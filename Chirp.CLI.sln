@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.CLI", "Chirp.CLI\Chirp.CLI.csproj", "{63195C90-3D46-404D-8519-9C3F9DC4895E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{63195C90-3D46-404D-8519-9C3F9DC4895E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63195C90-3D46-404D-8519-9C3F9DC4895E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63195C90-3D46-404D-8519-9C3F9DC4895E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63195C90-3D46-404D-8519-9C3F9DC4895E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

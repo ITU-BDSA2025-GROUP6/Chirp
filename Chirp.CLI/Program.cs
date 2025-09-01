@@ -5,16 +5,14 @@ using System.Globalization;
 using System.IO;
 using System.Security.AccessControl;
 
-
 try
 {
-  
     string filePath = System.IO.Path.GetFullPath("Data/chirp_cli_db.csv");
     using(var parser = new TextFieldParser(filePath))
     {
-        if (args[0] == "chirp")
+        if (args.Length > 0 && args[0] == "chirp")
         {
-            String name =  Environment.UserName;
+            string name =  Environment.UserName;
             string message = String.Join(" ", args, 1, args.Length - 1); 
             long unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             if (File.Exists(filePath))
@@ -25,7 +23,8 @@ try
                 }
             }
         }
-        else {
+        else
+        {
             parser.SetDelimiters(",");                     
             parser.HasFieldsEnclosedInQuotes = true;  
                 

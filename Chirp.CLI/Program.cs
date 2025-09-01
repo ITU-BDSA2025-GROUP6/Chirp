@@ -2,17 +2,35 @@
 using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Globalization;
+using System.IO;
+using System.Security.AccessControl;
+
 
 try
 {
+  
     string filePath = System.IO.Path.GetFullPath("Data/chirp_cli_db.csv");
     using(var parser = new TextFieldParser(filePath))
     {
-        parser.SetDelimiters(",");                     
-        parser.HasFieldsEnclosedInQuotes = true;  
-        
-        // remove first line
-        String[] header = parser.ReadFields();
+        if (args[0] == "chirp")
+        {
+            String name =  Environment.UserName;
+            string message = String.Join(" ", args, 1, args.Length - 1); 
+            long unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            if (File.Exists(filePath))
+            {
+                using (StreamWriter sw = File.AppendText(filePath))
+                {
+                    sw.WriteLine(name + ",\"" + message + "\"," + unixTime);
+                }
+            }
+        }
+        else {
+            parser.SetDelimiters(",");                     
+            parser.HasFieldsEnclosedInQuotes = true;  
+                
+            // remove first line
+            String[] header = parser.ReadFields();
         
         while (!parser.EndOfData)
         {
@@ -23,6 +41,7 @@ try
             
             Console.WriteLine(author + " @ " + date + ": " + message);
         }
+    }
     }
     // for writing to the csv
     //using (var writer = new StreamWriter(filePath))

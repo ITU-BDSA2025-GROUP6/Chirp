@@ -1,56 +1,62 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Microsoft.VisualBasic.FileIO;
-using System;
+using CsvHelper;
 using System.Globalization;
-using System.IO;
-using System.Security.AccessControl;
+
+string filePath = System.IO.Path.GetFullPath("Data/chirp_cli_db.csv");
 
 try
+{ 
+    if (args.Length > 0 && args[0] == "chirp")
+        {
+            string user_message = string.Join(" ", args.Skip(1));
+            Console.WriteLine(user_message);
+            writeCSV(user_message);
+        }
+    else
+        {
+            readCSV();
+        } 
+} catch (Exception e) { Console.WriteLine(e.Message); }
+
+void writeCSV(String user_message)
 {
-    string filePath = System.IO.Path.GetFullPath("Data/chirp_cli_db.csv");
-    using(var parser = new TextFieldParser(filePath))
-    {
-        if (args.Length > 0 && args[0] == "chirp")
-        {
-            string name =  Environment.UserName;
-            string message = String.Join(" ", args, 1, args.Length - 1); 
-            long unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            if (File.Exists(filePath))
-            {
-                using (StreamWriter sw = File.AppendText(filePath))
-                {
-                    sw.WriteLine(name + ",\"" + message + "\"," + unixTime);
-                }
-            }
-        }
-        else
-        {
-            parser.SetDelimiters(",");                     
-            parser.HasFieldsEnclosedInQuotes = true;  
-                
-            // remove first line
-            String[] header = parser.ReadFields();
-        
-        while (!parser.EndOfData)
-        {
-            var line = parser.ReadFields();
-            String author = line[0];
-            String message = line[1];
-            var date  = DateTimeOffset.FromUnixTimeSeconds(long.Parse(line[2])).DateTime;
-            
-            Console.WriteLine(author + " @ " + date + ": " + message);
-        }
-    }
-    }
-    // for writing to the csv
-    //using (var writer = new StreamWriter(filePath))
-    //{
-    //    writer.WriteLine("Test");
-    //}
+    var input = new Cheep();
+    { 
+        input.user_name = Environment.UserName;
+        input.user_message = user_message;
+        input.unixTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    };
     
-} catch (Exception e)
+    using (var writer = new StreamWriter((filePath), append:true))
+    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+    {
+        if (writer.BaseStream.Length == 0) { csv.WriteHeader<Cheep>(); }
+        csv.NextRecord();
+        csv.WriteRecord(input);
+    }
+}
+
+void readCSV()
 {
-    Console.WriteLine(e.Message);
+    {
+        using (var reader = new StreamReader(filePath))
+        {
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                var records = csv.GetRecords<Cheep>();
+            } 
+        }
+    }
+}
+
+
+
+public record Cheep
+{
+    public string user_name { get; set; }
+    public string user_message { get; set; }
+    public long unixTimeStamp { get; set; }
 }
 
 

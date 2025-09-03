@@ -8,10 +8,13 @@ string filePath = System.IO.Path.GetFullPath("Data/chirp_cli_db.csv");
 try
 { 
     if (args.Length > 0 && args[0] == "chirp")
-        {
-            string user_message = string.Join(" ", args.Skip(1));
-            Console.WriteLine(user_message);
-            writeCSV(user_message);
+    {
+        string user_message = "";
+            for (int i = 1; i < args.Length; i++)
+            {
+                user_message += args[i] +" ";
+            }
+            writeCSV(user_message.Trim());
         }
     else
         {

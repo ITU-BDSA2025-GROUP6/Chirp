@@ -14,12 +14,11 @@ try
             {
                 user_message += args[i] +" ";
             }
-            writeCSV(user_message.Trim());
-        }
-    else
-        {
+            writeCSV(user_message.Trim()); 
+    }
+    else {
             readCSV();
-        } 
+    } 
 } catch (Exception e) { Console.WriteLine(e.Message); }
 
 void writeCSV(String user_message)
@@ -28,7 +27,7 @@ void writeCSV(String user_message)
     { 
         input.user_name = Environment.UserName;
         input.user_message = user_message;
-        input.unixTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        input.unixTimeStamp = DateTimeOffset.UtcNow.ToLocalTime().AddHours(2).ToUnixTimeSeconds();
     };
     
     using (var writer = new StreamWriter((filePath), append:true))
@@ -48,6 +47,11 @@ void readCSV()
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 var records = csv.GetRecords<Cheep>();
+
+                foreach (var r in records )
+                {
+                    Console.WriteLine($"{r.user_name} @ {DateTimeOffset.FromUnixTimeSeconds(r.unixTimeStamp).DateTime} : {r.user_message}  ");
+                }
             } 
         }
     }
@@ -61,5 +65,3 @@ public record Cheep
     public string user_message { get; set; }
     public long unixTimeStamp { get; set; }
 }
-
-

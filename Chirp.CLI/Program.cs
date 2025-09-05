@@ -2,8 +2,9 @@
 using Microsoft.VisualBasic.FileIO;
 using CsvHelper;
 using System.Globalization;
+using SimpleDB;
 
-string filePath = System.IO.Path.GetFullPath("Data/chirp_cli_db.csv");
+var database = new CsvDatabase<Cheep>();
 
 try
 { 
@@ -14,50 +15,25 @@ try
             {
                 user_message += args[i] +" ";
             }
-            writeCSV(user_message.Trim()); 
+            var cheep = new Cheep();
+            { 
+                cheep.user_name = Environment.UserName;
+                cheep.user_message = user_message.Trim();
+                cheep.unixTimeStamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+                //cheep.unixTimeStamp = DateTimeOffset.UtcNow.ToLocalTime().AddHours(2).ToUnixTimeSeconds();
+            };
+            database.Store(cheep);
     }
-    else {
-            readCSV();
-    } 
-} catch (Exception e) { Console.WriteLine(e.Message); }
-
-void writeCSV(String user_message)
-{
-    var input = new Cheep();
-    { 
-        input.user_name = Environment.UserName;
-        input.user_message = user_message;
-        input.unixTimeStamp = DateTimeOffset.UtcNow.ToLocalTime().AddHours(2).ToUnixTimeSeconds();
-    };
-    
-    using (var writer = new StreamWriter((filePath), append:true))
-    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+    else
     {
-        if (writer.BaseStream.Length == 0) { csv.WriteHeader<Cheep>(); }
-        csv.NextRecord();
-        csv.WriteRecord(input);
-    }
-}
-
-void readCSV()
-{
-    {
-        using (var reader = new StreamReader(filePath))
+        foreach (var r in database.Read())
         {
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-            {
-                var records = csv.GetRecords<Cheep>();
-
-                foreach (var r in records )
-                {
-                    Console.WriteLine($"{r.user_name} @ {DateTimeOffset.FromUnixTimeSeconds(r.unixTimeStamp).DateTime} : {r.user_message}  ");
-                }
-            } 
+            Console.WriteLine($"{r.user_name} @ {DateTimeOffset.FromUnixTimeSeconds(r.unixTimeStamp).DateTime} : {r.user_message}  ");
         }
     }
-}
-
-
+    
+    
+} catch (Exception e) { Console.WriteLine(e.Message); }
 
 public record Cheep
 {

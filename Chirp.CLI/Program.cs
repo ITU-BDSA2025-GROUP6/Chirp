@@ -17,7 +17,7 @@ try
         {
             cheep.user_name = Environment.UserName;
             cheep.user_message = user_message.Trim();
-            cheep.unixTimeStamp = DateTimeOffset.UtcNow.ToLocalTime().AddHours(2).ToUnixTimeSeconds();
+            cheep.unixTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
         ;
         database.Store(cheep);

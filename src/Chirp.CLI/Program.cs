@@ -45,19 +45,16 @@ try
         {
             user_name = Environment.UserName,
             user_message = userMessage.Trim(),
-            unixTimeStamp = DateTimeOffset.UtcNow.ToLocalTime().AddHours(2).ToUnixTimeSeconds(),
+            unixTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         } ;
         database.Store(cheep);
         Console.WriteLine($"Cheep posted: {userMessage}");
     }
     
     else if (arguments["list"].IsTrue)
+        
     {
-        foreach (var cheep in database.Read())
-        {
-            Console.WriteLine(
-                $"{cheep.user_name} @ {DateTimeOffset.FromUnixTimeSeconds(cheep.unixTimeStamp).DateTime}: {cheep.user_message}");
-        }
+        UserInterface.PrintCheeps(database.Read());
     }
 }
 
@@ -66,11 +63,13 @@ catch (Exception e)
     Console.WriteLine(e.Message);
 }
 
+return 0;
+
+
 public record Cheep
 {
     public string user_name { get; set; }
     public string user_message { get; set; }
     public long unixTimeStamp { get; set; }
 }
-
 

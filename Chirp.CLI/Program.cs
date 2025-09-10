@@ -52,12 +52,9 @@ try
     }
     
     else if (arguments["list"].IsTrue)
+        
     {
-        foreach (var cheep in database.Read())
-        {
-            Console.WriteLine(
-                $"{cheep.user_name} @ {DateTimeOffset.FromUnixTimeSeconds(cheep.unixTimeStamp).DateTime}: {cheep.user_message}");
-        }
+        UserInterface.PrintCheeps(database.Read());
     }
 }
 

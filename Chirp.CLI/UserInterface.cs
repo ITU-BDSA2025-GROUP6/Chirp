@@ -15,8 +15,9 @@ public static class UserInterface
     {
         foreach (var cheep in cheeps)
         {
+            var when = DateTimeOffset.FromUnixTimeSeconds(cheep.unixTimeStamp).ToLocalTime();
             Console.WriteLine(
-                $"{cheep.user_name} @ {DateTimeOffset.FromUnixTimeSeconds(cheep.unixTimeStamp).DateTime} : {cheep.user_message}  ");
+                $"{cheep.user_name} @ {when:dd-MM-yyyy HH:mm} : {cheep.user_message}  ");
         }
     }
 }

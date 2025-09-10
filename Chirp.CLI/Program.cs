@@ -3,6 +3,19 @@ using Chirp.CLI;
 using SimpleDB;
 using DocoptNet;
 
+const string Help = @"Chirp
+Usage:
+  cheep chirp <message>...
+  cheep list
+  cheep (-h | --help)
+  cheep --version
+
+Options:
+  -h --help             Show help.
+  --version             Show version.
+  -- chirp <message>... Message to chirp.
+";
+
 try
 {
     var database = new CsvDatabase<Cheep>();

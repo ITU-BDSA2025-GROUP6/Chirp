@@ -45,7 +45,7 @@ try
         {
             user_name = Environment.UserName,
             user_message = userMessage.Trim(),
-            unixTimeStamp = DateTimeOffset.UtcNow.ToLocalTime().AddHours(2).ToUnixTimeSeconds(),
+            unixTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         } ;
         database.Store(cheep);
         Console.WriteLine($"Cheep posted: {userMessage}");
@@ -65,6 +65,8 @@ catch (Exception e)
 {
     Console.WriteLine(e.Message);
 }
+
+return 0;
 
 
 public record Cheep

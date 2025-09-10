@@ -66,11 +66,11 @@ catch (Exception e)
     Console.WriteLine(e.Message);
 }
 
-
 public record Cheep
 {
     public string user_name { get; set; }
     public string user_message { get; set; }
     public long unixTimeStamp { get; set; }
 }
+
 

@@ -16,39 +16,55 @@ Options:
   -- chirp <message>... Message to chirp.
 ";
 
+var database = new CsvDatabase<Cheep>();
+
 try
 {
-    var database = new CsvDatabase<Cheep>();
-    if (args.Length > 0 && args[0] == "chirp")
+    var arguments = new Docopt().Apply(Help, args, version: "Chirp", exit: true);
+    if (arguments["chirp"].IsTrue)
     {
-        string user_message = "";
-        for (int i = 1; i < args.Length; i++)
+        var messageValue = arguments["<message>"]?.Value;
+
+        string userMessage;
+        if (messageValue is System.Collections.IEnumerable messageWords)
         {
-            user_message += args[i] + " ";
+            var words = new List<string>();
+            foreach (var word in messageWords)
+            {
+                words.Add(word.ToString()!);
+            }
+
+            userMessage = string.Join(" ", words);
+        }
+        else
+        {
+            userMessage = messageValue.ToString()!;
         }
 
-        var cheep = new Cheep();
+        var cheep = new Cheep()
         {
-            cheep.user_name = Environment.UserName;
-            cheep.user_message = user_message.Trim();
-            cheep.unixTimeStamp = DateTimeOffset.UtcNow.ToLocalTime().AddHours(2).ToUnixTimeSeconds();
-        }
-        ;
+            user_name = Environment.UserName,
+            user_message = userMessage.Trim(),
+            unixTimeStamp = DateTimeOffset.UtcNow.ToLocalTime().AddHours(2).ToUnixTimeSeconds(),
+        } ;
         database.Store(cheep);
+        Console.WriteLine($"Cheep posted: {userMessage}");
     }
-    else
+    
+    else if (arguments["list"].IsTrue)
     {
-        UserInterface.PrintCheeps(database.Read());
+        foreach (var cheep in database.Read())
+        {
+            Console.WriteLine(
+                $"{cheep.user_name} @ {DateTimeOffset.FromUnixTimeSeconds(cheep.unixTimeStamp).DateTime}: {cheep.user_message}");
+        }
     }
-
-
 }
+
 catch (Exception e)
 {
     Console.WriteLine(e.Message);
 }
-
-return 0;
 
 
 public record Cheep

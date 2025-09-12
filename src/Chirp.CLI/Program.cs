@@ -55,7 +55,7 @@ try
         
     {
         UserInterface.PrintCheeps(database.Read());
-    }
+    } 
 }
 
 catch (Exception e)

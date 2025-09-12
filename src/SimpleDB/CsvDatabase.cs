@@ -11,6 +11,7 @@ using System.Globalization;
 public sealed class CsvDatabase<T> : IDatabaseRepository<T>
 {
     string filePath = "../SimpleDB/Data/Cheep_DB.csv";
+    
     /// <summary>
     /// Stores a record of type <typeparamref name="T"/> in the underlying CSV database.
     /// </summary>

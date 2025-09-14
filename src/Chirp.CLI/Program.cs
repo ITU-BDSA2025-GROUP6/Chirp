@@ -20,7 +20,6 @@ var database = CsvDatabase<Cheep>.Instance;
 
 try
 {
-    var database = new CsvDatabase<Cheep>();
     var arguments = new Docopt().Apply(Help, args, version: "Chirp", exit: true);
     if (arguments["chirp"].IsTrue)
     {

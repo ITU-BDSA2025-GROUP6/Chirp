@@ -10,8 +10,28 @@ using System.Globalization;
 /// </typeparam>
 public sealed class CsvDatabase<T> : IDatabaseRepository<T>
 {
+    private static CsvDatabase<T>? instance = null;
+    private static readonly object padlock = new object();
+
+    CsvDatabase()
+    {
+    }
+
+    public static CsvDatabase<T>? Instance
+    {
+        get
+        {
+            lock (padlock)
+            {
+                if (instance == null)
+                {
+                    instance = new CsvDatabase<T>();
+                }
+                return instance;
+            }
+        }
+    }
     string filePath = "../SimpleDB/Data/Cheep_DB.csv";
-    
     /// <summary>
     /// Stores a record of type <typeparamref name="T"/> in the underlying CSV database.
     /// </summary>
@@ -41,7 +61,3 @@ public sealed class CsvDatabase<T> : IDatabaseRepository<T>
         return records.ToList();
     }
 }
-
-
-
-

@@ -16,6 +16,7 @@ Options:
   -- chirp <message>... Message to chirp.
 ";
 
+var database = CsvDatabase<Cheep>.Instance;
 
 try
 {
@@ -55,7 +56,7 @@ try
         
     {
         UserInterface.PrintCheeps(database.Read());
-    }
+    } 
 }
 
 catch (Exception e)

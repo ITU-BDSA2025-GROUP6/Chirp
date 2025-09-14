@@ -61,7 +61,3 @@ public sealed class CsvDatabase<T> : IDatabaseRepository<T>
         return records.ToList();
     }
 }
-
-
-
-

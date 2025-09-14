@@ -16,7 +16,7 @@ Options:
   -- chirp <message>... Message to chirp.
 ";
 
-var database = new CsvDatabase<Cheep>();
+var database = CsvDatabase<Cheep>.Instance;
 
 try
 {

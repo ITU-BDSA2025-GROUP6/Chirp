@@ -46,7 +46,7 @@ try
             user_name = Environment.UserName,
             user_message = userMessage.Trim(),
             unixTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-        } ;
+        };
         database.Store(cheep);
         Console.WriteLine($"Cheep posted: {userMessage}");
     }

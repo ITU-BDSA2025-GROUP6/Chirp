@@ -3,15 +3,13 @@
 name: Release
 run-name: ${{ github.actor }} is publishing Release ${{ github.ref_name }}
 
-on:
+on: 
   push:
-    branches:
-      - main
-    tags:
-      - 'v*'
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
+    tags: 
+      'v*'
 
 jobs:
  
@@ -50,12 +48,14 @@ jobs:
     steps:
       - name: Create Shell
         uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }} 
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   publish:
      name: publish
-     needs: prep-publish
 
      strategy:
       matrix:
@@ -68,22 +68,25 @@ jobs:
           uses: actions/setup-dotnet@v5
           with:
             dotnet-version: 8.x
-        - name: Publish 
-          shell: bash
+        - name: Publish ${{ matrix.rid }} (single-file, framework-dependent)
           run: |
-            release_name="Chirp-${{ github.ref_name }}-${{ matrix.os }}"
-
-            dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" -r "${{ matrix.os }}" -o "${release_name}" --sc false -p:PublishSingleFile=True
-
-            7z a "${release_name}.zip" "${release_name}/."
-            7z d "${release_name}.zip" "*.pdb"
-
-            rm -r "${release_name}"
+            APP_NAME="Chirp"
+            OUT_DIR="out/${{ matrix.rid }}"
+            dotnet publish Chirp/Chirp.CLI/Chirp.CLI.csproj \
+            -c Release \
+            -r ${{ matrix.rid }} \
+            -o "$OUT_DIR" \
+            -p:PublishSingleFile=true \
+            -p:SelfContained=false
+            cd out
+            zip -r "${APP_NAME}-${{ github.ref_name }}-${{ matrix.rid }}.zip" "${{ matrix.rid }}"
+            cd -
         
         - name: Publish Github Release
           uses: softprops/action-gh-release@v2
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
-            files: "Chirp-*"
+            tag_name: ${{ github.ref_name }}                         # this tag triggered the run
+            files: out/Chirp-${{ github.ref_name }}-${{ matrix.rid }}.zip
             generate_release_notes: true

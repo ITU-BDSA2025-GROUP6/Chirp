@@ -42,20 +42,18 @@ jobs:
         run: dotnet test --no-build
 
   prep-publish:
-    name: Ensure no Matrix Issues
+    name: Prep-Publish
     needs: test              
     runs-on: ubuntu-latest
     steps:
       - name: Create Shell
         uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }} 
-          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   publish:
      name: publish
+     needs: prep-publish
 
      strategy:
       matrix:

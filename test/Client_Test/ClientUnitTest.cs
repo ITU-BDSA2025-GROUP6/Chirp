@@ -4,8 +4,18 @@ using Xunit;
 
 public class ClientUnitTest
 {
-    [Fact]
-    public void Unix_Username_Test()
+	[Fact]
+
+	public void Timestamp_Test()
+	{
+		//Arrange
+		var TestUnixTimpestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+		var testCheep = new Cheep() { };
+
+		//Act
+		//Assert
+	}
+    public void Username_Test()
     {
 		//Arange
 		

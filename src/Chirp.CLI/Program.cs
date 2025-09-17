@@ -52,7 +52,6 @@ try
     }
     
     else if (arguments["list"].IsTrue)
-        
     {
         UserInterface.PrintCheeps(database.Read());
     } 

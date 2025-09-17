@@ -28,7 +28,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build -c Release --no-restore
+        run: dotnet build -c Release
 
   test:
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
         with:
           dotnet-version: 8.x
       - name: Test
-        run: dotnet test --no-build
+        run: dotnet test -c Release
 
   prep-publish:
     name: Ensure no Matrix Issues

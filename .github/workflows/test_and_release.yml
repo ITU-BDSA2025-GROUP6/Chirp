@@ -59,7 +59,7 @@ jobs:
 
      strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ win-x64, linux-x64, osx-x64, osx-arm64 ]
 
      runs-on: ubuntu-latest    
      steps:

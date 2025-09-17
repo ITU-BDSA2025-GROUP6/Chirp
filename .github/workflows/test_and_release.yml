@@ -46,9 +46,14 @@ jobs:
     needs: test              
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
       - name: Create Shell
         uses: softprops/action-gh-release@v2
         env:
+          tag_name: ${{ github.ref_name }}        # e.g. v1.2.3
+          overwrite_files: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
   publish:

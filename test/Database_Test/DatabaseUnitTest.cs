@@ -2,7 +2,7 @@ using SimpleDB;
 
 namespace Database_Test;
 
-public class UnitTest1
+public class DatabaseUnitTest
 {
     [Fact]
     public void Test1()

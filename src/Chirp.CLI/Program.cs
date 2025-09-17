@@ -20,7 +20,6 @@ var database = CsvDatabase<Cheep>.Instance;
 
 try
 {
-    var database = new CsvDatabase<Cheep>();
     var arguments = new Docopt().Apply(Help, args, version: "Chirp", exit: true);
     if (arguments["chirp"].IsTrue)
     {
@@ -47,13 +46,12 @@ try
             user_name = Environment.UserName,
             user_message = userMessage.Trim(),
             unixTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-        } ;
+        };
         database.Store(cheep);
         Console.WriteLine($"Cheep posted: {userMessage}");
     }
     
     else if (arguments["list"].IsTrue)
-        
     {
         UserInterface.PrintCheeps(database.Read());
     } 

@@ -55,7 +55,7 @@ public class ClientUnitTest
 	}
 
 	[Fact]
-	public void User_Readable_Timestamp_Test()
+	public void User_Readable_Timestamp_CEST_Test()
 	{
 		Cheep cheep1 = new Cheep()
 		{

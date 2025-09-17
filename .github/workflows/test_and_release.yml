@@ -3,13 +3,15 @@
 name: Release
 run-name: ${{ github.actor }} is publishing Release ${{ github.ref_name }}
 
-on: 
+on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+    tags:
+      - 'v*'
   pull_request:
-    branches: [ main ]
-    tags: 
-      'v*'
+    branches:
+      - main
 
 jobs:
  
@@ -26,7 +28,7 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build -c Release --no-restore
+        run: dotnet build -c Release
 
   test:
     runs-on: ubuntu-latest
@@ -39,7 +41,7 @@ jobs:
         with:
           dotnet-version: 8.x
       - name: Test
-        run: dotnet test --no-build
+        run: dotnet test -c Release
 
   prep-publish:
     name: Prep-Publish
@@ -52,7 +54,7 @@ jobs:
       - name: Create Shell
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}        # e.g. v1.2.3
+          tag_name: ${{ github.ref_name }}     # this will be the tag (e.g. v1.0.0)
           overwrite_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -63,7 +65,7 @@ jobs:
 
      strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ win-x64, linux-x64, osx-x64, osx-arm64 ]
 
      runs-on: ubuntu-latest    
      steps:
@@ -72,25 +74,22 @@ jobs:
           uses: actions/setup-dotnet@v5
           with:
             dotnet-version: 8.x
-        - name: Publish ${{ matrix.rid }} (single-file, framework-dependent)
+        - name: Publish 
+          shell: bash
           run: |
-            APP_NAME="Chirp"
-            OUT_DIR="out/${{ matrix.rid }}"
-            dotnet publish Chirp/Chirp.CLI/Chirp.CLI.csproj \
-            -c Release \
-            -r ${{ matrix.rid }} \
-            -o "$OUT_DIR" \
-            -p:PublishSingleFile=true \
-            -p:SelfContained=false
-            cd out
-            zip -r "${APP_NAME}-${{ github.ref_name }}-${{ matrix.rid }}.zip" "${{ matrix.rid }}"
-            cd -
+            release_name="Chirp-${{ github.ref_name }}-${{ matrix.os }}"
+
+            dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" -r "${{ matrix.os }}" -o "${release_name}" --sc false -p:PublishSingleFile=True
+
+            7z a "${release_name}.zip" "${release_name}/."
+            7z d "${release_name}.zip" "*.pdb"
+
+            rm -r "${release_name}"
         
         - name: Publish Github Release
           uses: softprops/action-gh-release@v2
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
-            tag_name: ${{ github.ref_name }}                         # this tag triggered the run
-            files: out/Chirp-${{ github.ref_name }}-${{ matrix.rid }}.zip
+            files: "Chirp-*"
             generate_release_notes: true

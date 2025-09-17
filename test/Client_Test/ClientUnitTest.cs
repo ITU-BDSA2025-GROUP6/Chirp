@@ -19,8 +19,8 @@ public class ClientUnitTest
 		};
 
 		//Act
-		var unix_result = DateTimeOffset.FromUnixTimeMilliseconds(unixTime);
-		var cheep_unix_result = DateTimeOffset.FromUnixTimeMilliseconds(testCheep.unixTimeStamp);
+		var unix_result = DateTimeOffset.FromUnixTimeSeconds(unixTime);
+		var cheep_unix_result = DateTimeOffset.FromUnixTimeSeconds(testCheep.unixTimeStamp);
 		
 		//Assert
 		Assert.Equal(unix_result, cheep_unix_result);
@@ -45,11 +45,18 @@ public class ClientUnitTest
 		//Assert
 		Assert.Equal(unix_result, cheep_unix_result);
 	}
+	
+	static string ToCopenhagen(long unixSeconds)
+	{
+		var tz = TimeZoneInfo.FindSystemTimeZoneById("Europe/Copenhagen");
+		var utc = DateTimeOffset.FromUnixTimeSeconds(unixSeconds);
+		var local = TimeZoneInfo.ConvertTime(utc, tz);
+		return local.ToString("dd-MM-yyyy HH:mm");
+	}
 
 	[Fact]
 	public void User_Readable_Timestamp_Test()
 	{
-		//Arrange
 		Cheep cheep1 = new Cheep()
 		{
 			user_name = "sebastianhsvendsen",
@@ -76,10 +83,10 @@ public class ClientUnitTest
 		var when1 = DateTimeOffset.FromUnixTimeSeconds(cheep1.unixTimeStamp).ToLocalTime();
 		var when2 = DateTimeOffset.FromUnixTimeSeconds(cheep2.unixTimeStamp).ToLocalTime();
 		var when3 = DateTimeOffset.FromUnixTimeSeconds(cheep3.unixTimeStamp).ToLocalTime();
-		
-		string str1 = when1.ToString("dd-MM-yyyy HH:mm");
-		string str2 = when2.ToString("dd-MM-yyyy HH:mm");
-		string str3 = when3.ToString("dd-MM-yyyy HH:mm");
+
+		string str1 = ToCopenhagen(1757510356);
+		string str2 = ToCopenhagen(1757667210);
+		string str3 = ToCopenhagen(1757850545);
 
 		string test_str1 = "10-09-2025 15:19";
 		string test_str2 = "12-09-2025 10:53";

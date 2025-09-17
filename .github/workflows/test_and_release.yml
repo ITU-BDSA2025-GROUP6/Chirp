@@ -8,8 +8,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-    tags: 
-      'v*'
+    tags: ['v*']
 
 jobs:
  
@@ -53,40 +52,47 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+          
   publish:
-     name: publish
-
-     strategy:
+    name: publish
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
       matrix:
-        os: [ win-x64, linux-x64, osx-x64, osx-arm64 ]
-
-     runs-on: ubuntu-latest    
-     steps:
-        - uses: actions/checkout@v5
-        - name: Setup .NET
-          uses: actions/setup-dotnet@v5
-          with:
-            dotnet-version: 8.x
-        - name: Publish ${{ matrix.rid }} (single-file, framework-dependent)
-          run: |
-            APP_NAME="Chirp"
-            OUT_DIR="out/${{ matrix.rid }}"
-            dotnet publish Chirp/Chirp.CLI/Chirp.CLI.csproj \
+        rid: [ win-x64, linux-x64, osx-x64, osx-arm64 ]   # RIDs, not runner OSes
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: 8.x }
+  
+      # Create the Release once (avoid race)
+      - name: Ensure Release exists (one-time)
+        if: matrix.rid == 'linux-x64'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+      - name: Publish ${{ matrix.rid }} (single-file, framework-dependent)
+        run: |
+          APP_NAME="Chirp"
+          OUT_DIR="out/${{ matrix.rid }}"
+          dotnet publish Chirp/Chirp.CLI/Chirp.CLI.csproj \
             -c Release \
             -r ${{ matrix.rid }} \
             -o "$OUT_DIR" \
             -p:PublishSingleFile=true \
             -p:SelfContained=false
-            cd out
-            zip -r "${APP_NAME}-${{ github.ref_name }}-${{ matrix.rid }}.zip" "${{ matrix.rid }}"
-            cd -
-        
-        - name: Publish Github Release
-          uses: softprops/action-gh-release@v2
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            tag_name: ${{ github.ref_name }}                         # this tag triggered the run
-            files: out/Chirp-${{ github.ref_name }}-${{ matrix.rid }}.zip
-            generate_release_notes: true
+          cd out
+          zip -r "${APP_NAME}-${{ github.ref_name }}-${{ matrix.rid }}.zip" "${{ matrix.rid }}"
+          cd -
+  
+      - name: Upload asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          files: out/Chirp-${{ github.ref_name }}-${{ matrix.rid }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

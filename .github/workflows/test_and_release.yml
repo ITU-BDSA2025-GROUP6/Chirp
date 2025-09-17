@@ -78,7 +78,7 @@ jobs:
         - name: Publish 
           shell: bash
           run: |
-            release_name="Chirp-${{ github.ref_name }}-${{ matrix.os }}"
+            release_name="Chirp-${{ github.ref_name }}-${{ matrix.rid }}"
 
             dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" -r "${{ matrix.os }}" -o "${release_name}" --sc false -p:PublishSingleFile=True
 

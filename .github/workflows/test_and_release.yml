@@ -50,6 +50,9 @@ jobs:
     steps:
       - name: Create Shell
         uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}     # this will be the tag (e.g. v1.0.0)
+          overwrite_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   

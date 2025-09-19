@@ -40,7 +40,3 @@ jobs:
           dotnet-version: 8.x
           cache: true
       - run: dotnet test -c Release --no-build --collect:"XPlat Code Coverage"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: **/TestResults/*

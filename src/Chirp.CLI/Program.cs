@@ -4,11 +4,11 @@ using SimpleDB;
 using DocoptNet;
 
 const string Help = @"Chirp
-Usage:
-  cheep chirp <message>...
-  cheep list
-  cheep (-h | --help)
-  cheep --version
+Usage: 
+  chirp cheep <message>...
+  chirp list
+  chirp (-h | --help)
+  chirp --version
 
 Options:
   -h --help             Show help.
@@ -21,7 +21,7 @@ var database = CsvDatabase<Cheep>.Instance;
 try
 {
     var arguments = new Docopt().Apply(Help, args, version: "Chirp", exit: true);
-    if (arguments["chirp"].IsTrue)
+    if (arguments["cheep"].IsTrue)
     {
         var messageValue = arguments["<message>"]?.Value;
 

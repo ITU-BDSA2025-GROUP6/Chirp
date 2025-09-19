@@ -1,4 +1,6 @@
-﻿namespace SimpleDB;
+﻿using CsvHelper.Configuration;
+
+namespace SimpleDB;
 using CsvHelper;
 using System.Globalization;
 
@@ -55,8 +57,9 @@ public sealed class CsvDatabase<T> : IDatabaseRepository<T>
     /// <returns></returns>
     public IEnumerable<T> Read(int? limit = null)
     {
-        using var reader = new StreamReader(filePath );
-        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+        using var reader = new StreamReader(filePath);
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HeaderValidated = null, MissingFieldFound = null };
+        using var csv = new CsvReader(reader, config);
         var records = csv.GetRecords<T>();
         return records.ToList();
     }

@@ -2,7 +2,6 @@
 
 name: Release
 run-name: ${{ github.actor }} is publishing Release ${{ github.ref_name }}
-
 on:
   push:
     branches:
@@ -12,7 +11,8 @@ on:
   pull_request:
     branches:
       - main
-
+permissions: 
+  contents: write
 jobs:
  
   build:
@@ -44,10 +44,14 @@ jobs:
         run: dotnet test -c Release
 
   prep-publish:
-    name: Ensure no Matrix Issues
+    name: Prep-Publish
     needs: test              
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
       - name: Create Shell
         uses: softprops/action-gh-release@v2
         with:
@@ -59,10 +63,10 @@ jobs:
   publish:
      name: publish
      needs: prep-publish
-
+     if: startsWith(github.ref, 'refs/tags/v')
      strategy:
       matrix:
-        os: [ win-x64, linux-x64, osx-x64, osx-arm64 ]
+        rid: [ win-x64, linux-x64, osx-x64, osx-arm64 ]
 
      runs-on: ubuntu-latest    
      steps:
@@ -74,9 +78,9 @@ jobs:
         - name: Publish 
           shell: bash
           run: |
-            release_name="Chirp-${{ github.ref_name }}-${{ matrix.os }}"
+            release_name="Chirp-${{ github.ref_name }}-${{ matrix.rid }}"
 
-            dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" -r "${{ matrix.os }}" -o "${release_name}" --sc false -p:PublishSingleFile=True
+            dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" -r "${{ matrix.rid }}" -o "${release_name}" --sc false -p:PublishSingleFile=True
 
             7z a "${release_name}.zip" "${release_name}/."
             7z d "${release_name}.zip" "*.pdb"

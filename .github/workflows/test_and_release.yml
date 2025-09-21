@@ -100,7 +100,7 @@ jobs:
           with:
             dotnet-version: 8.x
             
-        - name: Publish for ${{ matrix.platorm_name }}
+        - name: Publish for ${{ matrix.platform_name }}
           shell: bash
           run: |
             release_name="Chirp-${{ github.ref_name }}-${{ matrix.rid }}"

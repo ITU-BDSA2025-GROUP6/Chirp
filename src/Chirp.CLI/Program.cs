@@ -17,6 +17,8 @@ Options:
 ";
 
 //var database = CsvDatabase<Cheep>.Instance;
+var baseAddress = new Uri("http://localhost:5252"); //replace SimpleDB
+using var http = new HttpClient { BaseAddress = baseAddress };
 
 try
 {
@@ -47,13 +49,17 @@ try
             user_message = userMessage.Trim(),
             unixTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
-        database.Store(cheep);
+        
+        var response = await http.PostAsJsonAsync("cheep", cheep);  //post as JSON instead of adding cheep to DB
+        response.EnsureSuccessStatusCode();
+        //database.Store(cheep);
         Console.WriteLine($"Cheep posted: {userMessage}");
     }
     
     else if (arguments["list"].IsTrue)
     {
-        UserInterface.PrintCheeps(database.Read());
+        
+        //UserInterface.PrintCheeps(database.Read());
     } 
 }
 

@@ -58,7 +58,8 @@ try
     
     else if (arguments["list"].IsTrue)
     {
-        
+        var cheeps = await http.GetFromJsonAsync<List<Cheep>>("cheeps") ?? new List<Cheep>();
+        UserInterface.PrintCheeps(cheeps);
         //UserInterface.PrintCheeps(database.Read());
     } 
 }

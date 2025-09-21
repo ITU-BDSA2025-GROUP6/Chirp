@@ -1,6 +1,7 @@
 ﻿using Chirp.CLI;
 using SimpleDB;
 using DocoptNet;
+using System.Net.Http.Json;
 
 const string Help = @"Chirp
 Usage: 
@@ -15,7 +16,8 @@ Options:
   -- chirp <message>... Message to chirp.
 ";
 
-var database = CsvDatabase<Cheep>.Instance;
+var baseAddress = new Uri("http://localhost:5252"); //replace SimpleDB
+using var http = new HttpClient { BaseAddress = baseAddress };
 
 try
 {
@@ -46,13 +48,16 @@ try
             user_message = userMessage.Trim(),
             unixTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
         };
-        database.Store(cheep);
+        
+        var response = await http.PostAsJsonAsync("cheep", cheep);  //post as JSON instead of adding cheep to DB
+        response.EnsureSuccessStatusCode();
         Console.WriteLine($"Cheep posted: {userMessage}");
     }
     
     else if (arguments["list"].IsTrue)
     {
-        UserInterface.PrintCheeps(database.Read());
+        var cheeps = await http.GetFromJsonAsync<List<Cheep>>("cheeps") ?? new List<Cheep>();
+        UserInterface.PrintCheeps(cheeps);
     } 
 }
 
@@ -70,5 +75,3 @@ public record Cheep
     public string user_message { get; set; }
     public long unixTimeStamp { get; set; }
 }
-
-//test

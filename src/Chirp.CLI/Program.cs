@@ -16,7 +16,6 @@ Options:
   -- chirp <message>... Message to chirp.
 ";
 
-//var database = CsvDatabase<Cheep>.Instance;
 var baseAddress = new Uri("http://localhost:5252"); //replace SimpleDB
 using var http = new HttpClient { BaseAddress = baseAddress };
 
@@ -52,7 +51,6 @@ try
         
         var response = await http.PostAsJsonAsync("cheep", cheep);  //post as JSON instead of adding cheep to DB
         response.EnsureSuccessStatusCode();
-        //database.Store(cheep);
         Console.WriteLine($"Cheep posted: {userMessage}");
     }
     
@@ -60,7 +58,6 @@ try
     {
         var cheeps = await http.GetFromJsonAsync<List<Cheep>>("cheeps") ?? new List<Cheep>();
         UserInterface.PrintCheeps(cheeps);
-        //UserInterface.PrintCheeps(database.Read());
     } 
 }
 
@@ -78,5 +75,3 @@ public record Cheep
     public string user_message { get; set; }
     public long unixTimeStamp { get; set; }
 }
-
-//test

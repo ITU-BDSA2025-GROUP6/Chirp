@@ -1,6 +1,7 @@
 ﻿using Chirp.CLI;
 using SimpleDB;
 using DocoptNet;
+using System.Net.Http.Json;
 
 const string Help = @"Chirp
 Usage: 
@@ -15,7 +16,7 @@ Options:
   -- chirp <message>... Message to chirp.
 ";
 
-var database = CsvDatabase<Cheep>.Instance;
+//var database = CsvDatabase<Cheep>.Instance;
 
 try
 {

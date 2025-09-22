@@ -31,48 +31,52 @@ jobs:
             } else if (labels.includes('todo') || labels.includes('backlog')) {
               targetColumnId = todoColumnId;
             }
+            
             if (targetColumnId) {
               try {
                 const cardsResponse = await github.rest.projects.listCards({ column_id: todoColumnId });
             
                 let card = cardsResponse.data.find(card => { 
-                    if (card.content_url) {
+                  if (card.content_url) {
                     return card.content_url.endsWith(`/issues/${issueNumber}`);
-                    }
-                    return false;
-                  });
-            if (!card) {
-              const inProgressCardsResponse = await github.rest.projects.listCards({ column_id: inProgressColumnId });
-              
-              card = inProgressCardsResponse.data.find(card => { 
+                  }
+                  return false;
+                });
+                
+                if (!card) {
+                  const inProgressCardsResponse = await github.rest.projects.listCards({ column_id: inProgressColumnId });
+                  
+                  card = inProgressCardsResponse.data.find(card => { 
                     if (card.content_url) {
-                    return card.content_url.endsWith(`/issues/${issueNumber}`);
+                      return card.content_url.endsWith(`/issues/${issueNumber}`);
                     }
                     return false;
                   });
                 }
-            if (!card) {
-              const doneCardResponse = await github.rest.projects.listCards({ column_id: doneColumnId });
-              
-              card = doneCardResponse.data.find(card => {
-                if (card.content_url) {
-                  return card.content_url.endsWith(`/issues/${issueNumber}`);
+                
+                if (!card) {
+                  const doneCardResponse = await github.rest.projects.listCards({ column_id: doneColumnId });
+                  
+                  card = doneCardResponse.data.find(card => {
+                    if (card.content_url) {
+                      return card.content_url.endsWith(`/issues/${issueNumber}`);
+                    }
+                    return false;
+                  });
                 }
-                return false
-              });
+                
+                if (card) {
+                  await github.rest.projects.moveCard({
+                    card_id: card.id,
+                    position: 'top',
+                    column_id: targetColumnId
+                  });
+                  
+                  console.log(`Moved issue #${issueNumber} to column ID ${targetColumnId}`);
+                } else {
+                  console.log(`Could not find card for issue #${issueNumber}`);
+                }
+              } catch (error) {
+                console.error(`Error moving card: ${error}`);
+              }
             }
-            if (card) {
-              await github.rest.projects.moveCard({
-                card_id: card.id,
-                position: 'top',
-                column_id: targetColumnId
-              });
-            
-            console.log(`Moved issue #${issueNumber} to column ID ${targetColumnId}`);
-          } else {
-            console.log(`Could not find card for issue #${issueNumber}`);
-          }
-        } catch (error) {
-          console.error(`Error moving card: ${error}`);
-        }
-      }

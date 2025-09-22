@@ -19,7 +19,7 @@ jobs:
             
             //Label Rules
             const labelRules = [
-              { label: 'bug', 'keywords: ['bug', 'error', 'crash', 'fix', 'issue', 'problem'] },
+              { label: 'bug', keywords: ['bug', 'error', 'crash', 'fix', 'issue', 'problem'] },
               { label: 'enhancement', keywords: ['feature', 'enhancement', 'improvement', 'add', 'new'] },
               { label: 'documentation', keywords: ['doc', 'documentation', 'readme', 'wiki'] },
               { label: 'question', keywords: ['question', 'help', 'how to', '?'] },

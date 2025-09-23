@@ -1,7 +1,7 @@
 #Co-Author: sesv@itu.dk, anys@itu.dk, luki@itu.dk, LLM (Chatgpt.com) samt inspiration fået fra Oliver Flinck Sheye 189235422+osheITU@users.noreply.github.com
 
-name: Release
-run-name: ${{ github.actor }} is publishing Release ${{ github.ref_name }}
+name: Build, Test, and Release
+run-name: ${{ github.actor }} is building and possibly releasing ${{ github.ref_name }}
 on:
   push:
     branches:
@@ -16,81 +16,113 @@ permissions:
 jobs:
  
   build:
-    name: build
+    name: Build
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v5
-      - name: Setup .NET
+      - name: Checkout code
+        uses: actions/checkout@v5
+        
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
+          
       - name: Restore dependencies
         run: dotnet restore
-      - name: Build
-        run: dotnet build -c Release
+        
+      - name: Build project
+        run: dotnet build -c Release --no-restore
 
   test:
-    runs-on: ubuntu-latest
+    name: Test
     needs: build
+    runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v5
-      - name: Setup .NET
+      - name: Checkout code
+        uses: actions/checkout@v5
+        
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
-      - name: Test
+          
+      - name: Run tests
         run: dotnet test -c Release
 
-  prep-publish:
-    name: Prep-Publish
+  prepare-release:
+    name: Prepare Release
     needs: test              
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
+    
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v5
       
-      - name: Create Shell
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}     # this will be the tag (e.g. v1.0.0)
-          overwrite_files: true
+          tag_name: ${{ github.ref_name }}
+          name: "Chirp ${{ github.ref_name }}"
+          draft: false
+          prerelease: false
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   
-  publish:
-     name: publish
-     needs: prep-publish
+  publish-platforms:
+     name: Publish Platform Executables
+     needs: prepare-release
      if: startsWith(github.ref, 'refs/tags/v')
+     runs-on: ubuntu-latest
+     
      strategy:
       matrix:
         rid: [ win-x64, linux-x64, osx-x64, osx-arm64 ]
+        include:
+          - rid: win-x64
+            platform_name: Windows
+          - rid: linux-x64
+            platform_name: Linux
+          - rid: osx-x64
+            platform_name: macOS (Intel)
+          - rid: osx-arm64
+            platform_name: macOS (Apple Silicon)
 
-     runs-on: ubuntu-latest    
      steps:
-        - uses: actions/checkout@v5
-        - name: Setup .NET
+        - name: Checkout code
+          uses: actions/checkout@v5
+          
+        - name: Setup .NET 8
           uses: actions/setup-dotnet@v5
           with:
             dotnet-version: 8.x
-        - name: Publish 
+            
+        - name: Publish for ${{ matrix.platform_name }}
           shell: bash
           run: |
             release_name="Chirp-${{ github.ref_name }}-${{ matrix.rid }}"
-
-            dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" -r "${{ matrix.rid }}" -o "${release_name}" --sc false -p:PublishSingleFile=True
-
+            
+            dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" \
+              -r "${{ matrix.rid }}" \
+              -c Release \
+              -o "${release_name}" \
+              --sc false \
+              -p:PublishSingleFile=True
+            # Compress the output directory into a zip file
             7z a "${release_name}.zip" "${release_name}/."
+            
+            # Remove debugging files from the zip
             7z d "${release_name}.zip" "*.pdb"
-
+            
+            # Clean up the output directory
             rm -r "${release_name}"
-        
-        - name: Publish Github Release
+
+        - name: Upload Release Asset
           uses: softprops/action-gh-release@v2
+          with:
+            files: "Chirp-${{ github.ref_name }}-${{ matrix.rid }}.zip"
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            files: "Chirp-*"
-            generate_release_notes: true

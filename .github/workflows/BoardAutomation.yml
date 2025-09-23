@@ -1,0 +1,82 @@
+name: Scrum Board Automation
+on:
+  issues: 
+    types:
+      - labeled
+      - unlabeled
+
+jobs:
+  move-card:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Move issue based on labels
+        uses: actions/github-script@v7
+        with: 
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = context.payload.issue.number;
+            const labels = context.payload.issue.labels.map(label => label.name);
+            
+            const projectId = 'PVT_kwDODaqg584BCWPc';
+            const todoColumnId = 'f75ad846';
+            const inProgressColumnId = '47fc9ee4';
+            const doneColumnId = '98236657';
+            
+            let targetColumnId = null;
+            
+            if (labels.includes('done') || labels.includes('completed')) {
+              targetColumnId = doneColumnId;
+            } else if (labels.includes('in progress') || labels.includes('working')) {
+              targetColumnId = inProgressColumnId;
+            } else if (labels.includes('todo') || labels.includes('backlog')) {
+              targetColumnId = todoColumnId;
+            }
+            
+            if (targetColumnId) {
+              try {
+                const cardsResponse = await github.rest.projects.listCards({ column_id: todoColumnId });
+            
+                let card = cardsResponse.data.find(card => { 
+                  if (card.content_url) {
+                    return card.content_url.endsWith(`/issues/${issueNumber}`);
+                  }
+                  return false;
+                });
+                
+                if (!card) {
+                  const inProgressCardsResponse = await github.rest.projects.listCards({ column_id: inProgressColumnId });
+                  
+                  card = inProgressCardsResponse.data.find(card => { 
+                    if (card.content_url) {
+                      return card.content_url.endsWith(`/issues/${issueNumber}`);
+                    }
+                    return false;
+                  });
+                }
+                
+                if (!card) {
+                  const doneCardResponse = await github.rest.projects.listCards({ column_id: doneColumnId });
+                  
+                  card = doneCardResponse.data.find(card => {
+                    if (card.content_url) {
+                      return card.content_url.endsWith(`/issues/${issueNumber}`);
+                    }
+                    return false;
+                  });
+                }
+                
+                if (card) {
+                  await github.rest.projects.moveCard({
+                    card_id: card.id,
+                    position: 'top',
+                    column_id: targetColumnId
+                  });
+                  
+                  console.log(`Moved issue #${issueNumber} to column ID ${targetColumnId}`);
+                } else {
+                  console.log(`Could not find card for issue #${issueNumber}`);
+                }
+              } catch (error) {
+                console.error(`Error moving card: ${error}`);
+              }
+            }

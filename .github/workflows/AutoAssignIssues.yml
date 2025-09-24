@@ -1,0 +1,77 @@
+//Written by sesv@itu.dk, LLM.
+name: Auto Assign Issues
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-assign issue
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // List of team members to assign issues to
+            const teamMembers = [
+              'sebseb10',
+              'LudvigKirkeby',
+              'glowbutt',
+              'Andreasschioett335',
+              'annakbh',
+              'nch19'
+            ];
+            
+            const assignments = {};
+            for (const member of teamMembers) {
+              assignments[member] = 0;
+            }
+            
+            // Count current assignments
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open'
+            });
+            
+            for (const issue of issues.data) {
+              if (issue.assignees) {
+                for (const assignee of issue.assignees) {
+                  if (teamMembers.includes(assignee.login)) {
+                    assignments[assignee.login]++;
+                  }
+                }
+              }
+            }
+            
+            // Find team member with fewest assigned issues
+            let minAssignments = Number.MAX_SAFE_INTEGER;
+            let assignee = null;
+            
+            for (const member of teamMembers) {
+              if (assignments[member] < minAssignments) {
+                minAssignments = assignments[member];
+                assignee = member;
+              }
+            }
+            
+            // Assign the issue
+            if (assignee) {
+              await github.rest.issues.addAssignees({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                assignees: [assignee]
+              });
+            
+              console.log(`Assigned issue #${context.payload.issue.number} to ${assignee}`);
+            
+              // Add a comment to notify the assignee
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.issue.number,
+                body: `@${assignee} you've been automatically assigned to this issue.`
+              });
+            }

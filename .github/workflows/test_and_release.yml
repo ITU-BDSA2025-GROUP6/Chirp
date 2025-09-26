@@ -1,6 +1,6 @@
 #Co-Author: sesv@itu.dk, anys@itu.dk, luki@itu.dk, LLM (Chatgpt.com) samt inspiration fået fra Oliver Flinck Sheye 189235422+osheITU@users.noreply.github.com
 
-name: Build, Test, and Release
+name: Build, Test, and Release for Razor
 run-name: ${{ github.actor }} is building and possibly releasing ${{ github.ref_name }}
 on:
   push:
@@ -105,7 +105,7 @@ jobs:
           run: |
             release_name="Chirp-${{ github.ref_name }}-${{ matrix.rid }}"
             
-            dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" \
+            dotnet publish "src/Chirp.Razor/Chirp.Razor.csproj" \
               -r "${{ matrix.rid }}" \
               -c Release \
               -o "${release_name}" \

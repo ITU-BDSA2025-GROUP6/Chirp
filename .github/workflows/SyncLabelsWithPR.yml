@@ -1,4 +1,15 @@
-name: SyncLabelsWithPR.yml
+name: Sync Issues to PR
 on:
-
+  pull_request: 
+    types: [opened, edited]
 jobs:
+  sync-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        
+      - name: Copy labels from linked issues
+        uses: micnncim/action-label-syncer@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

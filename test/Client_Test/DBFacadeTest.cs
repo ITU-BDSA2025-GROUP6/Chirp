@@ -26,4 +26,13 @@ public class DBFacadeTest
         Assert.NotNull(_connection);
         Assert.Equal(ConnectionState.Open, _connection.State);
     }
+
+    [Fact]
+    public void getAll()
+    {
+        CheepService cheepService = new CheepService();
+        List<CheepViewModel> list = cheepService.GetCheeps();
+        Console.WriteLine(list.Count);
+        Assert.True(list.Count == 2);
+    }
 }

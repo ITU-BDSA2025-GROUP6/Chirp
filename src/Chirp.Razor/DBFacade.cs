@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-
 using Microsoft.Data.Sqlite;
 
 namespace Chirp.Razor;
@@ -7,14 +5,13 @@ public class DBFacade
 {
     private SqliteConnection _connection = null;
     
-    public DBFacade()
-    {
-        _connection = new SqliteConnection("Data Source=./chirp.db");
-    }
-    public SqliteConnection getConnection()
+    public SqliteConnection GetConnection()
     {
         try
         {
+            if (_connection == null) {
+                _connection = new SqliteConnection("Data Source=./chirp.db");
+            } 
             _connection.Open();
             return _connection;
         }

@@ -17,3 +17,9 @@ select *
 from message;
 
 select message.*, user.* from message, user where message.author_id = user_id
+
+select username, m.*
+from message m 
+    inner join user u 
+        on u.user_id = m.author_id
+        order by m.pub_date desc

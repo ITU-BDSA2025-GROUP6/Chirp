@@ -1,3 +1,5 @@
+using Chirp.Razor;
+using Microsoft.Data.Sqlite;
 public record CheepViewModel(string Author, string Message, string Timestamp);
 
 public interface ICheepService
@@ -17,13 +19,66 @@ public class CheepService : ICheepService
 
     public List<CheepViewModel> GetCheeps()
     {
+        DBFacade facade = new DBFacade();
+        using SqliteConnection connection = facade.GetConnection();
+        var sqlQuery = @"
+        SELECT u.username, m.text, m.pub_date
+        FROM user u inner join message m
+        ON u.user_id = m.author_id
+        ORDER by m.pub_date desc;";
         
-        return _cheeps;
+        using var command = connection.CreateCommand();
+        command.CommandText = sqlQuery;
+        
+        var cheeps = new List<CheepViewModel>();
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            {
+                string author = reader.GetString(0);
+                string message = reader.GetString(1); 
+                double unixTime = reader.GetDouble(2); 
+                string timestamp = UnixTimeStampToDateTimeString(unixTime);
+
+                cheeps.Add(new CheepViewModel(author, message, timestamp));
+            }
+        }
+        
+        return cheeps;
     }
 
     public List<CheepViewModel> GetCheepsFromAuthor(string author)
     {
         // filter by the provided author name
+        DBFacade facade = new DBFacade();
+        using SqliteConnection connection = facade.GetConnection();
+        var sqlQuery = @"
+        SELECT u.username, m.text, m.pub_date
+        FROM user u inner join message m
+        ON u.user_id = m.author_id
+        WHERE u.username = @author
+        ORDER by m.pub_date desc;";
+        
+        using var command = connection.CreateCommand();
+        command.CommandText = sqlQuery;
+        command.Parameters.Add(@author);
+        
+        var cheeps = new List<CheepViewModel>();
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            {
+                string auth = reader.GetString(0);
+                string message = reader.GetString(1); 
+                double unixTime = reader.GetDouble(2); 
+                string timestamp = UnixTimeStampToDateTimeString(unixTime);
+
+                cheeps.Add(new CheepViewModel(auth, message, timestamp));
+            }
+        }
+        
+        return cheeps;
+        
         return _cheeps.Where(x => x.Author == author).ToList();
     }
 

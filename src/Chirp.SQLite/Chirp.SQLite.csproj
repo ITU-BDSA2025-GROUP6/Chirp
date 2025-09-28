@@ -12,4 +12,8 @@
     <EmbeddedResource Include="data/**/*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="identifier.sqlite" />
+  </ItemGroup>
+
 </Project>

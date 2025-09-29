@@ -28,6 +28,7 @@ public class DBFacadeTest
     }
 
     [Fact]
+    // should reference a local database made specifically for test
     public void getAll()
     {
         CheepService cheepService = new CheepService();

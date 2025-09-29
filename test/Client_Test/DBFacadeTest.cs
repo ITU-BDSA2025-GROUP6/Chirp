@@ -26,4 +26,14 @@ public class DBFacadeTest
         Assert.NotNull(_connection);
         Assert.Equal(ConnectionState.Open, _connection.State);
     }
+
+    [Fact]
+    // should reference a local database made specifically for test
+    public void getAll()
+    {
+        CheepService cheepService = new CheepService();
+        List<CheepViewModel> list = cheepService.GetCheeps();
+        Console.WriteLine(list.Count);
+        Assert.True(list.Count == 2);
+    }
 }

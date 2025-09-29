@@ -22,4 +22,4 @@ select username, m.*
 from message m 
     inner join user u 
         on u.user_id = m.author_id
-        order by m.pub_date desc
+where u.username = $username

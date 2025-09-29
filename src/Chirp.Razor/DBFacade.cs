@@ -9,8 +9,10 @@ public class DBFacade
     {
         try
         {
-            if (_connection == null) {
-                _connection = new SqliteConnection("Data Source=./chirp.db");
+            if (_connection == null)
+            {
+                var dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ?? Path.Combine(Path.GetTempPath(), "chirp.db");
+                _connection = new SqliteConnection($"Data Source={dbPath}");
             } 
             _connection.Open();
             return _connection;

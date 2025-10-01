@@ -15,7 +15,13 @@ public class UserTimelineModel : PageModel
 
     public ActionResult OnGet(string author)
     {
+        // 👇 Insert a specific cheep before fetching
+        // You might map author → userId in your service, here I'll just hardcode 1
+        _service.InsertCheep(100,"Automatic cheep: page was loaded!");
+
+        // then fetch as normal
         Cheeps = _service.GetCheepsFromAuthor(author);
+
         return Page();
     }
 }

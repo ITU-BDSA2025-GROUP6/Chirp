@@ -6,6 +6,7 @@ public record CheepViewModel(string Author, string Message, string Timestamp);
 public interface ICheepService
 {
     public List<CheepViewModel> GetCheeps();
+    void InsertCheep(int userId, string text);
     public List<CheepViewModel> GetCheepsFromAuthor(string author);
 }
 
@@ -90,5 +91,20 @@ public class CheepService : ICheepService
         dateTime = dateTime.AddSeconds(unixTimeStamp);
         return dateTime.ToString("MM/dd/yy H:mm:ss");
     }
-        
+    public void InsertCheep(int userId, string text)
+    {
+        DBFacade facade = new DBFacade();
+        using SqliteConnection connection = facade.GetConnection();
+        double unixTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+        var sqlInsert = @"INSERT INTO message (author_id, text, pub_date) VALUES ($author, $text, $date);";
+
+        using var command = connection.CreateCommand();
+        command.CommandText = sqlInsert;
+        command.Parameters.AddWithValue("$author", userId);
+        command.Parameters.AddWithValue("$text", text);
+        command.Parameters.AddWithValue("$date", unixTime);
+        command.ExecuteNonQuery();
+    }
 }
+

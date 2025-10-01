@@ -71,58 +71,38 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
-  publish-platforms:
-     name: Publish Platform Executables
-     needs: prepare-release
-     if: startsWith(github.ref, 'refs/tags/v')
-     runs-on: ubuntu-latest
-     
-     strategy:
-      matrix:
-        rid: [ win-x64, linux-x64, osx-x64, osx-arm64 ]
-        include:
-          - rid: win-x64
-            platform_name: Windows
-          - rid: linux-x64
-            platform_name: Linux
-          - rid: osx-x64
-            platform_name: macOS (Intel)
-          - rid: osx-arm64
-            platform_name: macOS (Apple Silicon)
-
-     steps:
-        - name: Checkout code
-          uses: actions/checkout@v5
           
-        - name: Setup .NET 8
-          uses: actions/setup-dotnet@v5
-          with:
-            dotnet-version: 8.x
-            
-        - name: Publish for ${{ matrix.platform_name }}
-          shell: bash
-          run: |
-            release_name="Chirp-${{ github.ref_name }}-${{ matrix.rid }}"
-            
-            dotnet publish "src/Chirp.CLI/Chirp.CLI.csproj" \
-              -r "${{ matrix.rid }}" \
-              -c Release \
-              -o "${release_name}" \
-              --sc false \
-              -p:PublishSingleFile=True
-            # Compress the output directory into a zip file
-            7z a "${release_name}.zip" "${release_name}/."
-            
-            # Remove debugging files from the zip
-            7z d "${release_name}.zip" "*.pdb"
-            
-            # Clean up the output directory
-            rm -r "${release_name}"
-
-        - name: Upload Release Asset
-          uses: softprops/action-gh-release@v2
-          with:
-            files: "Chirp-${{ github.ref_name }}-${{ matrix.rid }}.zip"
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  publish-web:
+    name: Publish Web Application
+    needs: prepare-release
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v5
+        
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.x
+      
+      - name: Publish Web App
+        run: |
+          release_name="Chirp-Razor-${{ github.ref_name }}"
+          
+          dotnet publish "src/Chirp.Razor/Chirp.Razor.csproj" \
+            -c Release \
+            -o "${release_name}" \
+            --self-contained false
+          
+          7z a "${release_name}.zip" "${release_name}/."
+          
+          rm -r "${{release_name}}"
+          
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "Chirp-Razor-${{ github.ref_name }}.zip"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,10 +1,11 @@
 using Microsoft.Data.Sqlite;
 
 namespace Chirp.Razor;
+
 public class DBFacade
 {
     private SqliteConnection _connection = null;
-    
+
     public SqliteConnection GetConnection()
     {
         try
@@ -13,7 +14,7 @@ public class DBFacade
             {
                 var dbPath = Environment.GetEnvironmentVariable("CHIRPDBPATH") ?? Path.Combine(Path.GetTempPath(), "chirp.db");
                 _connection = new SqliteConnection($"Data Source={dbPath}");
-            } 
+            }
             _connection.Open();
             return _connection;
         }

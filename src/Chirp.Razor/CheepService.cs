@@ -11,13 +11,6 @@ public interface ICheepService
 
 public class CheepService : ICheepService
 {
-    // These would normally be loaded from a database for example
-    private static readonly List<CheepViewModel> _cheeps = new()
-        {
-            new CheepViewModel("Helge", "Hello, BDSA students!", UnixTimeStampToDateTimeString(1690892208)),
-            new CheepViewModel("Adrian", "Hej, velkommen til kurset.", UnixTimeStampToDateTimeString(1690895308)),
-        };
-
     public List<CheepViewModel> GetCheeps()
     {
         DBFacade facade = new DBFacade();
@@ -79,22 +72,19 @@ public class CheepService : ICheepService
         }
 
         return cheeps;
-
-        return _cheeps.Where(x => x.Author == author).ToList();
     }
     
     public void InsertMessage(int authorid, string text)
     {
-        // filter by the provided author name
-        DBFacade facade = new DBFacade();
+        var facade = new DBFacade();
         using SqliteConnection connection = facade.GetConnection();
         long unixtime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        
-        var sqlInsert = "INSERT INTO message (author, text,pub_date) VALUES (@author, @text, @pub_date);)";
-        using var command = connection.CreateCommand();
 
+        const string sqlInsert = @"INSERT INTO message (author_id, text, pub_date)
+                               VALUES (@author_id, @text, @pub_date);";
+        using var command = connection.CreateCommand();
         command.CommandText = sqlInsert;
-        command.Parameters.AddWithValue("@author", authorid);
+        command.Parameters.AddWithValue("@author_id", authorid);
         command.Parameters.AddWithValue("@text", text);
         command.Parameters.AddWithValue("@pub_date", unixtime);
         command.ExecuteNonQuery();
@@ -102,13 +92,11 @@ public class CheepService : ICheepService
     
     public void InsertUser(string username, string email)
     {
-        // filter by the provided author name
-        DBFacade facade = new DBFacade();
+        var facade = new DBFacade();
         using SqliteConnection connection = facade.GetConnection();
-        
-        var sqlInsert = "INSERT INTO user (username, email) VALUES (@username, @email);)";
-        using var command = connection.CreateCommand();
 
+        const string sqlInsert = "INSERT INTO user (username, email) VALUES (@username, @email);";
+        using var command = connection.CreateCommand();
         command.CommandText = sqlInsert;
         command.Parameters.AddWithValue("@username", username);
         command.Parameters.AddWithValue("@email", email);

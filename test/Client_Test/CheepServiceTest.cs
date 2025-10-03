@@ -7,7 +7,5 @@ public class CheepServiceTest
     {
         CheepService cs = new CheepService();
         Assert.Equal(2, cs.GetCheeps().Count());
-        
-        
     }
 }

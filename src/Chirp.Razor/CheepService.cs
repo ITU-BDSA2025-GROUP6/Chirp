@@ -22,6 +22,7 @@ public class CheepService : ICheepService
     {
         DBFacade facade = new DBFacade();
         using SqliteConnection connection = facade.GetConnection();
+        
         var sqlQuery = @"
         SELECT u.username, m.text, m.pub_date
         FROM user u inner join message m

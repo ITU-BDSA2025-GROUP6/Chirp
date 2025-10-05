@@ -1,0 +1,43 @@
+@page "/page/{index:int}"
+@model Chirp.Razor.Pages.PaginationModel
+@{
+    ViewData["Title"] = "Chirp!";
+    Layout = "Shared/_Layout";
+
+    var routeIndexStr = HttpContext.GetRouteValue("index")?.ToString() ?? "1";
+    var currentPage = int.TryParse(routeIndexStr, out var tmp) && tmp > 0 ? tmp : 1;
+}
+
+<div>
+    <h2> Public Timeline — Page @currentPage </h2>
+
+    @if (Model.Cheeps.Any())
+    {
+        <ul id="messagelist" class="cheeps">
+            @foreach (var cheep in Model.Cheeps)
+            {
+                <li>
+                    <p>
+                        <strong>
+                            <a href="/@cheep.Author">@cheep.Author</a>
+                        </strong>
+                        @cheep.Message
+                        <small>&mdash; @cheep.Timestamp</small>
+                    </p>
+                </li>
+            }
+        </ul>
+
+        <nav class="pager" style="margin-top:1rem; display:flex; gap:.75rem;">
+            @if (currentPage > 1)
+            {
+                <a href="/page/@(currentPage - 1)">« Prev</a>
+            }
+            <a href="/page/@(currentPage + 1)">Next »</a>
+        </nav>
+    }
+    else
+    {
+        <em>There are no cheeps so far.</em>
+    }
+</div>

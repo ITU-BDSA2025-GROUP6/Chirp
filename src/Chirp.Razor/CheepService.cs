@@ -8,6 +8,8 @@ public interface ICheepService
     public List<CheepViewModel> GetCheeps();
     public List<CheepViewModel> GetCheeps(int page);
     public List<CheepViewModel> GetCheepsFromAuthor(string author);
+
+    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page);
 }
 
 public class CheepService : ICheepService
@@ -126,6 +128,49 @@ public class CheepService : ICheepService
             }
             return cheeps;
         }
+    }
+    
+    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page)
+    {
+        
+        int pageSize = 40;
+        int offset = (page - 1) * pageSize;
+        
+        // filter by the provided author name
+        DBFacade facade = new DBFacade();
+        using SqliteConnection connection = facade.GetConnection();
+        var sqlQuery = @"
+        SELECT u.username, m.text, m.pub_date
+        FROM user u inner join message m
+        ON u.user_id = m.author_id
+        WHERE u.username = @author
+        ORDER by m.pub_date desc
+        limit $limit offset $offset";
+        
+   
+        
+        using var command = connection.CreateCommand();
+        command.CommandText = sqlQuery;
+        
+        command.Parameters.AddWithValue("@author", author);
+        command.Parameters.AddWithValue("$limit", pageSize);
+        command.Parameters.AddWithValue("$offset", offset);
+
+        var cheeps = new List<CheepViewModel>();
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            {
+                string auth = reader.GetString(0);
+                string message = reader.GetString(1);
+                double unixTime = reader.GetDouble(2);
+                string timestamp = UnixTimeStampToDateTimeString(unixTime);
+
+                cheeps.Add(new CheepViewModel(auth, message, timestamp));
+            }
+        }
+
+        return cheeps;
     }
 }
 

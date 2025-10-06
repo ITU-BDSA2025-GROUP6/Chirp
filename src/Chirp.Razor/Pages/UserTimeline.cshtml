@@ -4,10 +4,11 @@
         ViewData["Title"] = "Chirp!";
         Layout = "Shared/_Layout";
         var routeName = HttpContext.GetRouteValue("author");
+        var currentPage = 1;
     }
 
     <div>
-        <h2> @routeName's Timeline </h2>
+        <h2> @routeName's Timeline - Page @currentPage </h2>
 
         @if (Model.Cheeps.Any())
         {
@@ -25,6 +26,14 @@
                     </li>
                 }
             </ul>
+            
+            <nav class="pager" style="margin-top:1rem; display:flex; gap:.75rem;">
+                @if (currentPage > 1)
+                {
+                    <a href="/@routeName/page/@(currentPage - 1)">« Prev</a>
+                }
+                <a href="/@routeName/page/@(currentPage + 1)">Next »</a>
+            </nav>
         }
         else
         {

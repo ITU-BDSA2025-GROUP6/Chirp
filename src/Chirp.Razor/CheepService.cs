@@ -98,7 +98,7 @@ public class CheepService : ICheepService
     
     public List<CheepViewModel> GetCheeps(int page){
         {
-            int pageSize = 40;
+            int pageSize = 32;
             int offset = (page - 1) * pageSize;
             var cheeps = new List<CheepViewModel>();
         
@@ -133,7 +133,7 @@ public class CheepService : ICheepService
     public List<CheepViewModel> GetCheepsFromAuthor(string author, int page)
     {
         
-        int pageSize = 40;
+        int pageSize = 32;
         int offset = (page - 1) * pageSize;
         
         // filter by the provided author name

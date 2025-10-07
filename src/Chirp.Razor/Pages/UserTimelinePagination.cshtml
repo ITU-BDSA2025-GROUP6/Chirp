@@ -12,10 +12,6 @@
 
 <div>
     <h2> @routeName's Timeline - Page @currentPage </h2>
-
-    @{
-        var number = 0; // REMOVE
-    }
     
     @if (Model.Cheeps.Any())
     {
@@ -25,14 +21,12 @@
                 <li>
                     <p>
                         <strong>
-                            @number.
                             <a href="/@cheep.Author">@cheep.Author</a>
                         </strong>
                         @cheep.Message
                         <small>&mdash; @cheep.Timestamp</small>
                     </p>
                 </li>
-                number++; // REMOVE
             }
             
         </ul>

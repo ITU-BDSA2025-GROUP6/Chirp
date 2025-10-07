@@ -98,7 +98,7 @@ jobs:
           
           7z a "${release_name}.zip" "${release_name}/."
           
-          rm -r "${{release_name}}"
+          rm -r "${release_name}"        
           
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2

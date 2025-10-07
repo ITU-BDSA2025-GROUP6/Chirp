@@ -6,10 +6,10 @@ public record CheepViewModel(string Author, string Message, string Timestamp);
 public interface ICheepService
 {
     public List<CheepViewModel> GetCheeps();
-    public List<CheepViewModel> GetCheeps(int page);
+    public List<CheepViewModel> GetCheeps(int page, int pageSize);
     public List<CheepViewModel> GetCheepsFromAuthor(string author);
 
-    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page);
+    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page, int pageSize);
 }
 
 public class CheepService : ICheepService
@@ -96,9 +96,8 @@ public class CheepService : ICheepService
         return dateTime.ToString("MM/dd/yy H:mm:ss");
     }
     
-    public List<CheepViewModel> GetCheeps(int page){
+    public List<CheepViewModel> GetCheeps(int page, int pageSize){
         {
-            int pageSize = 32;
             int offset = (page - 1) * pageSize;
             var cheeps = new List<CheepViewModel>();
         
@@ -130,10 +129,8 @@ public class CheepService : ICheepService
         }
     }
     
-    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page)
+    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page, int pageSize)
     {
-        
-        int pageSize = 32;
         int offset = (page - 1) * pageSize;
         
         // filter by the provided author name

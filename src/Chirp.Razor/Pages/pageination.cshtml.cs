@@ -8,6 +8,9 @@ public class PaginationModel : PageModel
     private readonly ICheepService _service;
 
     public List<CheepViewModel> Cheeps { get; set; } = new();
+    public bool hasNextPage { get; set; }
+    
+    public int currentPage { get; set; }
 
     public PaginationModel(ICheepService service)
     {
@@ -16,8 +19,12 @@ public class PaginationModel : PageModel
 
     public ActionResult OnGet(int index)
     {
-        var currentPage = index < 1 ? 1 : index;
-        Cheeps = _service.GetCheeps(currentPage);
+        int pageSize = 32;
+        currentPage = index < 1 ? 1 : index;
+        var cheeps = _service.GetCheeps(currentPage, pageSize+1);
+        
+        hasNextPage = cheeps.Count > pageSize;
+        Cheeps = cheeps.Take(pageSize).ToList();
         return Page();
     }
 }

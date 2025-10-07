@@ -1,14 +1,15 @@
-﻿@page "/"
-@model Chirp.Razor.Pages.PublicModel
+@page "/page/{index:int}"
+@model Chirp.Razor.Pages.PaginationModel
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
 
-    var currentPage = 1;
+    var routeIndexStr = HttpContext.GetRouteValue("index")?.ToString() ?? "1";
+    var currentPage = int.TryParse(routeIndexStr, out var tmp) && tmp > 0 ? tmp : 1;
 }
 
 <div>
-    <h2> Public Timeline </h2>
+    <h2> Public Timeline — Page @currentPage </h2>
 
     @if (Model.Cheeps.Any())
     {
@@ -26,13 +27,17 @@
                 </li>
             }
         </ul>
-        
+
         <nav class="pager" style="margin-top:1rem; display:flex; gap:.75rem;">
             @if (currentPage > 1)
             {
                 <a href="/page/@(currentPage - 1)">« Prev</a>
             }
-            <a href="/page/@(currentPage + 1)">Next »</a>
+            @if (Model.hasNextPage)
+            {
+                <a href="/page/@(currentPage + 1)">Next »</a>
+            }
+            
         </nav>
         
         <nav class="home" style="margin-top:1rem; display:flex; gap:.75rem;">

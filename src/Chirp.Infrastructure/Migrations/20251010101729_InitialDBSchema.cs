@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Chirp.Razor.Migrations
+namespace Chirp.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialDBSchema : Migration
@@ -31,7 +31,7 @@ namespace Chirp.Razor.Migrations
                 {
                     CheepID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Text = table.Column<string>(type: "TEXT", nullable: false),
+                    Text = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false),
                     Timestamp = table.Column<DateTime>(type: "TEXT", nullable: false),
                     AuthorID = table.Column<int>(type: "INTEGER", nullable: false)
                 },

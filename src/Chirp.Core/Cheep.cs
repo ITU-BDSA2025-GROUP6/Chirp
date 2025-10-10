@@ -1,4 +1,4 @@
-namespace Chirp.Razor;
+namespace Chirp.Core;
 using System.ComponentModel.DataAnnotations;
 
 public class Cheep

@@ -1,11 +1,20 @@
 namespace Chirp.Razor;
+using System.ComponentModel.DataAnnotations;
 
 public class Cheep
 {
-    public int CheepID { get; set; }
-    public string Text { get; set; }
-    public DateTime Timestamp { get; set; }
-    public Author Author { get; set; }
+    [Required]
+    public required int CheepID { get; set; }
+    
+    [Required] 
+    [StringLength(500)]
+    public required string Text { get; set; }
+    
+    [Required]
+    public required DateTime Timestamp { get; set; }
+    
+    [Required]
+    public required Author Author { get; set; }
     
     
 }

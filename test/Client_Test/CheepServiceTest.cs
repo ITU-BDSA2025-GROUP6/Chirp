@@ -1,3 +1,5 @@
+using Chirp.Infrastructure;
+
 namespace Client_Test;
 
 public class CheepServiceTest

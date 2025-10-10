@@ -12,8 +12,8 @@ public class Author
     [Required]
     public required string email { get; set; }
     
-    
-    public ICollection<Cheep>  cheeps { get; set; }
+    [Required]
+    public required ICollection<Cheep>  cheeps { get; set; }
 
    
     

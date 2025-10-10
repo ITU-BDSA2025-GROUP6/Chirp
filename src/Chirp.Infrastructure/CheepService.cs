@@ -1,9 +1,11 @@
-using Chirp.Infrastructure;
+namespace Chirp.Infrastructure;
+
 //using Microsoft.Data.Sqlite;
 public record CheepViewModel(string Author, string Message, string Timestamp);
 
 public class CheepService : ICheepService
 {
+    /*
     public List<CheepViewModel> GetCheeps()
     {
         DBFacade facade = new DBFacade();
@@ -202,6 +204,24 @@ public class CheepService : ICheepService
 
         return cheeps;
     }
+    */
+    public List<CheepViewModel> GetCheeps()
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<CheepViewModel> GetCheeps(int page, int pageSize)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<CheepViewModel> GetCheepsFromAuthor(string author)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page, int pageSize)
+    {
+        throw new NotImplementedException();
+    }
 }
-
-

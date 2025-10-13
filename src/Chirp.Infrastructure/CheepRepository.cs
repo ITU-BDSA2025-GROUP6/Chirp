@@ -23,6 +23,7 @@ public class CheepRepository : ICheepRepository
        
         Cheep newCheep = new Cheep
             {
+                CheepID = cheep.CheepID,
                 Text = cheep.Text,
                 Author = author,
                 Timestamp = cheep.Timestamp == default ? DateTime.UtcNow : cheep.Timestamp // if no time is found we set a current time
@@ -86,6 +87,7 @@ public async Task<int> InsertAuthor(string username, string email)
                     Timestamp = c.Timestamp
                 })
                 .Skip((page - 1) * 32)    // TODO check if offset is correct 
+                .Skip((page - 1) * 10)
                 .Take(32);
 
             return await query.ToListAsync();

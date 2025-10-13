@@ -23,7 +23,7 @@ public class CheepRepository : ICheepRepository
        
         Cheep newCheep = new Cheep
             {
-                CheepID = cheep.CheepID,
+                CheepID = cheep.CheepID, // *** Check if ID is set correct when method is used. ***
                 Text = cheep.Text,
                 Author = author,
                 Timestamp = cheep.Timestamp == default ? DateTime.UtcNow : cheep.Timestamp // if no time is found we set a current time

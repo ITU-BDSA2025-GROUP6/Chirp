@@ -1,20 +1,23 @@
-namespace Chirp.Core;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Cheep
+namespace Chirp.Core
 {
-    [Required]
-    public required int CheepID { get; set; }
-    
-    [Required] 
-    [StringLength(500)]
-    public required string Text { get; set; }
-    
-    [Required]
-    public required DateTime Timestamp { get; set; }
-    
-    [Required]
-    public required Author Author { get; set; }
-    
-    
+    public class Cheep
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Auto-increment primary key
+        public int CheepID { get; set; }
+
+        [Required]
+        [StringLength(500)]
+        public required string Text { get; set; }
+
+        [Required]
+        public DateTime Timestamp { get; set; }
+
+        // EF-core sees this as a foreign key
+        [Required]
+        public required Author Author { get; set; }
+    }
 }

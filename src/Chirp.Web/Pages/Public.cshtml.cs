@@ -1,4 +1,5 @@
 ﻿using Chirp.Infrastructure;
+using Chirp.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -7,7 +8,7 @@ namespace Chirp.Razor.Pages;
 public class PublicModel : PageModel
 {
     private readonly ICheepService _service;
-    public List<CheepViewModel> Cheeps { get; set; }
+    public Task<List<CheepDTO>> Cheeps { get; set; }
 
     public PublicModel(ICheepService service)
     {
@@ -16,7 +17,8 @@ public class PublicModel : PageModel
 
     public ActionResult OnGet()
     {
-        Cheeps = _service.GetCheeps(1, 32);
+        int currentpage = 1;
+        Cheeps = _service.GetCheeps(currentpage);
         return Page();
     }
 }

@@ -27,13 +27,13 @@ jobs:
         run: dotnet build Chirp.sln --configuration Release
 
       - name: Publish web project
-        run: dotnet publish src/Chirp.Web/Chirp.Web.csproj --configuration Release --no-build -o ${{env.DOTNET_ROOT}}/myapp
-
+        run: dotnet publish src/Chirp.Web/Chirp.Web.csproj --configuration Release --no-build -o ./publish
+      
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ./publish
 
   deploy:
     runs-on: ubuntu-latest
@@ -47,6 +47,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
+          path: ./publish # Explicitly download to a 'publish' directory
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -61,5 +62,6 @@ jobs:
         with:
           app-name: 'bdsa2025group6chirprazor'
           slot-name: 'Production'
-          package: .net-app
+          package: ./publish
+
           

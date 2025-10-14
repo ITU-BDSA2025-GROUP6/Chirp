@@ -61,5 +61,5 @@ jobs:
         with:
           app-name: 'bdsa2025group6chirprazor'
           slot-name: 'Production'
-          package: .
+          package: .net-app
           

@@ -1,10 +1,11 @@
-namespace Chirp.Infrastructure;
+namespace Chirp.Infrastructure.Interfaces;
 
 public interface ICheepService
 {
-    public List<CheepViewModel> GetCheeps();
-    public List<CheepViewModel> GetCheeps(int page, int pageSize);
-    public List<CheepViewModel> GetCheepsFromAuthor(string author);
+    Task<List<CheepDTO>> GetCheeps(int page);
+    Task<int> CreateCheep(CheepDTO newMessage);
+    Task<List<CheepDTO>> GetCheepsFromAuthor(string authorName, int page);
+    Task<int> UpdateCheep(CheepDTO alteredMessage);
 
-    public List<CheepViewModel> GetCheepsFromAuthor(string author, int page, int pageSize);
+    Task<int> InsertAuthor(string username, string email);
 }

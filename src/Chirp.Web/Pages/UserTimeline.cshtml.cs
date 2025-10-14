@@ -1,4 +1,5 @@
 ﻿using Chirp.Infrastructure;
+using Chirp.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -7,7 +8,7 @@ namespace Chirp.Razor.Pages;
 public class UserTimelineModel : PageModel
 {
     private readonly ICheepService _service;
-    public List<CheepViewModel> Cheeps { get; set; }
+    public Task<List<CheepDTO>> Cheeps { get; set; }
 
     public UserTimelineModel(ICheepService service)
     {
@@ -17,7 +18,7 @@ public class UserTimelineModel : PageModel
     public ActionResult OnGet(string author)
     {
         int currentPage = 1;
-        Cheeps = _service.GetCheepsFromAuthor(author, currentPage, 32);
+        Cheeps = _service.GetCheepsFromAuthor(author, currentPage);
         return Page();
     }
 }

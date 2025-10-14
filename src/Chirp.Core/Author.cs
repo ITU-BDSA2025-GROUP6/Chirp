@@ -1,21 +1,21 @@
-namespace Chirp.Core;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
-public class Author
+namespace Chirp.Core
 {
-    [Required]
-    public required int AuthorID  { get; set; }
-    
-    [Required]
-    public required string name { get; set; }
-    
-    [Required]
-    public required string email { get; set; }
-    
-    [Required]
-    public required ICollection<Cheep>  cheeps { get; set; }
+    public class Author
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Auto-increment
+        public int AuthorID { get; set; }
 
-   
-    
-    
+        [Required]
+        public required string Name { get; set; }
+
+        [Required]
+        public required string Email { get; set; }
+
+        public ICollection<Cheep> Cheeps { get; set; } = new List<Cheep>();
+    }
 }

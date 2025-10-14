@@ -1,6 +1,8 @@
 namespace Chirp.Infrastructure;
 
-// The data transfer object allows us to, via our LINQ Queries, Grab only the needed amount of data, for example, only "Text". This is done via not having "Required" fields
+// The data transfer object allows us to, via our LINQ Queries,
+// grab only the needed amount of data, for example, only "Text".
+// This is done via not having "Required" fields
 public class CheepDTO
 {
     public int CheepID { get; set; }

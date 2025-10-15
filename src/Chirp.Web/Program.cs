@@ -4,11 +4,18 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = "";
+// Check if code is running in production environment (like Azure)
+if (builder.Environment.IsProduction())
+{
+    var persistentDbPath = "/home/data/Chirp.db";
+    connectionString = $"Data Source={persistentDbPath};";
+}
+else
+{
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+}    
 builder.Services.AddDbContext<CheepDBContext>(options => options.UseSqlite(connectionString));
-
-
-
 
 // Add services to the container.
 builder.Services.AddRazorPages();

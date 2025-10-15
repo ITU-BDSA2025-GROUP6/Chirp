@@ -10,6 +10,12 @@ if (builder.Environment.IsProduction())
 {
     var persistentDbPath = "/home/data/Chirp.db";
     connectionString = $"Data Source={persistentDbPath};";
+    
+    var dbDir = Path.GetDirectoryName(persistentDbPath);
+    if (!string.IsNullOrEmpty(dbDir) && !Directory.Exists(dbDir))
+    {
+        Directory.CreateDirectory(dbDir);
+    }
 }
 else
 {

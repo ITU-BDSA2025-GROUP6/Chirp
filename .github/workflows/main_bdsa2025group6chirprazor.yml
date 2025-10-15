@@ -8,7 +8,11 @@ on:
     branches:
       - main
   workflow_dispatch:
-
+    
+env:
+  AZURE_WEBAPP_NAME: bdsa2025group6chirprazor
+  DOTNET_VERSION: "8.x"
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,17 +25,17 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.x'
+          dotnet-version: ${{ env.DOTNET_VERSION }}
           
-      - name: Restore dependencies
+      - name: Restore
         run: dotnet restore Chirp.sln
-        
+
       - name: Build solution
-        run: dotnet build Chirp.sln --configuration Release
+        run: dotnet build Chirp.sln --configuration Release --no-restore
 
       - name: Publish web project
-        run: dotnet publish src/Chirp.Web/Chirp.Web.csproj --configuration Release --no-build -o ./publish
-      
+        run: dotnet publish src/Chirp.Web/Chirp.Web.csproj --configuration Release -o ./publish --no-build
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -50,7 +54,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-          path: ./publish # Explicitly download to a 'publish' directory
+          path: ./publish
       
       - name: Login to Azure
         uses: azure/login@v2
@@ -63,10 +67,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'bdsa2025group6chirprazor'
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
           slot-name: 'Production'
           package: ./publish
-
           
-
-

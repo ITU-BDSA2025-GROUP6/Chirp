@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - main
+      - fix-database-path
+
   workflow_dispatch:
 
 env:

@@ -16,6 +16,3 @@ jobs:
           project: "BDSA Grp.6 Scrum Board"
           column: No Status
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-
-    steps:
-      - name: 

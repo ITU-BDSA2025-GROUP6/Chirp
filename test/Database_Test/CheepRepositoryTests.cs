@@ -17,6 +17,13 @@ public class CheepRepository_Tests : IDisposable
     {
         _connection = new SqliteConnection("Data Source=:memory:");
         _connection.Open();
+        
+        var options = new  DbContextOptionsBuilder<CheepDBContext>()
+            .UseSqlite(_connection)
+            .Options;
+        
+        _context = new CheepDBContext(options);
+        _context.Database.EnsureCreated();
     }
     
     public void Dispose()

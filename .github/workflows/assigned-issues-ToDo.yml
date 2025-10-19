@@ -14,7 +14,7 @@ jobs:
       - name: Move assigned issue to 'Todo' in Backlog project
         uses: alex-page/github-project-automation-plus@v0.8.3
         with:
-          project: Backlog
+          project: "BDSA Grp.6 Scrum Board"
           column: Todo
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           

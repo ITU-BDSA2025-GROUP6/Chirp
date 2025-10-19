@@ -10,7 +10,7 @@ namespace Chirp.Core
         public int CheepID { get; set; }
 
         [Required]
-        [StringLength(500)]
+        [StringLength(160)]
         public required string Text { get; set; }
 
         [Required]

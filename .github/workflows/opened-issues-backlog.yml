@@ -11,7 +11,8 @@ jobs:
   automate-project-columns:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/add-to-project@v1.0.1
+      - uses: alex-page/github-project-automation-plus@v0.8.3
         with:
-          project-url: "https://github.com/orgs/ITU-BDSA2025-GROUP6/projects/4"
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          project: "BDSA Grp.6 Scrum Board"
+          column: "No Status"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

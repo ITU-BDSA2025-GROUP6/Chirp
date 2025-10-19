@@ -1,3 +1,6 @@
+# This workflow is from: https://github.com/marketplace/actions/github-project-automation
+# Intended to automate the project board.
+
 name: Move new issues into No Status
 
 on:

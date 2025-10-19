@@ -1,3 +1,7 @@
+# This workflow is from: https://github.com/marketplace/actions/github-project-automation
+# Intended to automate the project board by moving issues when assigned to member to the Todo column.
+# It also adds them to the next iteration of the project, which is my contribution to this!
+
 name: Move assigned issues to the To Do column in the Project board
 on:
   issues: 
@@ -7,7 +11,16 @@ jobs:
   automate-project-columns:
     runs-on: ubuntu-latest
     steps: 
-      - uses: alex-page/github-project-automation-plus@v0.8.3
+      - name: Move assigned issue to 'Todo' in Backlog project
+        uses: alex-page/github-project-automation-plus@v0.8.3
         with:
           project: Backlog
           column: Todo
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Add assigned issue to 'Next Iteration' project
+        uses: alex-page/github-project-automation-plus@v0.8.3
+        with:
+          project: "Next Iteration"
+          column: Todo
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

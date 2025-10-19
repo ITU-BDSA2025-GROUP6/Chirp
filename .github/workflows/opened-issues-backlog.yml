@@ -15,5 +15,3 @@ jobs:
         with:
           project-url: "https://github.com/orgs/ITU-BDSA2025-GROUP6/projects/4"
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          field-values: |
-            Status: No Status

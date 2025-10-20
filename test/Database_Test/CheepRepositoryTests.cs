@@ -52,6 +52,18 @@ public class CheepRepository_Tests : IDisposable
         Assert.Equal("Test Author", createdCheep.Author.Name);
         Assert.Equal("Hello, this is a test cheep!", createdCheep.Text);
     }
+
+    [Fact]
+    public async Task CreateCheep_ShouldThrowExecptionIfCheepTooLong()
+    {
+        
+    }
+
+    [Fact]
+    public async Task InsertAuthor_ShouldThrowExecptionIfNameNotUnique()
+    {
+        
+    }
     
     public void Dispose()
     {

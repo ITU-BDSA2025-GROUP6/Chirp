@@ -16,12 +16,12 @@ namespace Chirp.Core
         [Required]
         public DateTime Timestamp { get; set; }
 
-        // EF-core sees this as a foreign key
+        //Unsure if this is required anymore
         [Required]
         public required Author Author { get; set; }
         
         [ForeignKey(nameof(Author))]
-        public int AuthorID { get; set; }   // 👈 explicit FK column
+        public int AuthorID { get; set; }
 
     }
 }

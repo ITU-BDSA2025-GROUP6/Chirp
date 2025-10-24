@@ -19,5 +19,9 @@ namespace Chirp.Core
         // EF-core sees this as a foreign key
         [Required]
         public required Author Author { get; set; }
+        
+        [ForeignKey(nameof(Author))]
+        public int AuthorID { get; set; }   // 👈 explicit FK column
+
     }
 }

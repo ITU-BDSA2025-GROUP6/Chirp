@@ -24,7 +24,12 @@ public class PaginationModel : PageModel
         int pageSize = 32;
         currentPage = index < 1 ? 1 : index;
         Cheeps = _service.GetCheeps(currentPage);
- 
+
+        if (_service.GetCheeps((currentPage + 1)).Result.Any())
+        {
+            hasNextPage = true;
+        }
+            
         return Page();
     }
 }

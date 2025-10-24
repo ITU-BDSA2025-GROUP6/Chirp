@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
-
     var routeIndexStr = HttpContext.GetRouteValue("index")?.ToString() ?? "1";
     var currentPage = int.TryParse(routeIndexStr, out var tmp) && tmp > 0 ? tmp : 1;
 }

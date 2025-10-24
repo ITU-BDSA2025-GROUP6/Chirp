@@ -51,58 +51,29 @@ jobs:
       - name: Run tests
         run: dotnet test -c Release
 
-  prepare-release:
-    name: Prepare Release
-    needs: test              
-    runs-on: ubuntu-latest
+  publish-and-release-webapp:
+    name: Publish and Release Web App
+    needs: test
     if: startsWith(github.ref, 'refs/tags/v')
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
-      
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: "Chirp ${{ github.ref_name }}"
-          draft: false
-          prerelease: false
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-  publish-web:
-    name: Publish Web Application
-    needs: prepare-release
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout Code
         uses: actions/checkout@v5
         
-      - name: Setup .NET 8
-        uses: actions/setup-dotnet@v5
+      - name: Setup .Net 8
+        uses: actions/setup-dotnet
         with:
           dotnet-version: 8.x
-      
-      - name: Publish Web App
+          
+      - name: Publish Web App for Release
         run: |
-          release_name="Chirp-Razor-${{ github.ref_name }}"
+          dotnet publish "src/Chirp.Web/Chirp.Web.csproj" -c Release -o release-output --self-contained false
+          zip -r "Chirp-Web-${{ github.ref_name }}.zip" ./release-output
           
-          dotnet publish "src/Chirp.Razor/Chirp.Razor.csproj" \
-            -c Release \
-            -o "${release_name}" \
-            --self-contained false
-          
-          7z a "${release_name}.zip" "${release_name}/."
-          
-          rm -r "${release_name}"        
-          
-      - name: Upload Release Asset
+      - name: Create GitHub Release and Upload Artifact
         uses: softprops/action-gh-release@v2
         with:
-          files: "Chirp-Razor-${{ github.ref_name }}.zip"
+          name: "Chirp ${{ github.ref_name }}"
+          generate_release_notes: true
+          files: "Chirp-Web-${{ github.ref_name }}.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

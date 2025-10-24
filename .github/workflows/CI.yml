@@ -54,13 +54,15 @@ jobs:
   publish-and-release-webapp:
     name: Publish and Release Web App
     needs: test
+    runs-on: ubuntu-latest
+    
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - name: Checkout Code
         uses: actions/checkout@v5
         
       - name: Setup .Net 8
-        uses: actions/setup-dotnet
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
           

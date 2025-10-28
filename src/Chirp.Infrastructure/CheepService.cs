@@ -14,10 +14,15 @@ public class CheepService : ICheepService
     {
         return await _repository.GetCheeps(page);
     }
-
+    
     public Task<int> CreateCheep(CheepDTO newMessage)
     {
         return _repository.CreateCheep(newMessage);
+    }
+
+    public Task<int> CreateAuthor(AuthorDTO newAuthor)
+    {
+        return _repository.CreateAuthor(newAuthor);
     }
 
     public Task<List<CheepDTO>> GetCheepsFromAuthor(string authorName, int page)

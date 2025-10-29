@@ -35,6 +35,16 @@ public class CheepService : ICheepService
         return _repository.UpdateCheep(alteredMessage);
     }
 
+    public Task<AuthorDTO> GetAuthorByName(string name)
+    {
+        return _repository.GetAuthorByName(name);
+    }
+    public Task<AuthorDTO> GetAuthorByEmail(string email)
+    {
+        return _repository.GetAuthorByEmail(email);
+    }
+    
+
     /*
     public Task<int> InsertAuthor(string username, string email)
     {

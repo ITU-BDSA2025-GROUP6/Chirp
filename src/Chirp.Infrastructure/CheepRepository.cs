@@ -55,16 +55,43 @@ public class CheepRepository : ICheepRepository
 
     public async Task<AuthorDTO> GetAuthorByName(string name)
     {
-        var author = await _dbContext.Authors
-            .FirstOrDefaultAsync(a => a.Name == name);
-        if (author != null)
+        try
         {
-            return new AuthorDTO
-                { AuthorID = author.AuthorID, Name = author.Name, Email = author.Email, Cheeps = author.Cheeps};
-        }
+            var author = await _dbContext.Authors
+                .FirstAsync(a => a.Name == name);
 
+            return new AuthorDTO
+            {
+                AuthorID = author.AuthorID,
+                Name = author.Name,
+                Email = author.Email,
+                Cheeps = author.Cheeps
+            };
+        }
+        catch (InvalidOperationException) 
         {
-            throw new InvalidOperationException("No such author: " + name);
+            throw new InvalidOperationException("No such author with name: " + name);
+        }
+    }
+    
+    public async Task<AuthorDTO> GetAuthorByEmail(string email)
+    {
+        try
+        {
+            var author = await _dbContext.Authors
+                .FirstAsync(a => a.Email == email);
+
+            return new AuthorDTO
+            {
+                AuthorID = author.AuthorID,
+                Name = author.Name,
+                Email = author.Email,
+                Cheeps = author.Cheeps
+            };
+        }
+        catch (InvalidOperationException)
+        {
+            throw new InvalidOperationException("No such author with email: " + email);
         }
     }
 

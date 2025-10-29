@@ -35,9 +35,11 @@ public class CheepService : ICheepService
         return _repository.UpdateCheep(alteredMessage);
     }
 
+    /*
     public Task<int> InsertAuthor(string username, string email)
     {
         return _repository.InsertAuthor(username, email);
     }
+    */
 
 }

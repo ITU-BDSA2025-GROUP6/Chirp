@@ -30,10 +30,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
         options.SignIn.RequireConfirmedAccount = true;
         options.Lockout.AllowedForNewUsers = true;
         options.Password.RequiredLength = 8;
-        options.Password.RequireNonAlphanumeric = true;
-        options.Password.RequireDigit = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequireLowercase = true;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireDigit = false;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireLowercase = false;
     })
     .AddEntityFrameworkStores<CheepDBContext>();
 

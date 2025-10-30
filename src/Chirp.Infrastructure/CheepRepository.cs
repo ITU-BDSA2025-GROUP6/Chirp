@@ -80,6 +80,7 @@ public class CheepRepository : ICheepRepository
         try
         {
             var author = await _dbContext.Authors
+                .Include(a => a.Cheeps)
                 .FirstAsync(a => a.Email == email);
 
             return new AuthorDTO

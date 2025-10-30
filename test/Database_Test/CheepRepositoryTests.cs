@@ -26,7 +26,11 @@ public class CheepRepository_Tests : IDisposable
         _context.Database.EnsureCreated();
         
         var author = new Author { AuthorID = 1, Name = "Test Author", Email = "test@author.com", Cheeps = new List<Cheep>() };
-        _context.Authors.Add(author);
+        var author2 = new Author {  AuthorID = 2, Name = "Test Author2", Email = "test2@email.com", Cheeps = new List<Cheep>() };
+        
+        //_context.Authors.Add(author);
+        //_context.Authors.Add(author2);
+        _context.Authors.AddRange(author, author2);
         _context.SaveChanges();
         
         _repository = new CheepRepository(_context);
@@ -66,12 +70,12 @@ public class CheepRepository_Tests : IDisposable
     }
 
     [Fact]
-    public async Task CreateAuthorTest()
+    public async Task CreateAuthorTest_ShouldAddAuthorToDatabase()
     {
         //Arrange
         var newAuthor = new AuthorDTO
         {
-            Name = "Test Author",
+            Name = "Test Author2",
             Email = "test@email.com",
         };
         
@@ -82,8 +86,28 @@ public class CheepRepository_Tests : IDisposable
         //Assert
         Assert.NotNull(createdAuthor);
         Assert.NotEqual(1, createdAuthor.AuthorID);
-        Assert.Equal("Test Author", createdAuthor.Name);
+        Assert.Equal(3, createdAuthor.AuthorID);
+        Assert.Equal("Test Author2", createdAuthor.Name);
         Assert.Equal("test@email.com", createdAuthor.Email);
+    }
+
+    [Fact]
+    public async Task GetAuthorByName_ShouldReturnAuthor()
+    {
+        //Arrange
+        var author = await _repository.GetAuthorByName("Test Author");
+        var author2 = await _repository.GetAuthorByName("Test Author2");
+        
+        Assert.NotNull(author);
+        Assert.Equal("Test Author", author.Name);
+        Assert.NotEmpty("Test Author");
+        Assert.NotNull(author.Cheeps);
+        
+        Assert.NotNull(author2);
+        Assert.Equal("Test Author2", author2.Name);
+        Assert.Equal("test2@email.com", author2.Email);
+        Assert.NotNull(author2.Cheeps);
+        
     }
     
     public void Dispose()

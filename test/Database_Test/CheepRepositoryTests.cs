@@ -64,6 +64,27 @@ public class CheepRepository_Tests : IDisposable
     {
         
     }
+
+    [Fact]
+    public async Task CreateAuthorTest()
+    {
+        //Arrange
+        var newAuthor = new AuthorDTO
+        {
+            Name = "Test Author",
+            Email = "test@email.com",
+        };
+        
+        //Act
+        await _repository.CreateAuthor(newAuthor);
+        var createdAuthor = await _context.Authors.FirstOrDefaultAsync(a => a.Email == newAuthor.Email);
+        
+        //Assert
+        Assert.NotNull(createdAuthor);
+        Assert.NotEqual(1, createdAuthor.AuthorID);
+        Assert.Equal("Test Author", createdAuthor.Name);
+        Assert.Equal("test@email.com", createdAuthor.Email);
+    }
     
     public void Dispose()
     {

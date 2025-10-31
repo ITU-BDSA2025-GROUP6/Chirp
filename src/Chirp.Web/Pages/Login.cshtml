@@ -12,13 +12,23 @@
 <div class="page">
     <div class="body">
         <form method="post">
-            <label for="username">Username:</label><br />
+            <label for="username">rec_Username:</label><br />
             <input type="text" id="username" name="username" required /><br />
 
-            <label for="password">Password:</label><br />
+            <label for="email">rec_Email:</label><br />
+            <input type="text" id="email" name="email" required /><br />
+
+            <label for="password">rec_Password:</label><br />
             <input type="password" id="password" name="password" required /><br />
 
             <input type="submit" value="Login" />
+        </form>
+
+        <form method="post" asp-page-handler="ExternalLogin" asp-route-provider="GitHub">
+            <button type="submit" class="github-button">
+                <img src="https://github.githubassets.com/favicons/favicon.png" alt="GitHub" width="20" style="vertical-align:middle; margin-right:8px;" />
+                Login with GitHub
+            </button>
         </form>
     </div>
 </div>

@@ -46,6 +46,7 @@ public class CheepRepository : ICheepRepository
         var newAuthor = new Author()
         {
             Name = author.Name,
+            Password = author.Password,
             Email = author.Email,
         };
         var queryResult = await _dbContext.Authors.AddAsync(newAuthor);

@@ -1,13 +1,22 @@
-name: Release (tagged build)
+name: Release Executables
 on:
   push:
-    tags: ['v*']  # git push origin v1.2.3
+    branches: [main]
+    tags: ['v*']
+  create: {}                       # catches tag creation from the UI
+  release:
+    types: [published]             # optional, still okay
 
 permissions:
   contents: write
 
 jobs:
   release:
+    # run only when it's a release OR a tag push v* OR a created tag that starts with v
+    if: >
+      github.event_name == 'release' ||
+      (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) ||
+      (github.event_name == 'create' && github.event.ref_type == 'tag' && startsWith(github.event.ref, 'v'))
     runs-on: ubuntu-latest
 
     steps:
@@ -17,9 +26,8 @@ jobs:
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
-          # IMPORTANT: do NOT set "cache: true" unless you commit packages.lock.json
+          cache: false   # important: avoid the lockfile error
 
-      # Build & test before publishing
       - name: Restore
         run: dotnet restore
       - name: Build
@@ -31,7 +39,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          tag="${{ github.ref_name }}"
+          tag="${{ github.event_name == 'release' && github.event.release.tag_name || (github.event_name == 'create' && github.event.ref || github.ref_name) }}"
           project="src/Chirp.Web/Chirp.Web.csproj"
           app="Chirp-Web"
           rids=(linux-x64 win-x64 osx-x64)   # add osx-arm64 if desired
@@ -39,12 +47,8 @@ jobs:
           mkdir -p out
           for rid in "${rids[@]}"; do
             outdir="${app}-${tag}-${rid}"
-
-            # Disable macOS code signing when cross-building on Linux
             mac_sign=""
-            if [[ "$rid" == osx-* ]]; then
-              mac_sign="-p:EnableMacOSCodeSign=false"
-            fi
+            [[ "$rid" == osx-* ]] && mac_sign="-p:EnableMacOSCodeSign=false"
 
             dotnet publish "$project" -c Release \
               --framework net8.0 \
@@ -56,17 +60,25 @@ jobs:
               $mac_sign \
               -o "$outdir"
 
-            # Zip the folder (keeps a single root in the archive)
             zip -r "out/${outdir}.zip" "$outdir"
             rm -rf "$outdir"
           done
 
-          ls -l out
-
       - name: Create GitHub Release and upload assets
         uses: softprops/action-gh-release@v2
+        if: github.event_name != 'release'  # if it's already a Release event, the release exists
         with:
-          name: "Chirp ${{ github.ref_name }}"
+          name: "Chirp ${{ github.event_name == 'create' && github.event.ref || github.ref_name }}"
+          generate_release_notes: true
+          files: out/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload assets to existing release (when event is release)
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'release'
+        with:
+          name: "Chirp ${{ github.event.release.tag_name }}"
           generate_release_notes: true
           files: out/*.zip
         env:

@@ -1,28 +1,32 @@
 name: Release (tagged build)
 on:
   push:
-    tags: ['v*']         
+    tags: ['v*']  # git push origin v1.2.3
 
 permissions:
-  contents: write       
+  contents: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v5
 
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.x       
+          dotnet-version: 8.x
+          # IMPORTANT: do NOT set "cache: true" unless you commit packages.lock.json
 
-      # Build before publishing
+      # Build & test before publishing
       - name: Restore
         run: dotnet restore
       - name: Build
         run: dotnet build -c Release --no-restore
-      # Publish framework-dependent single-file executables for each RID
+      - name: Test
+        run: dotnet test -c Release --no-build
+
       - name: Publish single-file (linux/win/mac) and zip
         shell: bash
         run: |
@@ -30,18 +34,26 @@ jobs:
           tag="${{ github.ref_name }}"
           project="src/Chirp.Web/Chirp.Web.csproj"
           app="Chirp-Web"
-          rids=(linux-x64 win-x64 osx-x64)   # add: osx-arm64 if desired
+          rids=(linux-x64 win-x64 osx-x64)   # add osx-arm64 if desired
 
           mkdir -p out
           for rid in "${rids[@]}"; do
             outdir="${app}-${tag}-${rid}"
+
+            # Disable macOS code signing when cross-building on Linux
+            mac_sign=""
+            if [[ "$rid" == osx-* ]]; then
+              mac_sign="-p:EnableMacOSCodeSign=false"
+            fi
 
             dotnet publish "$project" -c Release \
               --framework net8.0 \
               --runtime "$rid" \
               --self-contained false \
               -p:PublishSingleFile=true \
+              -p:PublishTrimmed=false \
               -p:DebugType=none -p:DebugSymbols=false \
+              $mac_sign \
               -o "$outdir"
 
             # Zip the folder (keeps a single root in the archive)

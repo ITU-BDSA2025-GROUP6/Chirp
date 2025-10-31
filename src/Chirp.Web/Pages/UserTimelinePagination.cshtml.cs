@@ -9,7 +9,7 @@ public class UserTimelinePaginationModel : PageModel
 {
     private readonly ICheepService _cheepService;
     
-    public Task<List<CheepDTO>> Cheeps { get; set; }
+    public Task<List<CheepDto>> Cheeps { get; set; }
     public bool hasNextPage { get; set; }
     public int currentPage { get; set; }
 

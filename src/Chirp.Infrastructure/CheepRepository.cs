@@ -14,7 +14,7 @@ public class CheepRepository : ICheepRepository
         _dbContext = dbContext;
     }
 
-    public async Task<int> CreateCheep(CheepDTO cheep)
+    public async Task<int> CreateCheep(CheepDto cheep)
     {
         // ChatGPT
         var author = await _dbContext.Authors
@@ -28,7 +28,7 @@ public class CheepRepository : ICheepRepository
 
         Cheep newCheep = new Cheep
         {
-            CheepID = cheep.CheepID, // *** Check if ID is set correct when method is used. ***
+            CheepID = cheep.CheepId, // *** Check if ID is set correct when method is used. ***
             Text = cheep.Text,
             Author = author,
             Timestamp = cheep.Timestamp == default
@@ -41,7 +41,7 @@ public class CheepRepository : ICheepRepository
         return queryResult.Entity.CheepID;
     }
 
-    public async Task<int> CreateAuthor(AuthorDTO author)
+    public async Task<int> CreateAuthor(AuthorDto author)
     {
         var newAuthor = new Author()
         {
@@ -53,7 +53,7 @@ public class CheepRepository : ICheepRepository
         return queryResult.Entity.AuthorID;
     }
 
-    public async Task<AuthorDTO> GetAuthorByName(string name)
+    public async Task<AuthorDto> GetAuthorByName(string name)
     {
         try
         {
@@ -61,9 +61,9 @@ public class CheepRepository : ICheepRepository
                 .Include(a => a.Cheeps)
                 .FirstAsync(a => a.Name == name);
 
-            return new AuthorDTO
+            return new AuthorDto
             {
-                AuthorID = author.AuthorID,
+                AuthorId = author.AuthorID,
                 Name = author.Name,
                 Email = author.Email,
                 Cheeps = author.Cheeps
@@ -75,7 +75,7 @@ public class CheepRepository : ICheepRepository
         }
     }
     
-    public async Task<AuthorDTO> GetAuthorByEmail(string email)
+    public async Task<AuthorDto> GetAuthorByEmail(string email)
     {
         try
         {
@@ -83,9 +83,9 @@ public class CheepRepository : ICheepRepository
                 .Include(a => a.Cheeps)
                 .FirstAsync(a => a.Email == email);
 
-            return new AuthorDTO
+            return new AuthorDto
             {
-                AuthorID = author.AuthorID,
+                AuthorId = author.AuthorID,
                 Name = author.Name,
                 Email = author.Email,
                 Cheeps = author.Cheeps
@@ -115,10 +115,10 @@ public class CheepRepository : ICheepRepository
     */
 
     // uses alter in UI to change the contect of a specefic message 
-    public async Task<int> UpdateCheep(CheepDTO alteredMessage)
+    public async Task<int> UpdateCheep(CheepDto alteredMessage)
     {
         
-        var existingCheep = await _dbContext.Cheeps.FindAsync(alteredMessage.CheepID);
+        var existingCheep = await _dbContext.Cheeps.FindAsync(alteredMessage.CheepId);
         if (existingCheep != null)
         {
             existingCheep.Text = alteredMessage.Text;
@@ -129,9 +129,9 @@ public class CheepRepository : ICheepRepository
         else
         {
             // Optionally handle not found case
-            throw new Exception($"Message with ID {alteredMessage.CheepID} not found.");
+            throw new Exception($"Message with ID {alteredMessage.CheepId} not found.");
         }
-        return alteredMessage.CheepID;
+        return alteredMessage.CheepId;
     }
 
     /// <summary>
@@ -139,13 +139,13 @@ public class CheepRepository : ICheepRepository
     /// </summary>
     /// <param name="page">The page to return cheeps for</param>
     /// <returns></returns>
-    public async Task<List<CheepDTO>> GetCheeps(int page)
+    public async Task<List<CheepDto>> GetCheeps(int page)
     {
         {
             var query = _dbContext.Cheeps
                 .Include(c => c.Author)
                 .OrderByDescending(c => c.Timestamp)
-                .Select(c => new CheepDTO   
+                .Select(c => new CheepDto   
                 {
                     Text = c.Text,
                     AuthorName = c.Author.Name,
@@ -158,13 +158,13 @@ public class CheepRepository : ICheepRepository
             return await query.ToListAsync();
         }
     }
-    public async Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int page)
+    public async Task<List<CheepDto>> GetCheepsFromAuthor(string author, int page)
     {
         var query = _dbContext.Cheeps
             .Include(c => c.Author)
             .Where(c => c.Author.Name == author)
             .OrderByDescending(c => c.Timestamp)
-            .Select(c => new CheepDTO   
+            .Select(c => new CheepDto   
             {
                 Text = c.Text,
                 AuthorName = c.Author.Name,

@@ -10,36 +10,36 @@ public class CheepService : ICheepService
         _repository = repository;
     }
 
-    public async Task<List<CheepDTO>> GetCheeps(int page)
+    public async Task<List<CheepDto>> GetCheeps(int page)
     {
         return await _repository.GetCheeps(page);
     }
     
-    public Task<int> CreateCheep(CheepDTO newMessage)
+    public Task<int> CreateCheep(CheepDto newMessage)
     {
         return _repository.CreateCheep(newMessage);
     }
 
-    public Task<int> CreateAuthor(AuthorDTO newAuthor)
+    public Task<int> CreateAuthor(AuthorDto newAuthor)
     {
         return _repository.CreateAuthor(newAuthor);
     }
 
-    public Task<List<CheepDTO>> GetCheepsFromAuthor(string authorName, int page)
+    public Task<List<CheepDto>> GetCheepsFromAuthor(string authorName, int page)
     {
         return _repository.GetCheepsFromAuthor(authorName, page);
     }
 
-    public Task<int> UpdateCheep(CheepDTO alteredMessage)
+    public Task<int> UpdateCheep(CheepDto alteredMessage)
     {
         return _repository.UpdateCheep(alteredMessage);
     }
 
-    public Task<AuthorDTO> GetAuthorByName(string name)
+    public Task<AuthorDto> GetAuthorByName(string name)
     {
         return _repository.GetAuthorByName(name);
     }
-    public Task<AuthorDTO> GetAuthorByEmail(string email)
+    public Task<AuthorDto> GetAuthorByEmail(string email)
     {
         return _repository.GetAuthorByEmail(email);
     }

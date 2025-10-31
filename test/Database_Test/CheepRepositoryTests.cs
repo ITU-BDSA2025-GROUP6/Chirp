@@ -40,7 +40,7 @@ public class CheepRepository_Tests : IDisposable
     public async Task createCheep_ShouldAddCheepToDatabase()
     {
         //Arrange
-        var newCheep = new CheepDTO
+        var newCheep = new CheepDto
         {
             AuthorName = "Test Author",
             Text = "Hello, this is a test cheep!",
@@ -73,7 +73,7 @@ public class CheepRepository_Tests : IDisposable
     public async Task CreateAuthorTest_ShouldAddAuthorToDatabase()
     {
         //Arrange
-        var newAuthor = new AuthorDTO
+        var newAuthor = new AuthorDto
         {
             Name = "Test Author2",
             Email = "test@email.com",
@@ -117,7 +117,7 @@ public class CheepRepository_Tests : IDisposable
         // var author2 = await _repository.GetAuthorByEmail("test2@email.com");
         
         Assert.NotNull(author);
-        Assert.Equal(1, author.AuthorID);
+        Assert.Equal(1, author.AuthorId);
         Assert.Equal("Test Author", author.Name);
         Assert.Equal("test@author.com", author.Email);
         Assert.NotNull(author.Cheeps);

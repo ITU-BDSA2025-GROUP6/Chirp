@@ -60,7 +60,7 @@ jobs:
           tag="${{ github.event_name == 'release' && github.event.release.tag_name || github.ref_name }}"
           rid="${{ matrix.target }}"
           app="Chirp-Web"
-          project="Chirp.Web/Chirp.Web.csproj"
+          project="src/Chirp.Web/Chirp.Web.csproj"
           outdir="${app}-${tag}-${rid}"
 
           # Disable macOS codesigning for cross-builds

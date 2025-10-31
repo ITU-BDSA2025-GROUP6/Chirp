@@ -20,12 +20,8 @@ public class UserTimelinePaginationModel : PageModel
     
     public ActionResult OnGet(string author, int index)
     {
-        int pageSize = 32;
         currentPage = index < 1 ? 1 : index;
-        var cheeps = _cheepService.GetCheepsFromAuthor(author, currentPage);
-        
-        //hasNextPage = cheeps.Count > pageSize;
-        //Cheeps = cheeps.Take(pageSize).ToList();
+        Cheeps = _cheepService.GetCheeps(currentPage); 
         
         return Page();
     }

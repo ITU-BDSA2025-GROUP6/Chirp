@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Core
 {
-    public class Author : IdentityUser
+    public class Author : IdentityUser<int>
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Auto-increment

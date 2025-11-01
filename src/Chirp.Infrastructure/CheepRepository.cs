@@ -63,7 +63,7 @@ public class CheepRepository : ICheepRepository
 
             return new AuthorDTO
             {
-                AuthorID = author.AuthorID,
+                AuthorID = author.Id,
                 Name = author.Name,
                 Email = author.Email,
                 Cheeps = author.Cheeps
@@ -85,7 +85,7 @@ public class CheepRepository : ICheepRepository
 
             return new AuthorDTO
             {
-                AuthorID = author.AuthorID,
+                AuthorID = author.Id,
                 Name = author.Name,
                 Email = author.Email,
                 Cheeps = author.Cheeps

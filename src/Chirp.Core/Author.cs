@@ -11,7 +11,11 @@ namespace Chirp.Core
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Auto-increment
         public int AuthorID { get; set; }
-
+        */                                       /// <summary>
+                                                 ///  This ID is completely redundant and actually is never used in the code, 
+                                                 ///  since IdentityUser overrules the primary key role
+                                                 /// </summary>
+        
         [Required]
         public required string Name { get; set; }
 

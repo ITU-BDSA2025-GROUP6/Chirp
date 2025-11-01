@@ -50,7 +50,7 @@ public class CheepRepository : ICheepRepository
         };
         var queryResult = await _dbContext.Authors.AddAsync(newAuthor);
         await _dbContext.SaveChangesAsync();
-        return queryResult.Entity.AuthorID;
+        return queryResult.Entity.Id;
     }
 
     public async Task<AuthorDTO> GetAuthorByName(string name)

@@ -19,9 +19,10 @@ namespace Chirp.Core
         [Required]
         public required string Name { get; set; }
 
+        /* This is also a built-in attribute in IdentityUser and thus is redundant
         [Required]
         public required string Email { get; set; }
-
+        */
         public ICollection<Cheep> Cheeps { get; set; } = new List<Cheep>();
     }
 }

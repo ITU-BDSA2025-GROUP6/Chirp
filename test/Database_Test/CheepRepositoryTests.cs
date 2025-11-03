@@ -117,7 +117,7 @@ public class CheepRepository_Tests : IDisposable
         // var author2 = await _repository.GetAuthorByEmail("test2@email.com");
         
         Assert.NotNull(author);
-        Assert.Equal(1, author.AuthorID);
+        Assert.Equal(1, author.Id);
         Assert.Equal("Test Author", author.Name);
         Assert.Equal("test@author.com", author.Email);
         Assert.NotNull(author.Cheeps);

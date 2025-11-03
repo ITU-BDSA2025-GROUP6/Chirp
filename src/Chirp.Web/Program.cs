@@ -35,6 +35,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
         options.Password.RequireUppercase = false;
         options.Password.RequireLowercase = false;
     })
+    .AddRoles<IdentityRole<int>>()
     .AddEntityFrameworkStores<CheepDBContext>();
 
 // Add services to the container.

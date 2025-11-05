@@ -1,21 +1,28 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Core
 {
-    public class Author
+    public class Author : IdentityUser<int>
     {
+        /*
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Auto-increment
         public int AuthorID { get; set; }
-
+        */                                       /// <summary>
+                                                 ///  This ID is completely redundant and actually is never used in the code, 
+                                                 ///  since IdentityUser overrules the primary key role
+                                                 /// </summary>
+        
         [Required]
         public required string Name { get; set; }
 
+        /* This is also a built-in attribute in IdentityUser and thus is redundant
         [Required]
         public required string Email { get; set; }
-
+        */
         public ICollection<Cheep> Cheeps { get; set; } = new List<Cheep>();
     }
 }

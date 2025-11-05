@@ -25,7 +25,7 @@ else
 builder.Services.AddDbContext<CheepDBContext>(options => options.UseSqlite(connectionString));
 
 // Adds the Identity services to the DI container and uses a custom user type, ApplicationUser
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+builder.Services.AddDefaultIdentity<IdentityUser<int>>(options =>
     {
         options.SignIn.RequireConfirmedAccount = true;
         options.Lockout.AllowedForNewUsers = true;

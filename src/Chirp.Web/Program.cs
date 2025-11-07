@@ -2,6 +2,7 @@ using Chirp.Core;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,6 +40,7 @@ builder.Services.AddIdentity<Author, IdentityRole<int>>(options =>
     .AddRoles<IdentityRole<int>>()
     .AddEntityFrameworkStores<CheepDBContext>();
 
+builder.Services.AddSingleton<IEmailSender, NoOpEmailSender>();
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepService, CheepService>();

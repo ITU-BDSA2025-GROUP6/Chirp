@@ -29,7 +29,8 @@ public class PublicModel : PageModel
     {
         if (!(User.Identity?.IsAuthenticated ?? false ))
         {
-            return Redirect("/login");
+            //return Redirect("/login");
+            return Redirect("/");
         }
         
         CheepDTO newcheep = new CheepDTO // not 100% but should automaticlly incremnt the id, check if this is the case.

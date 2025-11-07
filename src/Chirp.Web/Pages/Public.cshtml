@@ -12,18 +12,11 @@
     
     <div class="cheepbox">
         <h3>Chirp, @(User.Identity.Name )little bird</h3>
-        @if (User.Identity?.IsAuthenticated ?? false)
-        {
-            <form method="post">
-                <input style="float: left" type="text" asp-for="Text">
-                <input type="submit" value="Share">
-            </form>
-        } else {
-            <form method="get" action="/login">
-                <input style="float: left" type="text" asp-for="Text">
-                <input type="submit" value="Share">
-            </form>
-        }
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input style="float: left" type="text" asp-for="Text">
+            <input type="submit" value="Share">
+        </form>
     </div>
 
     @if (Model.Cheeps.Result.Any())

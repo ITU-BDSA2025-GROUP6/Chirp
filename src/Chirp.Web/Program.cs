@@ -1,3 +1,4 @@
+using Chirp.Core;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +26,7 @@ else
 builder.Services.AddDbContext<CheepDBContext>(options => options.UseSqlite(connectionString));
 
 // Adds the Identity services to the DI container and uses a custom user type, ApplicationUser
-builder.Services.AddDefaultIdentity<IdentityUser<int>>(options =>
+builder.Services.AddIdentity<Author, IdentityRole<int>>(options =>
     {
         options.SignIn.RequireConfirmedAccount = true;
         options.Lockout.AllowedForNewUsers = true;

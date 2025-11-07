@@ -19,6 +19,55 @@ public class Tests : PageTest
     {
         Assert.Pass();
     }
+    
+    [Test]
+    public async Task HasTitle()
+    {
+        await Page.GotoAsync("http://localhost:5273");
+
+        // Expect a title "to contain" a substring.
+        await Expect(Page).ToHaveTitleAsync(new Regex("Chirp!"));
+    }
+    
+    [Test]
+    public async Task GetStartedLink()
+    {
+        await Page.GotoAsync("http://localhost:5273");
+
+        // Click the get started link.
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Register" }).ClickAsync();
+
+        // Expects page to have a heading with the name of Installation.
+        await Expect(Page.GetByRole(AriaRole.Heading, new() { Name = "Register", Exact = true})).ToBeVisibleAsync();
+    }
+    
+    [Test]
+    public async Task PlaywrightTest1()
+    {
+        await Page.GotoAsync("http://localhost:5273/");
+
+        await Page.GetByRole(AriaRole.Paragraph)
+            .Filter(new() { HasText = "Jacqualine Gilcoine Starbuck" })
+            .GetByRole(AriaRole.Link)
+            .ClickAsync();
+
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Next »" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Public timeline" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Heading, new() { Name = "Log in", Exact = true }).ClickAsync();
+        await Page.GetByRole(AriaRole.Heading, new() { Name = "Use a local account to log in." }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Forgot your password?" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "article about setting up this" }).ClickAsync();
+        await Page.GotoAsync("http://localhost:5273/Identity/Account/Login");
+
+        // Assertion
+        StringAssert.Contains("Log in", await Page.TitleAsync());
+        Assert.AreEqual("Log in", await Page.TitleAsync());
+    }
+    
+    
+    // EXAMPLE TEST CASE FROM SESSION_09: 
+    [Test]
     public async Task HomepageHasPlaywrightInTitleAndGetStartedLinkLinkingtoTheIntroPage()
     {
         await Page.GotoAsync("https://playwright.dev");

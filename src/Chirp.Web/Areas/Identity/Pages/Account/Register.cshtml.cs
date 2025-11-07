@@ -98,9 +98,16 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+            
+            /// <summary>
+            ///     This has been added to meet the requirement of a name for our users
+            /// </summary>
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "full name")]
+            public string Name { get; set; }
         }
-
-
+        
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;

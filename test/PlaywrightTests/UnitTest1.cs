@@ -1,8 +1,12 @@
+using Microsoft.Playwright;
+using Microsoft.Playwright.NUnit;
+using System.Text.RegularExpressions;
+
 namespace PlaywrightTests;
 
 [Parallelizable(ParallelScope.Self)]
 [TestFixture]
-public class Tests
+public class Tests : PageTest
 // Terminal command: pwsh bin/Debug/net8.0/playwright.ps1 codegen  http://localhost:5273 
 {
     [SetUp]

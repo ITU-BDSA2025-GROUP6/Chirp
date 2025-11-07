@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Infrastructure", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Core", "src\Chirp.Core\Chirp.Core.csproj", "{E514B715-2442-4764-A24F-51D092922861}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaywrightTests", "test\PlaywrightTests\PlaywrightTests.csproj", "{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,18 @@ Global
 		{E514B715-2442-4764-A24F-51D092922861}.Release|x64.Build.0 = Release|Any CPU
 		{E514B715-2442-4764-A24F-51D092922861}.Release|x86.ActiveCfg = Release|Any CPU
 		{E514B715-2442-4764-A24F-51D092922861}.Release|x86.Build.0 = Release|Any CPU
+		{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}.Debug|x64.Build.0 = Debug|Any CPU
+		{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}.Debug|x86.Build.0 = Debug|Any CPU
+		{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}.Release|x64.ActiveCfg = Release|Any CPU
+		{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}.Release|x64.Build.0 = Release|Any CPU
+		{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}.Release|x86.ActiveCfg = Release|Any CPU
+		{2586DEBD-B8E9-4E17-AD93-56AE54AF7DD4}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using System.Text.RegularExpressions;
@@ -9,6 +10,8 @@ namespace PlaywrightTests;
 public class Tests : PageTest
 // Terminal command: pwsh bin/Debug/net8.0/playwright.ps1 codegen  http://localhost:5273 
 {
+    private const string Url = "http://localhost:5273"; 
+    
     [SetUp]
     public void Setup()
     {
@@ -23,7 +26,7 @@ public class Tests : PageTest
     [Test]
     public async Task HasTitle()
     {
-        await Page.GotoAsync("http://localhost:5273");
+        await Page.GotoAsync(Url);
 
         // Expect a title "to contain" a substring.
         await Expect(Page).ToHaveTitleAsync(new Regex("Chirp!"));
@@ -32,7 +35,7 @@ public class Tests : PageTest
     [Test]
     public async Task GetStartedLink()
     {
-        await Page.GotoAsync("http://localhost:5273");
+        await Page.GotoAsync(Url);
 
         // Click the get started link.
         await Page.GetByRole(AriaRole.Link, new() { Name = "Register" }).ClickAsync();
@@ -44,7 +47,7 @@ public class Tests : PageTest
     [Test]
     public async Task PlaywrightTest1()
     {
-        await Page.GotoAsync("http://localhost:5273/");
+        await Page.GotoAsync(Url);
 
         await Page.GetByRole(AriaRole.Paragraph)
             .Filter(new() { HasText = "Jacqualine Gilcoine Starbuck" })
@@ -64,7 +67,20 @@ public class Tests : PageTest
         StringAssert.Contains("Log in", await Page.TitleAsync());
         Assert.AreEqual("Log in", await Page.TitleAsync());
     }
-    
+
+    [Test]
+    public async Task GoToRegisterPage()
+    {
+        await Page.GotoAsync(Url);
+        await Page.ClickAsync("text=Register");
+        await Page.ScreenshotAsync(new PageScreenshotOptions
+        {
+            Path = "register.png"
+        });
+
+        var isExist = await Page.Locator("text=Use another service to register.").IsVisibleAsync();
+        Assert.That(isExist, Is.True);
+    }
     
     // EXAMPLE TEST CASE FROM SESSION_09: 
     [Test]

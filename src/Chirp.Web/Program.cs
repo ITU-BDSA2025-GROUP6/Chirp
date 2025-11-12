@@ -38,7 +38,8 @@ builder.Services.AddIdentity<Author, IdentityRole<int>>(options =>
         options.Password.RequireLowercase = false;
     })
     .AddRoles<IdentityRole<int>>()
-    .AddEntityFrameworkStores<CheepDBContext>();
+    .AddEntityFrameworkStores<CheepDBContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender, NoOpEmailSender>();
 // Add services to the container.

@@ -1,16 +1,18 @@
-using System.Diagnostics;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace PlaywrightTests;
 
 [Parallelizable(ParallelScope.Self)]
-[TestFixture]
+[TestFixture] 
 public class Tests : PageTest
 // Terminal command: pwsh bin/Debug/net8.0/playwright.ps1 codegen  http://localhost:5273 
 {
     private const string Url = "http://localhost:5273"; 
+    //private const string Url = "https://bdsa2025group6chirp.azurewebsites.net/";
     
     [SetUp]
     public void Setup()

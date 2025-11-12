@@ -1,4 +1,5 @@
 using Chirp.Infrastructure;
+using Chirp.Core;
 using Chirp.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,9 +26,10 @@ else
 builder.Services.AddDbContext<CheepDBContext>(options => options.UseSqlite(connectionString));
 
 // Adds the Identity services to the DI container and uses a custom user type, ApplicationUser
-builder.Services.AddDefaultIdentity<IdentityUser<int>>(options =>
+builder.Services.AddDefaultIdentity<Author>(options =>
     {
         options.SignIn.RequireConfirmedAccount = true;
+        options.User.RequireUniqueEmail = true;
         options.Lockout.AllowedForNewUsers = true;
         options.Password.RequiredLength = 8;
         options.Password.RequireNonAlphanumeric = false;
@@ -35,8 +37,8 @@ builder.Services.AddDefaultIdentity<IdentityUser<int>>(options =>
         options.Password.RequireUppercase = false;
         options.Password.RequireLowercase = false;
     })
-    .AddRoles<IdentityRole<int>>()
-    .AddEntityFrameworkStores<CheepDBContext>();
+    .AddEntityFrameworkStores<CheepDBContext>()
+    .AddDefaultTokenProviders();
 
 // Add services to the container.
 builder.Services.AddRazorPages();

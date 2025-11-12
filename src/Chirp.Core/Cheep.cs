@@ -19,6 +19,6 @@ namespace Chirp.Core
         public Author Author { get; set; }
         
         [ForeignKey(nameof(Author))]
-        public int AuthorID { get; set; }
+        public string AuthorID { get; set; }
     }
 }

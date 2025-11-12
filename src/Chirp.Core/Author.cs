@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Core
 {
-    public class Author : IdentityUser<int>
-    {
-   public ICollection<Cheep> Cheeps { get; set; } = new List<Cheep>();
+    public class Author : IdentityUser
+    { 
+        public ICollection<Cheep> Cheeps { get; set; } = new List<Cheep>();
     }
 }

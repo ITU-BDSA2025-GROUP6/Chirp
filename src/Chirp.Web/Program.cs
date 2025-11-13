@@ -1,8 +1,7 @@
-using Chirp.Core;
 using Chirp.Infrastructure;
+using Chirp.Core;
 using Chirp.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,9 +26,10 @@ else
 builder.Services.AddDbContext<CheepDBContext>(options => options.UseSqlite(connectionString));
 
 // Adds the Identity services to the DI container and uses a custom user type, ApplicationUser
-builder.Services.AddIdentity<Author, IdentityRole<int>>(options =>
+builder.Services.AddDefaultIdentity<Author>(options =>
     {
         options.SignIn.RequireConfirmedAccount = true;
+        options.User.RequireUniqueEmail = true;
         options.Lockout.AllowedForNewUsers = true;
         options.Password.RequiredLength = 8;
         options.Password.RequireNonAlphanumeric = false;
@@ -37,10 +37,8 @@ builder.Services.AddIdentity<Author, IdentityRole<int>>(options =>
         options.Password.RequireUppercase = false;
         options.Password.RequireLowercase = false;
     })
-    .AddRoles<IdentityRole<int>>()
     .AddEntityFrameworkStores<CheepDBContext>();
 
-builder.Services.AddSingleton<IEmailSender, NoOpEmailSender>();
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepService, CheepService>();

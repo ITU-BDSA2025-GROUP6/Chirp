@@ -20,10 +20,10 @@ public class CheepService : ICheepService
         return _repository.CreateCheep(newMessage);
     }
 
-    public Task<int> CreateAuthor(AuthorDTO newAuthor)
+    /* public Task<int> CreateAuthor(AuthorDTO newAuthor)
     {
         return _repository.CreateAuthor(newAuthor);
-    }
+    }*/
 
     public Task<List<CheepDTO>> GetCheepsFromAuthor(string authorName, int page)
     {
@@ -43,13 +43,4 @@ public class CheepService : ICheepService
     {
         return _repository.GetAuthorByEmail(email);
     }
-    
-
-    /*
-    public Task<int> InsertAuthor(string username, string email)
-    {
-        return _repository.InsertAuthor(username, email);
-    }
-    */
-
 }

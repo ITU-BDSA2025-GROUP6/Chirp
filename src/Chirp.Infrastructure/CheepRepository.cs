@@ -18,7 +18,7 @@ public class CheepRepository : ICheepRepository
     {
         // ChatGPT
         var author = await _dbContext.Authors
-            .FirstOrDefaultAsync(a => a.Name == cheep.AuthorName);
+            .FirstOrDefaultAsync(a => a.UserName == cheep.AuthorName);
         // End ChatGPT     
 
         if (author == null)
@@ -41,30 +41,18 @@ public class CheepRepository : ICheepRepository
         return queryResult.Entity.CheepID;
     }
 
-    public async Task<int> CreateAuthor(AuthorDTO author)
-    {
-        var newAuthor = new Author()
-        {
-            Name = author.Name,
-            Email = author.Email,
-        };
-        var queryResult = await _dbContext.Authors.AddAsync(newAuthor);
-        await _dbContext.SaveChangesAsync();
-        return queryResult.Entity.Id;
-    }
-
     public async Task<AuthorDTO> GetAuthorByName(string name)
     {
         try
         {
             var author = await _dbContext.Authors
                 .Include(a => a.Cheeps)
-                .FirstAsync(a => a.Name == name);
+                .FirstAsync(a => a.UserName == name);
 
             return new AuthorDTO
             {
                 Id = author.Id,
-                Name = author.Name,
+                Name = author.UserName,
                 Email = author.Email,
                 Cheeps = author.Cheeps
             };
@@ -86,7 +74,7 @@ public class CheepRepository : ICheepRepository
             return new AuthorDTO
             {
                 Id = author.Id,
-                Name = author.Name,
+                Name = author.UserName,
                 Email = author.Email,
                 Cheeps = author.Cheeps
             };
@@ -96,23 +84,7 @@ public class CheepRepository : ICheepRepository
             throw new InvalidOperationException("No such author with email: " + email);
         }
     }
-
-    /*
-    public async Task<int> InsertAuthor(string username, string email)
-    {
-        var newAuthor = new Author
-        {
-            Name = username,
-            Email = email,
-            Cheeps = new List<Cheep>(),
-        };
-
-        _dbContext.Authors.Add(newAuthor);
-        await _dbContext.SaveChangesAsync();
-
-        return newAuthor.AuthorID;
-    }
-    */
+    
 
     // uses alter in UI to change the contect of a specefic message 
     public async Task<int> UpdateCheep(CheepDTO alteredMessage)
@@ -148,7 +120,7 @@ public class CheepRepository : ICheepRepository
                 .Select(c => new CheepDTO   
                 {
                     Text = c.Text,
-                    AuthorName = c.Author.Name,
+                    AuthorName = c.Author.UserName,
                     Timestamp = c.Timestamp
                 })
                 .Skip((page - 1) * 32)    // TODO check if offset is correct 
@@ -162,12 +134,12 @@ public class CheepRepository : ICheepRepository
     {
         var query = _dbContext.Cheeps
             .Include(c => c.Author)
-            .Where(c => c.Author.Name == author)
+            .Where(c => c.Author.UserName == author)
             .OrderByDescending(c => c.Timestamp)
             .Select(c => new CheepDTO   
             {
                 Text = c.Text,
-                AuthorName = c.Author.Name,
+                AuthorName = c.Author.UserName,
                 Timestamp = c.Timestamp
             })
             .Skip((page - 1) * 32)    // kept old offset logic, TODO check if correct                      
@@ -177,3 +149,38 @@ public class CheepRepository : ICheepRepository
     }
     
 }
+
+
+
+///// CREATE METHODS - COVERED BY IDENTITY CORE NOW
+
+/*
+    public async Task<int> CreateAuthor(AuthorDTO author)
+    {
+        var newAuthor = new Author()
+        {
+            UserName = author.Name,
+            Email = author.Email,
+        };
+        var queryResult = await _dbContext.Authors.AddAsync(newAuthor);
+        await _dbContext.SaveChangesAsync();
+        return queryResult.Entity.Id();
+    }
+*/
+
+/*
+    public async Task<int> InsertAuthor(string username, string email)
+    {
+        var newAuthor = new Author
+        {
+            Name = username,
+            Email = email,
+            Cheeps = new List<Cheep>(),
+        };
+
+        _dbContext.Authors.Add(newAuthor);
+        await _dbContext.SaveChangesAsync();
+
+        return newAuthor.AuthorID;
+    }
+    */

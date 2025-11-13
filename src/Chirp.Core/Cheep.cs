@@ -16,11 +16,9 @@ namespace Chirp.Core
         [Required]
         public DateTime Timestamp { get; set; }
 
-        //Unsure if this is required anymore
-        [Required]
-        public required Author Author { get; set; }
+        public Author Author { get; set; }
         
         [ForeignKey(nameof(Author))]
-        public int AuthorID { get; set; }
+        public string AuthorID { get; set; }
     }
 }

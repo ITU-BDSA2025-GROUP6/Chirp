@@ -9,18 +9,18 @@ public static class DbInitializer
     {
         if (!(chirpContext.Authors.Any() && chirpContext.Cheeps.Any()))
         {
-            var a1 = new Author() { Id = 1, Name = "Roger Histand", Email = "Roger+Histand@hotmail.com", Cheeps = new List<Cheep>() };
-            var a2 = new Author() { Id = 2, Name = "Luanna Muro", Email = "Luanna-Muro@ku.dk", Cheeps = new List<Cheep>() };
-            var a3 = new Author() { Id = 3, Name = "Wendell Ballan", Email = "Wendell-Ballan@gmail.com", Cheeps = new List<Cheep>() };
-            var a4 = new Author() { Id = 4, Name = "Nathan Sirmon", Email = "Nathan+Sirmon@dtu.dk", Cheeps = new List<Cheep>() };
-            var a5 = new Author() { Id = 5, Name = "Quintin Sitts", Email = "Quintin+Sitts@itu.dk", Cheeps = new List<Cheep>() };
-            var a6 = new Author() { Id = 6, Name = "Mellie Yost", Email = "Mellie+Yost@ku.dk", Cheeps = new List<Cheep>() };
-            var a7 = new Author() { Id = 7, Name = "Malcolm Janski", Email = "Malcolm-Janski@gmail.com", Cheeps = new List<Cheep>() };
-            var a8 = new Author() { Id = 8, Name = "Octavio Wagganer", Email = "Octavio.Wagganer@dtu.dk", Cheeps = new List<Cheep>() };
-            var a9 = new Author() { Id = 9, Name = "Johnnie Calixto", Email = "Johnnie+Calixto@itu.dk", Cheeps = new List<Cheep>() };
-            var a10 = new Author() { Id = 10, Name = "Jacqualine Gilcoine", Email = "Jacqualine.Gilcoine@gmail.com", Cheeps = new List<Cheep>() };
-            var a11 = new Author() { Id = 11, Name = "Helge", Email = "ropf@itu.dk", Cheeps = new List<Cheep>() };
-            var a12 = new Author() { Id = 12, Name = "Adrian", Email = "adho@itu.dk", Cheeps = new List<Cheep>() };
+            var a1 = new Author() { Id = "1", UserName = "Roger Histand", Email = "Roger+Histand@hotmail.com", Cheeps = new List<Cheep>() };
+            var a2 = new Author() { Id = "2", UserName = "Luanna Muro", Email = "Luanna-Muro@ku.dk", Cheeps = new List<Cheep>() };
+            var a3 = new Author() { Id = "3", UserName = "Wendell Ballan", Email = "Wendell-Ballan@gmail.com", Cheeps = new List<Cheep>() };
+            var a4 = new Author() { Id = "4", UserName = "Nathan Sirmon", Email = "Nathan+Sirmon@dtu.dk", Cheeps = new List<Cheep>() };
+            var a5 = new Author() { Id = "5", UserName = "Quintin Sitts", Email = "Quintin+Sitts@itu.dk", Cheeps = new List<Cheep>() };
+            var a6 = new Author() { Id = "6", UserName = "Mellie Yost", Email = "Mellie+Yost@ku.dk", Cheeps = new List<Cheep>() };
+            var a7 = new Author() { Id = "7", UserName = "Malcolm Janski", Email = "Malcolm-Janski@gmail.com", Cheeps = new List<Cheep>() };
+            var a8 = new Author() { Id = "8", UserName = "Octavio Wagganer", Email = "Octavio.Wagganer@dtu.dk", Cheeps = new List<Cheep>() };
+            var a9 = new Author() { Id = "9", UserName = "Johnnie Calixto", Email = "Johnnie+Calixto@itu.dk", Cheeps = new List<Cheep>() };
+            var a10 = new Author() { Id = "10", UserName = "Jacqualine Gilcoine", Email = "Jacqualine.Gilcoine@gmail.com", Cheeps = new List<Cheep>() };
+            var a11 = new Author() { Id = "11", UserName = "Helge", Email = "ropf@itu.dk", Cheeps = new List<Cheep>() };
+            var a12 = new Author() { Id = "12", UserName = "Adrian", Email = "adho@itu.dk", Cheeps = new List<Cheep>() };
             
             var authors = new List<Author>() { a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12 };
             
@@ -39,12 +39,12 @@ public static class DbInitializer
             var c13 = new Cheep() { CheepID = 13, AuthorID = a10.Id, Author = a10, Text = "It struck cold to see you, Mr. White Mason, to our shores a number of young Alec.", Timestamp = DateTime.Parse("2023-08-01 13:13:23") };
             var c14 = new Cheep() { CheepID = 14, AuthorID = a1.Id, Author = a1, Text = "You are here for at all?", Timestamp = DateTime.Parse("2023-08-01 13:13:18") };
             var c15 = new Cheep() { CheepID = 15, AuthorID = a5.Id, Author = a5, Text = "My friend took the treasure-box to the window.", Timestamp = DateTime.Parse("2023-08-01 13:15:17") };
-            var c16 = new Cheep() { CheepID = 16, AuthorID = a1.Id, Author = a1, Text = "But ere I could not find it a name that I come from.", Timestamp = DateTime.Parse("2023-08-01 13:17:18") };
+            var c16 = new Cheep() { CheepID = 16, AuthorID = a1.Id, Author = a1, Text = "But ere I could not find it a UserName that I come from.", Timestamp = DateTime.Parse("2023-08-01 13:17:18") };
             var c17 = new Cheep() { CheepID = 17, AuthorID = a10.Id, Author = a10, Text = "Then Sherlock looked across at the window, candle in his wilful disobedience of the road.", Timestamp = DateTime.Parse("2023-08-01 13:14:30") };
             var c18 = new Cheep() { CheepID = 18, AuthorID = a5.Id, Author = a5, Text = "The message was as well live in this way-- SHERLOCK HOLMES--his limits.", Timestamp = DateTime.Parse("2023-08-01 13:13:40") };
             var c19 = new Cheep() { CheepID = 19, AuthorID = a10.Id, Author = a10, Text = "I commend that fact very carefully in the afternoon.", Timestamp = DateTime.Parse("2023-08-01 13:13:20") };
             var c20 = new Cheep() { CheepID = 20, AuthorID = a1.Id, Author = a1, Text = "In the card-case is a wonderful old man!", Timestamp = DateTime.Parse("2023-08-01 13:15:42") };
-            var c21 = new Cheep() { CheepID = 21, AuthorID = a10.Id, Author = a10, Text = "But this is his name! said Holmes, shaking his hand.", Timestamp = DateTime.Parse("2023-08-01 13:13:21") };
+            var c21 = new Cheep() { CheepID = 21, AuthorID = a10.Id, Author = a10, Text = "But this is his UserName! said Holmes, shaking his hand.", Timestamp = DateTime.Parse("2023-08-01 13:13:21") };
             var c22 = new Cheep() { CheepID = 22, AuthorID = a10.Id, Author = a10, Text = "She had turned suddenly, and a lady who has satisfied himself that he has heard it.", Timestamp = DateTime.Parse("2023-08-01 13:15:51") };
             var c23 = new Cheep() { CheepID = 23, AuthorID = a5.Id, Author = a5, Text = "You were dwelling upon the ground, the sky, the spray that he would be a man''s forefinger dipped in blood.", Timestamp = DateTime.Parse("2023-08-01 13:13:55") };
             var c24 = new Cheep() { CheepID = 24, AuthorID = a9.Id, Author = a9, Text = "Mrs. Straker tells us that his mates thanked God the direful disorders seemed waning.", Timestamp = DateTime.Parse("2023-08-01 13:14:00") };
@@ -174,7 +174,7 @@ public static class DbInitializer
             var c148 = new Cheep() { CheepID = 148, AuthorID = a4.Id, Author = a4, Text = "He had prospered well, and she could have been.", Timestamp = DateTime.Parse("2023-08-01 13:14:54") };
             var c149 = new Cheep() { CheepID = 149, AuthorID = a3.Id, Author = a3, Text = "I am not to play a desperate game.", Timestamp = DateTime.Parse("2023-08-01 13:14:22") };
             var c150 = new Cheep() { CheepID = 150, AuthorID = a10.Id, Author = a10, Text = "How did you mean that it was better surely to face with a West-End practice.", Timestamp = DateTime.Parse("2023-08-01 13:13:17") };
-            var c151 = new Cheep() { CheepID = 151, AuthorID = a8.Id, Author = a8, Text = "What was the name of Murphy had given him a coat, which was stolen?", Timestamp = DateTime.Parse("2023-08-01 13:14:15") };
+            var c151 = new Cheep() { CheepID = 151, AuthorID = a8.Id, Author = a8, Text = "What was the UserName of Murphy had given him a coat, which was stolen?", Timestamp = DateTime.Parse("2023-08-01 13:14:15") };
             var c152 = new Cheep() { CheepID = 152, AuthorID = a10.Id, Author = a10, Text = "You do what I was well that we went to the lawn.", Timestamp = DateTime.Parse("2023-08-01 13:13:40") };
             var c153 = new Cheep() { CheepID = 153, AuthorID = a10.Id, Author = a10, Text = "I knew by experience that railway cases were scanty and the earth, accompanying Old Ahab in all the same.", Timestamp = DateTime.Parse("2023-08-01 13:13:52") };
             var c154 = new Cheep() { CheepID = 154, AuthorID = a4.Id, Author = a4, Text = "Phelps seized his trumpet, and knowing by her bedroom fire, with his chief followers shared his fate.", Timestamp = DateTime.Parse("2023-08-01 13:16:20") };
@@ -348,7 +348,7 @@ public static class DbInitializer
             var c322 = new Cheep() { CheepID = 322, AuthorID = a2.Id, Author = a2, Text = "That is certainly a singular appearance, even in law.", Timestamp = DateTime.Parse("2023-08-01 13:13:37") };
             var c323 = new Cheep() { CheepID = 323, AuthorID = a2.Id, Author = a2, Text = "I fainted dead away, and we married a worthy fellow very kindly escorted me here.", Timestamp = DateTime.Parse("2023-08-01 13:13:19") };
             var c324 = new Cheep() { CheepID = 324, AuthorID = a3.Id, Author = a3, Text = "But I mean by that?", Timestamp = DateTime.Parse("2023-08-01 13:14:06") };
-            var c325 = new Cheep() { CheepID = 325, AuthorID = a10.Id, Author = a10, Text = "And your name need not be darted at the word with you, led you safe to our needs.", Timestamp = DateTime.Parse("2023-08-01 13:15:59") };
+            var c325 = new Cheep() { CheepID = 325, AuthorID = a10.Id, Author = a10, Text = "And your UserName need not be darted at the word with you, led you safe to our needs.", Timestamp = DateTime.Parse("2023-08-01 13:15:59") };
             var c326 = new Cheep() { CheepID = 326, AuthorID = a10.Id, Author = a10, Text = "It was an upright beam, which had a remarkable degree, the power of stimulating it.", Timestamp = DateTime.Parse("2023-08-01 13:16:27") };
             var c327 = new Cheep() { CheepID = 327, AuthorID = a3.Id, Author = a3, Text = "Now, when with a frowning brow and a knowing smile.", Timestamp = DateTime.Parse("2023-08-01 13:13:34") };
             var c328 = new Cheep() { CheepID = 328, AuthorID = a8.Id, Author = a8, Text = "I didn''t know I like it.", Timestamp = DateTime.Parse("2023-08-01 13:13:49") };
@@ -462,7 +462,7 @@ public static class DbInitializer
             var c436 = new Cheep() { CheepID = 436, AuthorID = a1.Id, Author = a1, Text = "It was over the heads of their profession.", Timestamp = DateTime.Parse("2023-08-01 13:13:41") };
             var c437 = new Cheep() { CheepID = 437, AuthorID = a10.Id, Author = a10, Text = "When he had been so anxious to hurry my work, for on the forecastle, till Ahab, troubledly pacing the deck, and we walked along the road.", Timestamp = DateTime.Parse("2023-08-01 13:13:26") };
             var c438 = new Cheep() { CheepID = 438, AuthorID = a2.Id, Author = a2, Text = "''From the beginning of the dead of night, and then you have come, however, before I left.", Timestamp = DateTime.Parse("2023-08-01 13:14:36") };
-            var c439 = new Cheep() { CheepID = 439, AuthorID = a10.Id, Author = a10, Text = "You know my name?", Timestamp = DateTime.Parse("2023-08-01 13:14:35") };
+            var c439 = new Cheep() { CheepID = 439, AuthorID = a10.Id, Author = a10, Text = "You know my UserName?", Timestamp = DateTime.Parse("2023-08-01 13:14:35") };
             var c440 = new Cheep() { CheepID = 440, AuthorID = a1.Id, Author = a1, Text = "If the lady whom I had made himself one of the SEA UNICORN, of Dundee.", Timestamp = DateTime.Parse("2023-08-01 13:15:20") };
             var c441 = new Cheep() { CheepID = 441, AuthorID = a3.Id, Author = a3, Text = "Swerve me? ye cannot swerve me, else ye swerve yourselves! man has to be drunk in order to avoid scandal in so busy a place.", Timestamp = DateTime.Parse("2023-08-01 13:13:37") };
             var c442 = new Cheep() { CheepID = 442, AuthorID = a4.Id, Author = a4, Text = "In this I had it would just cover that bare space and correspond with these.", Timestamp = DateTime.Parse("2023-08-01 13:13:19") };
@@ -585,7 +585,7 @@ public static class DbInitializer
             var c559 = new Cheep() { CheepID = 559, AuthorID = a5.Id, Author = a5, Text = "To the credulous mariners it seemed the cunning jeweller would show them when they were swallowed.", Timestamp = DateTime.Parse("2023-08-01 13:17:05") };
             var c560 = new Cheep() { CheepID = 560, AuthorID = a7.Id, Author = a7, Text = "You are not over yet, I say that it gives us the news.", Timestamp = DateTime.Parse("2023-08-01 13:17:23") };
             var c561 = new Cheep() { CheepID = 561, AuthorID = a10.Id, Author = a10, Text = "Oh, hush, Mr. McMurdo, may I forgive myself, but I thought you were going to be done.", Timestamp = DateTime.Parse("2023-08-01 13:14:31") };
-            var c562 = new Cheep() { CheepID = 562, AuthorID = a1.Id, Author = a1, Text = "His name, I have in bringing me safely to the King his father''s influence could prevail.", Timestamp = DateTime.Parse("2023-08-01 13:13:14") };
+            var c562 = new Cheep() { CheepID = 562, AuthorID = a1.Id, Author = a1, Text = "His UserName, I have in bringing me safely to the King his father''s influence could prevail.", Timestamp = DateTime.Parse("2023-08-01 13:13:14") };
             var c563 = new Cheep() { CheepID = 563, AuthorID = a10.Id, Author = a10, Text = "He makes one in the air.", Timestamp = DateTime.Parse("2023-08-01 13:16:03") };
             var c564 = new Cheep() { CheepID = 564, AuthorID = a8.Id, Author = a8, Text = "It was a sawed-off shotgun; so he fell back dead.", Timestamp = DateTime.Parse("2023-08-01 13:17:01") };
             var c565 = new Cheep() { CheepID = 565, AuthorID = a3.Id, Author = a3, Text = "He was dressed like a woman who answered the Guernsey-man, under cover of darkness, I must arrange with you.", Timestamp = DateTime.Parse("2023-08-01 13:14:13") };

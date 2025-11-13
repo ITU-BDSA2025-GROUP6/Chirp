@@ -9,6 +9,15 @@
 
 <div>
     <h2> Public Timeline </h2>
+    
+    <div class="cheepbox">
+        <h3>Chirp, @(User.Identity.Name )little bird</h3>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input style="float: left" type="text" asp-for="Text">
+            <input type="submit" value="Share">
+        </form>
+    </div>
 
     @if (Model.Cheeps.Result.Any())
     {

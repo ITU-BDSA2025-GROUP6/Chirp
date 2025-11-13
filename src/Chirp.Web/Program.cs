@@ -37,8 +37,8 @@ builder.Services.AddDefaultIdentity<Author>(options =>
         options.Password.RequireUppercase = false;
         options.Password.RequireLowercase = false;
     })
+    .AddRoles<IdentityRole<int>>()
     .AddEntityFrameworkStores<CheepDBContext>();
-
 
 // Add services to the container.
 builder.Services.AddRazorPages();

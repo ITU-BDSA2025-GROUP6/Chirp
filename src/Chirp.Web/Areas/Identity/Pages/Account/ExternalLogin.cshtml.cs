@@ -150,6 +150,7 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
+
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
@@ -195,6 +196,13 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
 
             ProviderDisplayName = info.ProviderDisplayName;
             ReturnUrl = returnUrl;
+            if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+            {
+                Input = new InputModel
+                {
+                    Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                };
+            }
             return Page();
         }
 

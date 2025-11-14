@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="8.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.21" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.21" />
@@ -31,5 +32,15 @@
   <ItemGroup>
     <Folder Include="Areas\Identity\Data\" />
   </ItemGroup>
+
+   <PropertyGroup>
+      <TargetFramework>net8.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <RootNamespace>Chirp.Web</RootNamespace>
+
+      <!-- Add this -->
+      <UserSecretsId>chirp-web-dev</UserSecretsId>
+    </PropertyGroup>
 
 </Project>

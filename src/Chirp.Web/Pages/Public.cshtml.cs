@@ -9,10 +9,10 @@ namespace Chirp.Web.Pages;
 public class PublicModel : PageModel
 {
     private readonly ICheepService _service;
-    public Task<List<CheepDTO>> Cheeps { get; set; }
+    public Task<List<CheepDTO>> Cheeps { get; set; } = Task.FromResult(new List<CheepDTO>());
     
     [BindProperty]
-    public string Text { get; set; }
+    public string Text { get; set; } = string.Empty;
     public PublicModel(ICheepService service)
     {
         _service = service;

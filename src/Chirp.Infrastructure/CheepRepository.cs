@@ -52,8 +52,8 @@ public class CheepRepository : ICheepRepository
             return new AuthorDTO
             {
                 Id = author.Id,
-                Name = author.UserName,
-                Email = author.Email,
+                Name = author.UserName!,
+                Email = author.Email!,
                 Cheeps = author.Cheeps
             };
         }
@@ -74,8 +74,8 @@ public class CheepRepository : ICheepRepository
             return new AuthorDTO
             {
                 Id = author.Id,
-                Name = author.UserName,
-                Email = author.Email,
+                Name = author.UserName!,
+                Email = author.Email!,
                 Cheeps = author.Cheeps
             };
         }
@@ -120,7 +120,7 @@ public class CheepRepository : ICheepRepository
                 .Select(c => new CheepDTO   
                 {
                     Text = c.Text,
-                    AuthorName = c.Author.UserName,
+                    AuthorName = c.Author!.UserName!,
                     Timestamp = c.Timestamp
                 })
                 .Skip((page - 1) * 32)    // TODO check if offset is correct 
@@ -134,12 +134,12 @@ public class CheepRepository : ICheepRepository
     {
         var query = _dbContext.Cheeps
             .Include(c => c.Author)
-            .Where(c => c.Author.UserName == author)
+            .Where(c => c.Author!.UserName! == author)
             .OrderByDescending(c => c.Timestamp)
             .Select(c => new CheepDTO   
             {
                 Text = c.Text,
-                AuthorName = c.Author.UserName,
+                AuthorName = c.Author!.UserName!,
                 Timestamp = c.Timestamp
             })
             .Skip((page - 1) * 32)    // kept old offset logic, TODO check if correct                      

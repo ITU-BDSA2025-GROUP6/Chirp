@@ -43,19 +43,26 @@ builder.Services.AddDefaultIdentity<Author>(options =>
     })
     .AddEntityFrameworkStores<CheepDBContext>();
 
+builder.Services.ConfigureExternalCookie(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepService, CheepService>();
 builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 
 // github authentication
-builder.Services.AddAuthentication(options =>
+builder.Services.AddAuthentication()
+    /*
     {
         options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = "GitHub";
     })
-    .AddCookie()
+    */
     .AddGitHub(o =>
     {
         o.ClientId = builder.Configuration["authentication:github:clientId"];
@@ -64,6 +71,8 @@ builder.Services.AddAuthentication(options =>
         o.Scope.Add("user:email"); // Explicitly asking for Email as Github can be difficult to get Email from
         o.SaveTokens = true; // maybe
 
+        o.CorrelationCookie.SameSite = SameSiteMode.None;
+        o.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
     });
 
 var app = builder.Build();

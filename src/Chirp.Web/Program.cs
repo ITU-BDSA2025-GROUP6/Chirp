@@ -93,6 +93,10 @@ using (var scope = app.Services.CreateScope())
     //context.Database.Migrate();
 }
 
+if(app.Environment.IsProduction())
+{
+    app.UseHsts(); // Send HSTS headers, but only in production
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

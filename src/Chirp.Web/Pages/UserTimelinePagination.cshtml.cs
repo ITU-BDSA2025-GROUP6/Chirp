@@ -9,8 +9,8 @@ public class UserTimelinePaginationModel : PageModel
 {
     private readonly ICheepService _cheepService;
     
-    public Task<List<CheepDTO>> Cheeps { get; set; }
-    public bool hasNextPage { get; set; }
+    public List<CheepDTO> Cheeps { get; set; }
+    public bool hasNextPage { get; set; } = new();
     public int currentPage { get; set; }
 
     public UserTimelinePaginationModel(ICheepService cheepService)
@@ -18,10 +18,10 @@ public class UserTimelinePaginationModel : PageModel
         _cheepService = cheepService;
     }
     
-    public ActionResult OnGet(string author, int index)
+    public async Task<ActionResult> OnGet(string author, int index)
     {
         currentPage = index < 1 ? 1 : index;
-        Cheeps = _cheepService.GetCheeps(currentPage); 
+        Cheeps = await _cheepService.GetCheeps(currentPage); 
         
         return Page();
     }

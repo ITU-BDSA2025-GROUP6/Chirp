@@ -83,6 +83,9 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
+            public string Name { get; set; }
+
+            [Required]
             [EmailAddress]
             public string Email { get; set; }
         }
@@ -123,22 +126,35 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             {
                 return RedirectToPage("./Lockout");
             }
-            else
-            {
-                // If the user does not have an account, then ask the user to create an account.
-                ReturnUrl = returnUrl;
-                ProviderDisplayName = info.ProviderDisplayName;
-                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var name = info.Principal.FindFirstValue(ClaimTypes.Name) ?? info.Principal.FindFirstValue("urn:github:login");
+
+            if (email != null) {
+                var user = CreateUser();
+                user.Email = email;
+                user.UserName = name;
+
+                await _userStore.SetUserNameAsync(user, name, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, email, CancellationToken.None);
+
+                var createResult = await _userManager.CreateAsync(user);
+                if (createResult.Succeeded)
                 {
-                    Input = new InputModel
+                    var createLoginResult = await _userManager.AddLoginAsync(user, info);
+                    if (createLoginResult.Succeeded)
                     {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                    };
+                        await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                        return LocalRedirect(returnUrl);
+                    }
                 }
-                return Page();
+                ErrorMessage = "Error creating user for external login.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
+            return Page();
         }
 
+/*
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -149,7 +165,6 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                 ErrorMessage = "Error loading external login information during confirmation.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
-
 
             if (ModelState.IsValid)
             {
@@ -205,6 +220,7 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             }
             return Page();
         }
+        */
 
         private Author CreateUser()
         {

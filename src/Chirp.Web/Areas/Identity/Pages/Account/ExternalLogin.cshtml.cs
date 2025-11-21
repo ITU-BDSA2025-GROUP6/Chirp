@@ -130,7 +130,16 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             var email = info.Principal.FindFirstValue(ClaimTypes.Email);
             var name = info.Principal.FindFirstValue(ClaimTypes.Name) ?? info.Principal.FindFirstValue("urn:github:login");
 
+
             if (email != null) {
+                var existingUser = await _userManager.FindByEmailAsync(email);
+                if (existingUser != null) {
+                 await _signInManager.SignInAsync(existingUser, isPersistent: false, info.LoginProvider);
+                 return LocalRedirect("/"); // Returns to homepage
+                 //return LocalRedirect($"/{name}");
+                }
+
+                // Create new user instead
                 var user = CreateUser();
                 user.Email = email;
                 user.UserName = name;

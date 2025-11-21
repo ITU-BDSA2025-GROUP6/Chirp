@@ -53,6 +53,8 @@ builder.Services.ConfigureExternalCookie(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepService, CheepService>();
 builder.Services.AddScoped<ICheepRepository, CheepRepository>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
 // github authentication
 builder.Services.AddAuthentication()

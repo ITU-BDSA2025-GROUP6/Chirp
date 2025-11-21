@@ -12,7 +12,5 @@ public class AuthorDTO
     
     public ICollection<Cheep> Cheeps { get; set; }
     
-    public List<AuthorDTO> Followers { get; set; }
-    
     public List<AuthorDTO> Following { get; set; }
 }

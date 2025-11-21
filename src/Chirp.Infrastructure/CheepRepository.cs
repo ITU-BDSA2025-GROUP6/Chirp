@@ -76,7 +76,8 @@ public class CheepRepository : ICheepRepository
                 Id = author.Id,
                 Name = author.UserName,
                 Email = author.Email,
-                Cheeps = author.Cheeps
+                Cheeps = author.Cheeps,
+                    
             };
         }
         catch (InvalidOperationException)

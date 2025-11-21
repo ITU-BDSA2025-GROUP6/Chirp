@@ -56,15 +56,8 @@ builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
-// github authentication
+// External login options
 builder.Services.AddAuthentication()
-    /*
-    {
-        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = "GitHub";
-    })
-    */
     .AddGitHub(o =>
     {
         o.ClientId = builder.Configuration["authentication:github:clientId"];
@@ -75,7 +68,23 @@ builder.Services.AddAuthentication()
 
         o.CorrelationCookie.SameSite = SameSiteMode.None;
         o.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-    });
+    })
+    .AddGoogle(googleOptions =>
+        {
+            googleOptions.ClientId = builder.Configuration["authentication:google:clientId"];
+            googleOptions.ClientSecret = builder.Configuration["authentication:google:clientSecret"];
+            googleOptions.CallbackPath = "/signin-google";
+
+            // Optional: get additional info like profile or email
+            googleOptions.Scope.Add("profile");
+            googleOptions.Scope.Add("email");
+
+            googleOptions.SaveTokens = true;
+
+            // Ensure cookies are secure for cross-site auth
+            googleOptions.CorrelationCookie.SameSite = SameSiteMode.None;
+            googleOptions.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+        });
 
 var app = builder.Build();
 

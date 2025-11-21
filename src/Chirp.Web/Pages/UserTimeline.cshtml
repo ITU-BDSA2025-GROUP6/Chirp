@@ -9,6 +9,10 @@
 
     <div>
         <h2> @routeName's Timeline - Page @currentPage </h2>
+        
+        <div class="followstatus">
+            <button type="submit">Follow</button>
+        </div>
 
         @if (Model.Cheeps.Result.Any())
         {

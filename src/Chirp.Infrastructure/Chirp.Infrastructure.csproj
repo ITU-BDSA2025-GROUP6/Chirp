@@ -28,4 +28,8 @@
       <ProjectReference Include="..\Chirp.Core\Chirp.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Chirp.db-shm" />
+    </ItemGroup>
+
 </Project>

@@ -19,12 +19,10 @@ public static class DbInitializer
             var a8 = new Author() { Id = "8", UserName = "Octavio Wagganer", NormalizedUserName = "OCTAVIO WAGGANER", Email = "Octavio.Wagganer@dtu.dk", NormalizedEmail = "OCTAVIO.WAGGANER@DTU.DK", Cheeps = new List<Cheep>() };
             var a9 = new Author() { Id = "9", UserName = "Johnnie Calixto", NormalizedUserName = "JOHNNIE CALIXTO", Email = "Johnnie+Calixto@itu.dk", NormalizedEmail = "JOHNNIE+CALIXTO@ITU.DK", Cheeps = new List<Cheep>() };
             var a10 = new Author() { Id = "10", UserName = "Jacqualine Gilcoine", NormalizedUserName = "JACQUALINE GILCOINE", Email = "Jacqualine.Gilcoine@gmail.com", NormalizedEmail = "JACQUALINE.GILCOINE@GMAIL.COM", Cheeps = new List<Cheep>() };
-            var a11 = new Author() { Id = "11", UserName = "Helge", NormalizedUserName = "HELGE", Email = "ropf@itu.dk", NormalizedEmail = "ROPF@ITU.DK", Cheeps = new List<Cheep>() };
-            var a12 = new Author() { Id = "12", UserName = "Adrian", NormalizedUserName = "ADRIAN", Email = "adho@itu.dk", NormalizedEmail = "ADHO@ITU.DK", Cheeps = new List<Cheep>() };
 
 
             
-            var authors = new List<Author>() { a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12 };
+            var authors = new List<Author>() { a1, a2, a3, a4, a5, a6, a7, a8, a9, a10};
             
             var c1 = new Cheep() { CheepID = 1, AuthorID = a10.Id, Author = a10, Text = "They were married in Chicago, with old Smith, and was expected aboard every day; meantime, the two went past me.", Timestamp = DateTime.Parse("2023-08-01 13:14:37") };
             var c2 = new Cheep() { CheepID = 2, AuthorID = a10.Id, Author = a10, Text = "And then, as he listened to all that''s left o'' twenty-one people.", Timestamp = DateTime.Parse("2023-08-01 13:15:21") };

@@ -9,7 +9,7 @@ public class PaginationModel : PageModel
 {
     private readonly ICheepService _service;
 
-    public Task<List<CheepDTO>> Cheeps { get; set; }
+    public Task<List<CheepDTO>> Cheeps { get; set; } = Task.FromResult(new List<CheepDTO>());
     public bool hasNextPage { get; set; }
     
     public int currentPage { get; set; }

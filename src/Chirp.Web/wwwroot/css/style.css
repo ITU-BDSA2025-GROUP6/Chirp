@@ -149,6 +149,11 @@ div.page ul.cheeps p .followbutton {
     margin-left: auto;
 }
 
+div.page ul.cheeps p .unfollowbutton {
+    background: #571010;
+    color: white;
+}
+
 div.page ul.cheeps li img {
   float: left;
   padding: 0 10px 0 0;

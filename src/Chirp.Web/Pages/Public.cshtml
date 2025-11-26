@@ -31,7 +31,7 @@
                         </strong>
                         @cheep.Text
                         <small>&mdash; @cheep.Timestamp</small>
-                        <button class="followbutton">Follow</button>
+                        <button class="followbutton" asp-page-handler="FollowBtn" asp-route-authorName="@cheep.AuthorName" onclick="toggleFollow(this)">Follow</button>
                     </p>
 
                 </li>
@@ -52,3 +52,15 @@
         <em>There are no cheeps so far.</em>
     }
 </div>
+
+<script>
+function toggleFollow(btn) {
+    if (btn.innerText === "Follow") {
+        btn.innerText = "Unfollow";
+        btn.classList.add("unfollowbutton");
+    } else {
+        btn.innerText = "Follow";
+        btn.classList.remove("unfollowbutton");
+    }
+}
+</script>

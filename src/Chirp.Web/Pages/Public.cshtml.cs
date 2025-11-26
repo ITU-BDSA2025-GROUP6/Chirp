@@ -32,10 +32,13 @@ public class PublicModel : PageModel
             //return Redirect("/login");
             return Redirect("/");
         }
+        // Lille fail safe ift. nullable names
+        var authorName = User.Identity?.Name;
+        if (string.IsNullOrEmpty(authorName)) return Redirect("/");
         
         CheepDTO newcheep = new CheepDTO // not 100% but should automaticlly incremnt the id, check if this is the case.
         {
-            AuthorName = User.Identity.Name,
+            AuthorName = authorName,
             Text = Text,
             Timestamp = DateTime.UtcNow
         };

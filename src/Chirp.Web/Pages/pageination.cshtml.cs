@@ -21,7 +21,6 @@ public class PaginationModel : PageModel
 
     public ActionResult OnGet(int index)
     {
-        int pageSize = 32;
         currentPage = index < 1 ? 1 : index;
         Cheeps = _service.GetCheeps(currentPage);
 

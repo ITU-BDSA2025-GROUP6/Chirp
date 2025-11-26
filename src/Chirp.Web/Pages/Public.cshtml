@@ -11,7 +11,7 @@
     <h2> Public Timeline </h2>
     
     <div class="cheepbox">
-        <h3>Chirp, @(User.Identity.Name )little bird</h3>
+        <h3>Chirp, @(User.Identity!.Name ?? "anon" )little bird</h3>
         <form method="post">
             @Html.AntiForgeryToken()
             <input style="float: left" type="text" asp-for="Text">

@@ -67,7 +67,7 @@ public class PublicModel : PageModel
             return NotFound();
         }
 
-        if (user.Id != follower.Id && user.Following.Contains(follower))
+        if (user.Id != follower.Id && !user.Following.Contains(follower))
         {
             user.Following.Add(follower);
         }

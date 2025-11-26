@@ -55,7 +55,11 @@ builder.Services.AddScoped<ICheepService, CheepService>();
 builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
-
+// HSTS necessary for the HSTS header for reasons
+builder.Services.AddHsts(options =>
+{
+    options.MaxAge = TimeSpan.FromHours(1);
+});
 // github authentication
 builder.Services.AddAuthentication()
     /*

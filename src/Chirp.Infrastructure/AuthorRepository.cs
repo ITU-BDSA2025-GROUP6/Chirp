@@ -25,9 +25,8 @@ public class AuthorRepository : IAuthorRepository
             return new AuthorDTO
             {
                 Id = author.Id,
-                    
-                Name = author.UserName,
-                Email = author.Email,
+                Name = author.UserName ?? string.Empty,
+                Email = author.Email ?? string.Empty,
                 Cheeps = author.Cheeps
             };
         }
@@ -48,8 +47,8 @@ public class AuthorRepository : IAuthorRepository
             return new AuthorDTO
             {
                 Id = author.Id,
-                Name = author.UserName,
-                Email = author.Email,
+                Name = author.UserName ?? string.Empty,
+                Email = author.Email ?? string.Empty,
                 Cheeps = author.Cheeps
             };
         }

@@ -67,8 +67,10 @@ builder.Services.AddAuthentication()
     */
     .AddGitHub(o =>
     {
-        o.ClientId = builder.Configuration["authentication:github:clientId"];
-        o.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
+        o.ClientId = builder.Configuration["authentication:github:clientId"] 
+                     ?? throw new InvalidOperationException("GitHub ClientId not configured");
+        o.ClientSecret = builder.Configuration["authentication:github:clientSecret"] 
+                     ?? throw new  InvalidOperationException("GitHub ClientSecret not configured");
         o.CallbackPath = "/signin-github";
         o.Scope.Add("user:email"); // Explicitly asking for Email as Github can be difficult to get Email from
         o.SaveTokens = true; // maybe

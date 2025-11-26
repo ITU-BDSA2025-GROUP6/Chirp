@@ -5,7 +5,12 @@ namespace Chirp.Infrastructure;
 public class AuthorService : IAuthorService
 {
     private readonly IAuthorRepository _repository;
-    
+
+    public AuthorService(IAuthorRepository repository)
+    {
+        _repository = repository;
+    }
+
     public Task<AuthorDTO> GetAuthorByName(string name)
     {
         return _repository.GetAuthorByName(name);

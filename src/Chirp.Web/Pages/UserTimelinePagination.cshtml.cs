@@ -21,7 +21,7 @@ public class UserTimelinePaginationModel : PageModel
     public ActionResult OnGet(string author, int index)
     {
         currentPage = index < 1 ? 1 : index;
-        Cheeps = _cheepService.GetCheeps(currentPage); 
+        Cheeps = _cheepService.GetCheepsFromAuthor(author, currentPage);
         
         return Page();
     }

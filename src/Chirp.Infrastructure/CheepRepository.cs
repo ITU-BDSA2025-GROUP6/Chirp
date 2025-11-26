@@ -41,49 +41,9 @@ public class CheepRepository : ICheepRepository
         return queryResult.Entity.CheepID;
     }
 
-    public async Task<AuthorDTO> GetAuthorByName(string name)
-    {
-        try
-        {
-            var author = await _dbContext.Authors
-                .Include(a => a.Cheeps)
-                .FirstAsync(a => a.UserName == name);
-
-            return new AuthorDTO
-            {
-                Id = author.Id,
-                Name = author.UserName!,
-                Email = author.Email!,
-                Cheeps = author.Cheeps
-            };
-        }
-        catch (InvalidOperationException) 
-        {
-            throw new InvalidOperationException("No such author with name: " + name);
-        }
-    }
+   
     
-    public async Task<AuthorDTO> GetAuthorByEmail(string email)
-    {
-        try
-        {
-            var author = await _dbContext.Authors
-                .Include(a => a.Cheeps)
-                .FirstAsync(a => a.Email == email);
-
-            return new AuthorDTO
-            {
-                Id = author.Id,
-                Name = author.UserName!,
-                Email = author.Email!,
-                Cheeps = author.Cheeps
-            };
-        }
-        catch (InvalidOperationException)
-        {
-            throw new InvalidOperationException("No such author with email: " + email);
-        }
-    }
+    
     
 
     // uses alter in UI to change the contect of a specefic message 
@@ -120,7 +80,7 @@ public class CheepRepository : ICheepRepository
                 .Select(c => new CheepDTO   
                 {
                     Text = c.Text,
-                    AuthorName = c.Author!.UserName!,
+                    AuthorName = c.Author.UserName,
                     Timestamp = c.Timestamp
                 })
                 .Skip((page - 1) * 32)    // TODO check if offset is correct 
@@ -134,12 +94,12 @@ public class CheepRepository : ICheepRepository
     {
         var query = _dbContext.Cheeps
             .Include(c => c.Author)
-            .Where(c => c.Author!.UserName! == author)
+            .Where(c => c.Author.UserName == author)
             .OrderByDescending(c => c.Timestamp)
             .Select(c => new CheepDTO   
             {
                 Text = c.Text,
-                AuthorName = c.Author!.UserName!,
+                AuthorName = c.Author.UserName,
                 Timestamp = c.Timestamp
             })
             .Skip((page - 1) * 32)    // kept old offset logic, TODO check if correct                      

@@ -3,6 +3,10 @@ using Chirp.Core;
 using Chirp.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using System.Security.Claims;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,10 +43,39 @@ builder.Services.AddDefaultIdentity<Author>(options =>
     })
     .AddEntityFrameworkStores<CheepDBContext>();
 
+builder.Services.ConfigureExternalCookie(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<ICheepService, CheepService>();
 builder.Services.AddScoped<ICheepRepository, CheepRepository>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+
+// github authentication
+builder.Services.AddAuthentication()
+    /*
+    {
+        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = "GitHub";
+    })
+    */
+    .AddGitHub(o =>
+    {
+        o.ClientId = builder.Configuration["authentication:github:clientId"];
+        o.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
+        o.CallbackPath = "/signin-github";
+        o.Scope.Add("user:email"); // Explicitly asking for Email as Github can be difficult to get Email from
+        o.SaveTokens = true; // maybe
+
+        o.CorrelationCookie.SameSite = SameSiteMode.None;
+        o.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
 
 var app = builder.Build();
 

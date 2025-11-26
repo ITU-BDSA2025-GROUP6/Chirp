@@ -83,6 +83,9 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [Required]
+            public string Name { get; set; }
+
+            [Required]
             [EmailAddress]
             public string Email { get; set; }
         }
@@ -123,22 +126,44 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
             {
                 return RedirectToPage("./Lockout");
             }
-            else
-            {
-                // If the user does not have an account, then ask the user to create an account.
-                ReturnUrl = returnUrl;
-                ProviderDisplayName = info.ProviderDisplayName;
-                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
-                {
-                    Input = new InputModel
-                    {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                    };
+
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var name = info.Principal.FindFirstValue(ClaimTypes.Name) ?? info.Principal.FindFirstValue("urn:github:login");
+
+
+            if (email != null) {
+                var existingUser = await _userManager.FindByEmailAsync(email);
+                if (existingUser != null) {
+                 await _signInManager.SignInAsync(existingUser, isPersistent: false, info.LoginProvider);
+                 return LocalRedirect("/"); // Returns to homepage
+                 //return LocalRedirect($"/{name}");
                 }
-                return Page();
+
+                // Create new user instead
+                var user = CreateUser();
+                user.Email = email;
+                user.UserName = name;
+
+                await _userStore.SetUserNameAsync(user, name, CancellationToken.None);
+                await _emailStore.SetEmailAsync(user, email, CancellationToken.None);
+
+                var createResult = await _userManager.CreateAsync(user);
+                if (createResult.Succeeded)
+                {
+                    var createLoginResult = await _userManager.AddLoginAsync(user, info);
+                    if (createLoginResult.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                        return LocalRedirect(returnUrl);
+                    }
+                }
+                ErrorMessage = "Error creating user for external login.";
+                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
+            return Page();
         }
 
+/*
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
@@ -195,8 +220,16 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
 
             ProviderDisplayName = info.ProviderDisplayName;
             ReturnUrl = returnUrl;
+            if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+            {
+                Input = new InputModel
+                {
+                    Email = info.Principal.FindFirstValue(ClaimTypes.Email)
+                };
+            }
             return Page();
         }
+        */
 
         private Author CreateUser()
         {

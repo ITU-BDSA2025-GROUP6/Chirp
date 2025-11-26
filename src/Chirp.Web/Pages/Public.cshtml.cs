@@ -9,10 +9,10 @@ namespace Chirp.Web.Pages;
 public class PublicModel : PageModel
 {
     private readonly ICheepService _service;
-    public Task<List<CheepDTO>> Cheeps { get; set; }
+    public Task<List<CheepDTO>> Cheeps { get; set; } = Task.FromResult(new List<CheepDTO>());
     
     [BindProperty]
-    public string Text { get; set; }
+    public string Text { get; set; } = string.Empty;
     public PublicModel(ICheepService service)
     {
         _service = service;
@@ -32,10 +32,13 @@ public class PublicModel : PageModel
             //return Redirect("/login");
             return Redirect("/");
         }
+        // Lille fail safe ift. nullable names
+        var authorName = User.Identity?.Name;
+        if (string.IsNullOrEmpty(authorName)) return Redirect("/");
         
         CheepDTO newcheep = new CheepDTO // not 100% but should automaticlly incremnt the id, check if this is the case.
         {
-            AuthorName = User.Identity.Name,
+            AuthorName = authorName,
             Text = Text,
             Timestamp = DateTime.UtcNow
         };

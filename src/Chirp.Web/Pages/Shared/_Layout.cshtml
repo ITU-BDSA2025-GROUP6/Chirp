@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Chirp.Core
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Author> SignInManager
+@inject UserManager<Author> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>@ViewData["Title"]</title>
@@ -10,7 +15,6 @@
     <h1><img src="/images/icon1.png" alt="Icon1"/>Chirp!</h1>
 
     <div class=navigation>
-        <partial name="_LoginPartial"/>
         @if (User.Identity!.IsAuthenticated)
         {
             <div>
@@ -18,22 +22,22 @@
                 <a href="/">Public Timeline</a> |
                 <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Account</a> |
                 <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
-                <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout [@User.Identity.Name]</button>
+                    <button id="logout" type="submit" class="nav-link btn btn-link text-dark border-0">Logout [@UserManager.GetUserName(User)]</button>
                 </form>
             </div>
         }
         else
         {
             <div>
-                 <a href="/">Public Timeline</a> |
-                 <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a> |
-                 <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                <a href="/">Public Timeline</a> |
+                <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a> |
+                <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
             </div>
         }
     </div>
 
     <div class=body>
-            @RenderBody()
+        @RenderBody()
     </div>
     <div class=footer>
         Chirp &mdash; An ASP.NET Application

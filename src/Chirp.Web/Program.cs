@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -40,6 +41,8 @@ builder.Services.AddDefaultIdentity<Author>(options =>
         options.Password.RequireDigit = false;
         options.Password.RequireUppercase = false;
         options.Password.RequireLowercase = false;
+        options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ ";
     })
     .AddEntityFrameworkStores<CheepDBContext>();
 
@@ -69,6 +72,10 @@ builder.Services.AddAuthentication()
         o.CorrelationCookie.SameSite = SameSiteMode.None;
         o.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
     })
+    .AddMicrosoftAccount(microsoftOptions =>
+    {
+
+    })
     .AddGoogle(googleOptions =>
         {
             googleOptions.ClientId = builder.Configuration["authentication:google:clientId"];
@@ -78,6 +85,7 @@ builder.Services.AddAuthentication()
             // Optional: get additional info like profile or email
             googleOptions.Scope.Add("profile");
             googleOptions.Scope.Add("email");
+
 
             googleOptions.SaveTokens = true;
 

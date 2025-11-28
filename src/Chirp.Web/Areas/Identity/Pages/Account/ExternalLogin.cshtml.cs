@@ -157,6 +157,14 @@ namespace Chirp.Web.Areas.Identity.Pages.Account
                         return LocalRedirect(returnUrl);
                     }
                 }
+
+                foreach (var error in createResult.Errors)
+                    {
+                        Console.WriteLine($"[IDENTITY ERROR] Code: {error.Code} | Description: {error.Description}");
+                        _logger.LogError("Identity CreateAsync failed. Code: {Code}, Description: {Description}",
+                            error.Code, error.Description);
+                    }
+
                 ErrorMessage = "Error creating user for external login.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }

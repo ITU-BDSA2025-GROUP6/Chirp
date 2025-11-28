@@ -20,6 +20,21 @@ public class CheepDBContext : IdentityDbContext<Author>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        //many to many relation
+        base.OnModelCreating(builder);
+
+        builder.Entity<Follows>()
+            .HasKey(f => new { f.FollowsId, f.FollowedById });
+
+        builder.Entity<Follows>()
+            .HasOne(f => f.FollowsAuthor)
+            .WithMany(a => a.Following)
+            .HasForeignKey(f => f.FollowsId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Follows>()
+            .HasOne(f => f.FollowedByAuthor)
+            .WithMany(a => a.FollowedBy)
+            .HasForeignKey(f => f.FollowedById)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

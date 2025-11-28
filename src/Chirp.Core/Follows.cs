@@ -6,8 +6,10 @@ namespace Chirp.Core;
 public class Follows
 {
     [Required]
-    public Author FollowsID { get; set; }
-    
+    public string FollowsId { get; set; }   
+    public Author FollowsAuthor { get; set; }
+
     [Required]
-    public Author FollowedByID { get; set; }
+    public string FollowedById { get; set; } 
+    public Author FollowedByAuthor { get; set; }
 }

@@ -35,5 +35,10 @@ public class CheepService : ICheepService
         return _repository.UpdateCheep(alteredMessage);
     }
 
+    public Task<bool> DeleteCheep(int cheepId, string authorName)
+    {
+        return _repository.DeleteCheep(cheepId, authorName);
+    }
+
    
 }

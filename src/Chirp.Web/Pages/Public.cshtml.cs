@@ -54,4 +54,19 @@ public class PublicModel : PageModel
         
         return Redirect("/");
     }
+
+    public async Task<IActionResult> OnPostDelete(int cheepId)
+    {
+        if (! User.Identity?.IsAuthenticated ?? true)
+        {
+            return  Redirect("/");
+        }
+        var authorName = User.Identity?.Name;
+        if (string.IsNullOrEmpty(authorName))
+        {
+            return Redirect("/");
+        }
+        await _service.DeleteCheep(cheepId, authorName);
+        return Redirect("/");
+    }
 }

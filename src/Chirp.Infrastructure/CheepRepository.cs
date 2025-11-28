@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Chirp.Core;
 using Chirp.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,11 @@ public class CheepRepository : ICheepRepository
         if (author == null)
         {
             throw new InvalidOperationException("No such author: " + cheep.AuthorName);
+        }
+        
+        if (cheep.Text.Length > 160)
+        {
+            throw new ValidationException("Cheep text too long: " + cheep.Text);
         }
 
         Cheep newCheep = new Cheep

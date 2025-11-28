@@ -1,4 +1,5 @@
-﻿using System.Net.Mime;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net.Mime;
 using Chirp.Core;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Interfaces;
@@ -16,13 +17,13 @@ public class PublicModel : PageModel
     public Task<List<Author>> Followers { get; set; }
     
     [BindProperty]
+    [StringLength(160, ErrorMessage = "The {0} must be at max {1} characters long.")]
     public string Text { get; set; } = string.Empty;
     public PublicModel(ICheepService service,  IAuthorService authorService)
     {
         _service = service;
         _authorService = authorService;
     }
-    
 
     public ActionResult OnGet()
     {
@@ -33,6 +34,11 @@ public class PublicModel : PageModel
 
     public IActionResult OnPost()
     {
+        if (!ModelState.IsValid)
+        {
+            Cheeps = _service.GetCheeps(1);
+            return Page();
+        }
         if (!(User.Identity?.IsAuthenticated ?? false ))
         {
             //return Redirect("/login");

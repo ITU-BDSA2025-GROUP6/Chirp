@@ -34,4 +34,8 @@
     <Folder Include="Areas\Identity\Data\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <AdditionalFiles Include="Pages\Shared\_ValidationScriptsPartial.cshtml" />
+  </ItemGroup>
+
 </Project>

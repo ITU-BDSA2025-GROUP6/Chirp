@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Chirp.Core;
 using Chirp.Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,11 @@ public class CheepRepository : ICheepRepository
         if (author == null)
         {
             throw new InvalidOperationException("No such author: " + cheep.AuthorName);
+        }
+        
+        if (cheep.Text.Length > 160)
+        {
+            throw new ValidationException("Cheep text too long: " + cheep.Text);
         }
 
         Cheep newCheep = new Cheep
@@ -80,11 +86,10 @@ public class CheepRepository : ICheepRepository
                 .Select(c => new CheepDTO   
                 {
                     Text = c.Text,
-                    AuthorName = c.Author.UserName,
+                    AuthorName = c.Author!.UserName ?? string.Empty,
                     Timestamp = c.Timestamp
                 })
                 .Skip((page - 1) * 32)    // TODO check if offset is correct 
-                .Skip((page - 1) * 10)
                 .Take(32);
 
             return await query.ToListAsync();
@@ -94,15 +99,15 @@ public class CheepRepository : ICheepRepository
     {
         var query = _dbContext.Cheeps
             .Include(c => c.Author)
-            .Where(c => c.Author.UserName == author)
+            .Where(c => c.Author!.UserName == author)
             .OrderByDescending(c => c.Timestamp)
             .Select(c => new CheepDTO   
             {
                 Text = c.Text,
-                AuthorName = c.Author.UserName,
+                AuthorName = c.Author!.UserName ?? string.Empty,
                 Timestamp = c.Timestamp
             })
-            .Skip((page - 1) * 32)    // kept old offset logic, TODO check if correct                      
+            .Skip((page - 1) * 32)                 
             .Take(32);
 
         return await query.ToListAsync();

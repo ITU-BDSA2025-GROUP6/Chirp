@@ -11,16 +11,20 @@
 
 <div>
     <h2> Public Timeline </h2>
-     @if (SignInManager.IsSignedIn(User)) {
-      <div class="cheepbox">
-             <h3>Chirp little bird, @(User.Identity.Name ) </h3>
-             <form method="post">
-                 @Html.AntiForgeryToken()
-                 <input style="float: left" type="text" asp-for="Text">
-                 <input type="submit" value="Share">
-             </form>
-         </div>
-     }
+    @if (SignInManager.IsSignedIn(User)) {
+        <div class="cheepbox">
+            <h3>Chirp little bird, @(User.Identity!.Name ?? "anon") </h3>
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <div>
+                    <input style="float: left" type="text" asp-for="Text" maxlength="200">
+                    <input type="submit" value="Share">
+                </div>
+                
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </form>
+        </div>
+    }
 
     @if (Model.Cheeps.Result.Any())
     {
@@ -53,3 +57,7 @@
         <em>There are no cheeps so far.</em>
     }
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial.cshtml" />
+}

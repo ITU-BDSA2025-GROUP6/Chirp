@@ -9,7 +9,7 @@ public class PaginationModel : PageModel
 {
     private readonly ICheepService _service;
 
-    public Task<List<CheepDTO>> Cheeps { get; set; }
+    public Task<List<CheepDTO>> Cheeps { get; set; } = Task.FromResult(new List<CheepDTO>());
     public bool hasNextPage { get; set; }
     
     public int currentPage { get; set; }
@@ -21,7 +21,6 @@ public class PaginationModel : PageModel
 
     public ActionResult OnGet(int index)
     {
-        int pageSize = 32;
         currentPage = index < 1 ? 1 : index;
         Cheeps = _service.GetCheeps(currentPage);
 

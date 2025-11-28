@@ -9,6 +9,6 @@ namespace Chirp.Core
     { 
         public ICollection<Cheep> Cheeps { get; set; } = new List<Cheep>();
         
-        public List<Author> Authors { get; set; } = new List<Author>();
+        public List<Author> Following { get; set; } = new List<Author>();
     }
 }

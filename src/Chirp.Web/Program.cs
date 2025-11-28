@@ -72,17 +72,6 @@ builder.Services.AddAuthentication()
         githubOptions.CorrelationCookie.SameSite = SameSiteMode.None;
         githubOptions.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
     })
-    .AddMicrosoftAccount(microsoftOptions =>
-    {
-        microsoftOptions.ClientId = builder.Configuration["authentication:microsoft:clientId"];
-        microsoftOptions.ClientSecret = builder.Configuration["authentication:microsoft:clientSecret"];
-
-        microsoftOptions.Scope.Add("User.Read");
-        microsoftOptions.SaveTokens = true;
-
-        microsoftOptions.CorrelationCookie.SameSite = SameSiteMode.None;
-        microsoftOptions.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-    })
     .AddGoogle(googleOptions =>
         {
             googleOptions.ClientId = builder.Configuration["authentication:google:clientId"];

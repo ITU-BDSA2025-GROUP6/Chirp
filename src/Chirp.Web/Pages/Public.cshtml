@@ -28,15 +28,14 @@
             @foreach (var cheep in Model.Cheeps.Result)
             {
                 <li>
-                    <p>
+                    <div>
                         <strong>
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
                         </strong>
-                        @cheep.Text
+                        <span>@cheep.Text</span>
                         <small>&mdash; @cheep.Timestamp</small>
-                        <button class="followbutton" asp-page-handler="FollowBtn" asp-route-authorName="@cheep.AuthorName" onclick="toggleFollow(this)">Follow</button>
-                    </p>
-
+                        <a class="followbutton" asp-page-handler="FollowBtn" asp-route-authorName="@cheep.AuthorName">Follow</a>
+                    </div>
                 </li>
             }
         </ul>

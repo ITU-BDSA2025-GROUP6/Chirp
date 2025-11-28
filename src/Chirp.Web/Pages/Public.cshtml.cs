@@ -54,12 +54,50 @@ public class PublicModel : PageModel
         return Redirect("/");
     }
 
-    
+
     public async Task<IActionResult> OnGetFollowBtn(string authorName)
     {
+        //if (!User.Identity.IsAuthenticated)
+           // return Redirect("/");
+
+        var currentUser = await _authorService.GetAuthorEntityByName(User.Identity.Name);
+        var followTarget = await _authorService.GetAuthorEntityByName(authorName);
+
+        if (currentUser == null || followTarget == null || currentUser.Id == followTarget.Id)
+            return Redirect("/");
+        
+        Console.WriteLine($"CurrentUser: {currentUser?.UserName}");
+        Console.WriteLine($"FollowTarget: {followTarget?.UserName}");
+        Console.WriteLine($"Following.Count before add: {currentUser?.Following.Count}");
+
+
+        bool alreadyFollow = currentUser.Following
+            .Any(f => f.FollowedById == followTarget.Id);
+
+        Console.WriteLine($"AlreadyFollowing: {alreadyFollow}");
+        
+        if (!alreadyFollow)
+        {
+            currentUser.Following.Add(new Follows
+            {
+                FollowsId = currentUser.Id,
+                FollowedById = followTarget.Id
+            });
+
+            await _authorService.SaveChangesAsync();
+        }
+
+        Console.WriteLine($"Following.Count after add: {currentUser?.Following.Count}");
+        
+        return RedirectToPage();
+    }
+}
+
+
+        /*
         if (!User.Identity.IsAuthenticated)
         {
-            return Redirect("/login"); 
+            return Redirect("/login");
         }
 
         AuthorDTO user = await _authorService.GetAuthorByName(User.Identity.Name);
@@ -74,8 +112,7 @@ public class PublicModel : PageModel
         {
             user.Following.Add(follower);
         }
-        
+
         return RedirectToPage();
-    }
-    
-}
+        */
+   

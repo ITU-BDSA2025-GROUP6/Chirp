@@ -61,20 +61,27 @@ builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
 // External login options
 builder.Services.AddAuthentication()
-    .AddGitHub(o =>
+    .AddGitHub(githubOptions =>
     {
-        o.ClientId = builder.Configuration["authentication:github:clientId"];
-        o.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
-        o.CallbackPath = "/signin-github";
-        o.Scope.Add("user:email"); // Explicitly asking for Email as Github can be difficult to get Email from
-        o.SaveTokens = true; // maybe
+        githubOptions.ClientId = builder.Configuration["authentication:github:clientId"];
+        githubOptions.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
+        githubOptions.CallbackPath = "/signin-github";
+        githubOptions.Scope.Add("user:email"); // Explicitly asking for Email as Github can be difficult to get Email from
+        githubOptions.SaveTokens = true; // maybe
 
-        o.CorrelationCookie.SameSite = SameSiteMode.None;
-        o.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+        githubOptions.CorrelationCookie.SameSite = SameSiteMode.None;
+        githubOptions.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
     })
     .AddMicrosoftAccount(microsoftOptions =>
     {
+        microsoftOptions.ClientId = builder.Configuration["authentication:microsoft:clientId"];
+        microsoftOptions.ClientSecret = builder.Configuration["authentication:microsoft:clientSecret"];
 
+        microsoftOptions.Scope.Add("User.Read");
+        microsoftOptions.SaveTokens = true;
+
+        microsoftOptions.CorrelationCookie.SameSite = SameSiteMode.None;
+        microsoftOptions.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
     })
     .AddGoogle(googleOptions =>
         {

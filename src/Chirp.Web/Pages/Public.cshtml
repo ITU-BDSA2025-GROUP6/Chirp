@@ -36,7 +36,15 @@
                         <strong>
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
                         </strong>
+                        <br />
                         @cheep.Text
+                        <br />
+
+                         <form method="post" asp-page-handler="Recheep">
+                             @Html.AntiForgeryToken()
+                            <input type="hidden" name="CheepID" value="@cheep.CheepID" />
+                            <button type="submit" class="btn btn-sm btn-primary">Recheep</button>
+                         </form>
                         <small>&mdash; @cheep.Timestamp</small>
                     </p>
                 </li>

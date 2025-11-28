@@ -1,4 +1,5 @@
-﻿using System.Net.Mime;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net.Mime;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ public class PublicModel : PageModel
     public Task<List<CheepDTO>> Cheeps { get; set; } = Task.FromResult(new List<CheepDTO>());
     
     [BindProperty]
+    [StringLength(160, ErrorMessage = "The {0} must be at max {1} characters long.")]
     public string Text { get; set; } = string.Empty;
     public PublicModel(ICheepService service)
     {
@@ -27,6 +29,11 @@ public class PublicModel : PageModel
 
     public IActionResult OnPost()
     {
+        if (!ModelState.IsValid)
+        {
+            Cheeps = _service.GetCheeps(1);
+            return Page();
+        }
         if (!(User.Identity?.IsAuthenticated ?? false ))
         {
             //return Redirect("/login");

@@ -50,6 +50,8 @@ jobs:
           
       - name: Run tests
         run: dotnet test -c Release --filter "FullyQualifiedName!~PlaywrightTests"
+        env:
+          ASPNETCORE_ENVIRONMENT: Testing
 
   publish-and-release-webapp:
     name: Publish and Release Web App

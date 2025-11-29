@@ -32,11 +32,11 @@
             @foreach (var cheep in Model.Cheeps.Result)
             {
                 <li>
-                    <p>
+                    <div>
                         <strong>
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
                         </strong>
-                        @cheep.Text
+                        <span>@cheep.Text</span>
                         <small>&mdash; @cheep.Timestamp</small>
                         
                         @if (User.Identity?.Name == cheep.AuthorName)
@@ -48,7 +48,9 @@
                                 </button>
                             </form>
                         }
-                    </p>
+                        
+                        <a class="followbutton" asp-page-handler="FollowBtn" asp-route-authorName="@cheep.AuthorName"><button>Follow</button></a>
+                    </div>
                 </li>
             }
         </ul>
@@ -70,4 +72,16 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial.cshtml" />
+    
+    <script>
+        function toggleFollow(btn) {
+            if (btn.innerText === "Follow") {
+                btn.innerText = "Unfollow";
+                btn.classList.add("unfollowbutton");
+            } else {
+                btn.innerText = "Follow";
+                btn. classList.remove("unfollowbutton");
+            }
+        }
+    </script>
 }

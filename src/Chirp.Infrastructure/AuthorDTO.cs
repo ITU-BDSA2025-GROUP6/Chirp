@@ -11,4 +11,6 @@ public class AuthorDTO
     public string Email { get; set; } = string.Empty;
     
     public ICollection<Cheep> Cheeps { get; set; } = new List<Cheep>();
+
+    public List<Follows> Following { get; set; } = new();
 }

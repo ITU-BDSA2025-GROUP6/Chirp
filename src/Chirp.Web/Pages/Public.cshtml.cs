@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
+using Chirp.Core;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -10,14 +11,18 @@ namespace Chirp.Web.Pages;
 public class PublicModel : PageModel
 {
     private readonly ICheepService _service;
+    private readonly IAuthorService _authorService;
     public Task<List<CheepDTO>> Cheeps { get; set; } = Task.FromResult(new List<CheepDTO>());
+    
+    public Task<List<Author>> Followers { get; set; }
     
     [BindProperty]
     [StringLength(160, ErrorMessage = "The {0} must be at max {1} characters long.")]
     public string Text { get; set; } = string.Empty;
-    public PublicModel(ICheepService service)
+    public PublicModel(ICheepService service,  IAuthorService authorService)
     {
         _service = service;
+        _authorService = authorService;
     }
 
     public ActionResult OnGet()
@@ -54,4 +59,66 @@ public class PublicModel : PageModel
         
         return Redirect("/");
     }
+
+
+    public async Task<IActionResult> OnGetFollowBtn(string authorName)
+    {
+        //if (!User.Identity.IsAuthenticated)
+           // return Redirect("/");
+
+        var currentUser = await _authorService.GetAuthorEntityByName(User.Identity.Name);
+        var followTarget = await _authorService.GetAuthorEntityByName(authorName);
+
+        if (currentUser == null || followTarget == null || currentUser.Id == followTarget.Id)
+            return Redirect("/");
+        
+        Console.WriteLine($"CurrentUser: {currentUser?.UserName}");
+        Console.WriteLine($"FollowTarget: {followTarget?.UserName}");
+        Console.WriteLine($"Following.Count before add: {currentUser?.Following.Count}");
+
+
+        bool alreadyFollow = currentUser.Following
+            .Any(f => f.FollowedById == followTarget.Id);
+
+        Console.WriteLine($"AlreadyFollowing: {alreadyFollow}");
+        
+        if (!alreadyFollow)
+        {
+            currentUser.Following.Add(new Follows
+            {
+                FollowsId = currentUser.Id,
+                FollowedById = followTarget.Id
+            });
+
+            await _authorService.SaveChangesAsync();
+        }
+
+        Console.WriteLine($"Following.Count after add: {currentUser?.Following.Count}");
+        
+        return RedirectToPage();
+    }
 }
+
+
+        /*
+        if (!User.Identity.IsAuthenticated)
+        {
+            return Redirect("/login");
+        }
+
+        AuthorDTO user = await _authorService.GetAuthorByName(User.Identity.Name);
+        AuthorDTO follower = await _authorService.GetAuthorByName(authorName);
+
+        if (user == null || follower == null)
+        {
+            return NotFound();
+        }
+
+        if (user.Id != follower.Id && !user.Following.Contains(follower))
+        {
+            user.Following.Add(follower);
+        }
+
+        return RedirectToPage();
+        */
+   

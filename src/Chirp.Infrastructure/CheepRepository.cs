@@ -72,6 +72,21 @@ public class CheepRepository : ICheepRepository
         return alteredMessage.CheepID;
     }
 
+    public async Task<bool> DeleteCheep(int cheepId, string authorName)
+    {
+        var cheep = await _dbContext.Cheeps
+            .Include(a => a.Author)
+            .FirstOrDefaultAsync(a => a.CheepID == cheepId && a.Author!.UserName == authorName);
+        if (cheep == null)
+        {
+            return false;
+        }
+        _dbContext.Cheeps.Remove(cheep);
+        await _dbContext.SaveChangesAsync();
+        
+        return true;
+    }
+
     /// <summary>
     /// Returns all available cheeps for a given page as a list of "Cheep" Data Transfer Objects
     /// </summary>
@@ -85,6 +100,7 @@ public class CheepRepository : ICheepRepository
                 .OrderByDescending(c => c.Timestamp)
                 .Select(c => new CheepDTO   
                 {
+                    CheepID = c.CheepID,
                     Text = c.Text,
                     AuthorName = c.Author!.UserName ?? string.Empty,
                     Timestamp = c.Timestamp
@@ -114,38 +130,3 @@ public class CheepRepository : ICheepRepository
     }
     
 }
-
-
-
-///// CREATE METHODS - COVERED BY IDENTITY CORE NOW
-
-/*
-    public async Task<int> CreateAuthor(AuthorDTO author)
-    {
-        var newAuthor = new Author()
-        {
-            UserName = author.Name,
-            Email = author.Email,
-        };
-        var queryResult = await _dbContext.Authors.AddAsync(newAuthor);
-        await _dbContext.SaveChangesAsync();
-        return queryResult.Entity.Id();
-    }
-*/
-
-/*
-    public async Task<int> InsertAuthor(string username, string email)
-    {
-        var newAuthor = new Author
-        {
-            Name = username,
-            Email = email,
-            Cheeps = new List<Cheep>(),
-        };
-
-        _dbContext.Authors.Add(newAuthor);
-        await _dbContext.SaveChangesAsync();
-
-        return newAuthor.AuthorID;
-    }
-    */

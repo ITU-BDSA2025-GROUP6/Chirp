@@ -60,6 +60,21 @@ public class PublicModel : PageModel
         return Redirect("/");
     }
 
+    public async Task<IActionResult> OnPostDelete(int cheepId)
+    {
+        if (! User.Identity?.IsAuthenticated ?? true)
+        {
+            return  Redirect("/");
+        }
+        var authorName = User.Identity?.Name;
+        if (string.IsNullOrEmpty(authorName))
+        {
+            return Redirect("/");
+        }
+        await _service.DeleteCheep(cheepId, authorName);
+        return Redirect("/");
+    }
+
 
     public async Task<IActionResult> OnGetFollowBtn(string authorName)
     {
@@ -98,27 +113,3 @@ public class PublicModel : PageModel
         return RedirectToPage();
     }
 }
-
-
-        /*
-        if (!User.Identity.IsAuthenticated)
-        {
-            return Redirect("/login");
-        }
-
-        AuthorDTO user = await _authorService.GetAuthorByName(User.Identity.Name);
-        AuthorDTO follower = await _authorService.GetAuthorByName(authorName);
-
-        if (user == null || follower == null)
-        {
-            return NotFound();
-        }
-
-        if (user.Id != follower.Id && !user.Following.Contains(follower))
-        {
-            user.Following.Add(follower);
-        }
-
-        return RedirectToPage();
-        */
-   

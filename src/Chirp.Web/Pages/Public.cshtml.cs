@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Net.Mime;
 using Chirp.Core;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Interfaces;
@@ -14,7 +13,7 @@ public class PublicModel : PageModel
     private readonly IAuthorService _authorService;
     public Task<List<CheepDTO>> Cheeps { get; set; } = Task.FromResult(new List<CheepDTO>());
     
-    public Task<List<Author>> Followers { get; set; }
+    public Task<List<Author>>? Followers { get; set; }
     
     [BindProperty]
     [StringLength(160, ErrorMessage = "The {0} must be at max {1} characters long.")]
@@ -27,8 +26,8 @@ public class PublicModel : PageModel
 
     public ActionResult OnGet()
     {
-        int currentpage = 1;
-        Cheeps = _service.GetCheeps(currentpage);
+        int currentPage = 1;
+        Cheeps = _service.GetCheeps(currentPage);
         return Page();
     }
 
@@ -48,13 +47,13 @@ public class PublicModel : PageModel
         var authorName = User.Identity?.Name;
         if (string.IsNullOrEmpty(authorName)) return Redirect("/");
         
-        CheepDTO newcheep = new CheepDTO // not 100% but should automaticlly incremnt the id, check if this is the case.
+        CheepDTO newCheep = new CheepDTO // not 100% but should automatically increment the id, check if this is the case.
         {
             AuthorName = authorName,
             Text = Text,
             Timestamp = DateTime.UtcNow
         };
-        _service.CreateCheep(newcheep);
+        _service.CreateCheep(newCheep);
         
         
         return Redirect("/");
@@ -65,16 +64,19 @@ public class PublicModel : PageModel
     {
         //if (!User.Identity.IsAuthenticated)
            // return Redirect("/");
+           
+        var username = User.Identity?.Name;
+        if (string.IsNullOrEmpty(username)) return Redirect("/");
 
-        var currentUser = await _authorService.GetAuthorEntityByName(User.Identity.Name);
+        var currentUser = await _authorService.GetAuthorEntityByName(username);
         var followTarget = await _authorService.GetAuthorEntityByName(authorName);
 
         if (currentUser == null || followTarget == null || currentUser.Id == followTarget.Id)
             return Redirect("/");
         
-        Console.WriteLine($"CurrentUser: {currentUser?.UserName}");
-        Console.WriteLine($"FollowTarget: {followTarget?.UserName}");
-        Console.WriteLine($"Following.Count before add: {currentUser?.Following.Count}");
+        Console.WriteLine($"CurrentUser: {currentUser.UserName}");
+        Console.WriteLine($"FollowTarget: {followTarget.UserName}");
+        Console.WriteLine($"Following.Count before add: {currentUser.Following.Count}");
 
 
         bool alreadyFollow = currentUser.Following
@@ -93,7 +95,7 @@ public class PublicModel : PageModel
             await _authorService.SaveChangesAsync();
         }
 
-        Console.WriteLine($"Following.Count after add: {currentUser?.Following.Count}");
+        Console.WriteLine($"Following.Count after add: {currentUser.Following.Count}");
         
         return RedirectToPage();
     }

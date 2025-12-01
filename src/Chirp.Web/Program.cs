@@ -17,6 +17,7 @@ if (builder.Environment.IsProduction())
 {
     //ChatGPT help here
     connectionString = builder.Configuration.GetConnectionString("AzureSQL")
+        ?? Environment.GetEnvironmentVariable("SQLAZURECONNSTR_AzureSQL")
                        ?? throw new InvalidOperationException(
                            "AzureSQL connection string not found.  Configure it in Azure Portal.");
 

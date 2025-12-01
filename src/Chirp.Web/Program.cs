@@ -15,20 +15,19 @@ var connectionString = "";
 // Check if code is running in production environment (like Azure)
 if (builder.Environment.IsProduction())
 {
-    var persistentDbPath = "/home/data/Chirp.db";
-    connectionString = $"Data Source={persistentDbPath};";
-    
-    var dbDir = Path.GetDirectoryName(persistentDbPath);
-    if (!string.IsNullOrEmpty(dbDir) && !Directory.Exists(dbDir))
-    {
-        Directory.CreateDirectory(dbDir);
-    }
-}
-else
-{
-    connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-}    
-builder.Services.AddDbContext<CheepDBContext>(options => options.UseSqlite(connectionString));
+    //ChatGPT help here
+    connectionString = builder.Configuration.GetConnectionString("AzureSQL")
+                       ?? throw new InvalidOperationException(
+                           "AzureSQL connection string not found.  Configure it in Azure Portal.");
+
+    builder.Services.AddDbContext<CheepDBContext>(options => options.UseSqlServer(connectionString));
+} 
+else 
+{ 
+    connectionString = builder. Configuration.GetConnectionString("DefaultConnection")
+                       ??  "Data Source=Chirp.db";
+    builder.Services.AddDbContext<CheepDBContext>(options => options.UseSqlite(connectionString));
+} 
 
 // Adds the Identity services to the DI container and uses a custom user type, ApplicationUser
 builder.Services.AddDefaultIdentity<Author>(options =>
@@ -107,14 +106,11 @@ if (!app.Environment.IsDevelopment())
 // Create a disposable service scope
 using (var scope = app.Services.CreateScope())
 {
-    using var context = scope.ServiceProvider.GetService<CheepDBContext>();
-    if (context != null)
+    using var context = scope.ServiceProvider.GetRequiredService<CheepDBContext>();
+    context.Database.Migrate();
+    if (app.Environment.EnvironmentName != "Testing")
     {
-        context.Database.Migrate();
-        if (app.Environment.EnvironmentName != "Testing")
-        {
-            DbInitializer.SeedDatabase(context);
-        }
+        DbInitializer.SeedDatabase(context);
     }
 }
 

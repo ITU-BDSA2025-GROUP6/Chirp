@@ -58,8 +58,12 @@ builder.Services.AddScoped<ICheepService, CheepService>();
 builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
-
-// External login options
+// HSTS necessary for the HSTS header for reasons
+builder.Services.AddHsts(options =>
+{
+    options.MaxAge = TimeSpan.FromHours(1);
+});
+// github authentication
 builder.Services.AddAuthentication()
     .AddGitHub(githubOptions =>
     {
@@ -103,18 +107,21 @@ if (!app.Environment.IsDevelopment())
 // Create a disposable service scope
 using (var scope = app.Services.CreateScope())
 {
-    // From the scope, get an instance of our database context.
-    // Through the `using` keyword, we make sure to dispose it after we are done.
     using var context = scope.ServiceProvider.GetService<CheepDBContext>();
     if (context != null)
     {
-        DbInitializer.SeedDatabase(context);
+        context.Database.Migrate();
+        if (app.Environment.EnvironmentName != "Testing")
+        {
+            DbInitializer.SeedDatabase(context);
+        }
     }
-
-    // Execute the migration from code.
-    //context.Database.Migrate();
 }
 
+if(app.Environment.IsProduction())
+{
+    app.UseHsts(); // Send HSTS headers, but only in production
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

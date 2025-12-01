@@ -11,16 +11,20 @@
 
 <div>
     <h2> Public Timeline </h2>
-     @if (SignInManager.IsSignedIn(User)) {
-      <div class="cheepbox">
-             <h3>Chirp little bird, @(User.Identity.Name ) </h3>
-             <form method="post">
-                 @Html.AntiForgeryToken()
-                 <input style="float: left" type="text" asp-for="Text">
-                 <input type="submit" value="Share">
-             </form>
-         </div>
-     }
+    @if (SignInManager.IsSignedIn(User)) {
+        <div class="cheepbox">
+            <h3>Chirp little bird, @(User.Identity!.Name ?? "anon") </h3>
+            <form method="post">
+                @Html.AntiForgeryToken()
+                <div>
+                    <input style="float: left" type="text" asp-for="Text" maxlength="200">
+                    <input type="submit" value="Share">
+                </div>
+                
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </form>
+        </div>
+    }
 
     @if (Model.Cheeps.Result.Any())
     {
@@ -28,13 +32,25 @@
             @foreach (var cheep in Model.Cheeps.Result)
             {
                 <li>
-                    <p>
+                    <div>
                         <strong>
                             <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
                         </strong>
-                        @cheep.Text
+                        <span>@cheep.Text</span>
                         <small>&mdash; @cheep.Timestamp</small>
-                    </p>
+                        
+                        @if (User.Identity?.Name == cheep.AuthorName)
+                        {
+                            <form method="post" asp-page-handler="Delete" style="display:inline;">
+                                <input type="hidden" name="cheepID" value="@cheep.CheepID" />
+                                <button type="submit" onclick="return confirm('Delete this cheep');">
+                                    Delete
+                                </button>
+                            </form>
+                        }
+                        
+                        <a class="followbutton" asp-page-handler="FollowBtn" asp-route-authorName="@cheep.AuthorName"><button>Follow</button></a>
+                    </div>
                 </li>
             }
         </ul>
@@ -53,3 +69,19 @@
         <em>There are no cheeps so far.</em>
     }
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial.cshtml" />
+    
+    <script>
+        function toggleFollow(btn) {
+            if (btn.innerText === "Follow") {
+                btn.innerText = "Unfollow";
+                btn.classList.add("unfollowbutton");
+            } else {
+                btn.innerText = "Follow";
+                btn. classList.remove("unfollowbutton");
+            }
+        }
+    </script>
+}

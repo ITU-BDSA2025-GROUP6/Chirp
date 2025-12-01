@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Chirp.Web</RootNamespace>
+    <UserSecretsId>chirp-web-dev</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

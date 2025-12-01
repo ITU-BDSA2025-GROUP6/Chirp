@@ -17,6 +17,7 @@ if (builder.Environment.IsProduction())
 {
     //ChatGPT help here
     connectionString = builder.Configuration.GetConnectionString("AzureSQL")
+        ?? Environment.GetEnvironmentVariable("SQLAZURECONNSTR_AzureSQL")
                        ?? throw new InvalidOperationException(
                            "AzureSQL connection string not found.  Configure it in Azure Portal.");
 
@@ -41,7 +42,7 @@ builder.Services.AddDefaultIdentity<Author>(options =>
         options.Password.RequireUppercase = false;
         options.Password.RequireLowercase = false;
         options.User.AllowedUserNameCharacters =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ ";
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.@";
     })
     .AddEntityFrameworkStores<CheepDBContext>();
 
@@ -63,35 +64,44 @@ builder.Services.AddHsts(options =>
     options.MaxAge = TimeSpan.FromHours(1);
 });
 // github authentication
-builder.Services.AddAuthentication()
-    .AddGitHub(githubOptions =>
-    {
-        githubOptions.ClientId = builder.Configuration["authentication:github:clientId"];
-        githubOptions.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
-        githubOptions.CallbackPath = "/signin-github";
-        githubOptions.Scope.Add("user:email"); // Explicitly asking for Email as Github can be difficult to get Email from
-        githubOptions.SaveTokens = true; // maybe
+var githubClientId = builder.Configuration["authentication:github:clientId"];
+var  githubClientSecret = builder.Configuration["authentication:github:clientSecret"];
+var googleClientId = builder.Configuration["authentication:google:clientId"];
+var googleClientSecret = builder.Configuration["authentication:google:clientSecret"];
 
+var authBuilder = builder.Services.AddAuthentication();
+
+if (!string.IsNullOrEmpty(githubClientId) && !string.IsNullOrEmpty(githubClientSecret))
+{
+    authBuilder.AddGitHub(githubOptions =>
+    {
+        githubOptions.ClientId = githubClientId;
+        githubOptions.ClientSecret = githubClientSecret;
+        githubOptions.CallbackPath = "/signin-github";
+        githubOptions.Scope
+            .Add("user:email"); // Explicitly asking for Email as Github can be difficult to get Email from
+        githubOptions.SaveTokens = true; // maybe
         githubOptions.CorrelationCookie.SameSite = SameSiteMode.None;
         githubOptions.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-    })
-    .AddGoogle(googleOptions =>
-        {
-            googleOptions.ClientId = builder.Configuration["authentication:google:clientId"];
-            googleOptions.ClientSecret = builder.Configuration["authentication:google:clientSecret"];
-            googleOptions.CallbackPath = "/signin-google";
+    });
+}
 
-            // Optional: get additional info like profile or email
-            googleOptions.Scope.Add("profile");
-            googleOptions.Scope.Add("email");
-
-
-            googleOptions.SaveTokens = true;
-
-            // Ensure cookies are secure for cross-site auth
-            googleOptions.CorrelationCookie.SameSite = SameSiteMode.None;
-            googleOptions.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-        });
+if (!string.IsNullOrEmpty(googleClientId) && !string.IsNullOrEmpty(githubClientSecret))
+{
+    authBuilder.AddGoogle(googleOptions =>
+    {
+        googleOptions.ClientId = googleClientId;
+        googleOptions.ClientSecret = googleClientSecret;
+        googleOptions.CallbackPath = "/signin-google";
+        // Optional: get additional info like profile or email
+        googleOptions.Scope.Add("profile");
+        googleOptions.Scope.Add("email");
+        googleOptions.SaveTokens = true;
+        // Ensure cookies are secure for cross-site auth
+        googleOptions.CorrelationCookie.SameSite = SameSiteMode.None;
+        googleOptions.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+    });
+}
 
 var app = builder.Build();
 
@@ -114,10 +124,10 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-if(app.Environment.IsProduction())
-{
-    app.UseHsts(); // Send HSTS headers, but only in production
-}
+// if(app.Environment.IsProduction())
+// {
+//     app.UseHsts(); // Send HSTS headers, but only in production
+// }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

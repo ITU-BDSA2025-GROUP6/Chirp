@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -40,6 +41,8 @@ builder.Services.AddDefaultIdentity<Author>(options =>
         options.Password.RequireDigit = false;
         options.Password.RequireUppercase = false;
         options.Password.RequireLowercase = false;
+        options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_ ";
     })
     .AddEntityFrameworkStores<CheepDBContext>();
 
@@ -62,30 +65,36 @@ builder.Services.AddHsts(options =>
 });
 // github authentication
 builder.Services.AddAuthentication()
-    /*
+    .AddGitHub(githubOptions =>
     {
-        options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = "GitHub";
-    })
-    */
-    .AddGitHub(o =>
-    {
-        o.ClientId = builder.Configuration["authentication:github:clientId"] 
-                     ?? throw new InvalidOperationException("GitHub ClientId not configured");
-        o.ClientSecret = builder.Configuration["authentication:github:clientSecret"] 
-                     ?? throw new  InvalidOperationException("GitHub ClientSecret not configured");
-        o.CallbackPath = "/signin-github";
-        o.Scope.Add("user:email"); // Explicitly asking for Email as Github can be difficult to get Email from
-        o.SaveTokens = true; // maybe
+        githubOptions.ClientId = builder.Configuration["authentication:github:clientId"];
+        githubOptions.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
+        githubOptions.CallbackPath = "/signin-github";
+        githubOptions.Scope.Add("user:email"); // Explicitly asking for Email as Github can be difficult to get Email from
+        githubOptions.SaveTokens = true; // maybe
 
-        o.CorrelationCookie.SameSite = SameSiteMode.None;
-        o.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-    });
+        githubOptions.CorrelationCookie.SameSite = SameSiteMode.None;
+        githubOptions.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+    })
+    .AddGoogle(googleOptions =>
+        {
+            googleOptions.ClientId = builder.Configuration["authentication:google:clientId"];
+            googleOptions.ClientSecret = builder.Configuration["authentication:google:clientSecret"];
+            googleOptions.CallbackPath = "/signin-google";
+
+            // Optional: get additional info like profile or email
+            googleOptions.Scope.Add("profile");
+            googleOptions.Scope.Add("email");
+
+
+            googleOptions.SaveTokens = true;
+
+            // Ensure cookies are secure for cross-site auth
+            googleOptions.CorrelationCookie.SameSite = SameSiteMode.None;
+            googleOptions.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+        });
 
 var app = builder.Build();
-
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

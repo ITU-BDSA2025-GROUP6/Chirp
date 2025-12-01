@@ -9,7 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="8.1.0" />
+    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="8.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.21" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.21" />
@@ -34,8 +37,14 @@
     <Folder Include="Areas\Identity\Data\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <AdditionalFiles Include="Pages\Shared\_ValidationScriptsPartial.cshtml" />
-  </ItemGroup>
+   <PropertyGroup>
+      <TargetFramework>net8.0</TargetFramework>
+      <Nullable>enable</Nullable>
+      <ImplicitUsings>enable</ImplicitUsings>
+      <RootNamespace>Chirp.Web</RootNamespace>
+
+      <!-- Add this -->
+      <UserSecretsId>chirp-web-dev</UserSecretsId>
+    </PropertyGroup>
 
 </Project>

@@ -86,7 +86,7 @@ if (!string.IsNullOrEmpty(githubClientId) && !string.IsNullOrEmpty(githubClientS
     });
 }
 
-if (!string.IsNullOrEmpty(googleClientId) && !string.IsNullOrEmpty(githubClientSecret))
+if (!string.IsNullOrEmpty(googleClientId) && !string.IsNullOrEmpty(googleClientSecret))
 {
     authBuilder.AddGoogle(googleOptions =>
     {

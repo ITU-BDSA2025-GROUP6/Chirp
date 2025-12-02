@@ -117,7 +117,8 @@ if (!app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     using var context = scope.ServiceProvider.GetRequiredService<CheepDBContext>();
-    context.Database.Migrate();
+    if (app.Environment.IsProduction()) context.Database.EnsureCreated();
+    else context.Database.Migrate();
     if (app.Environment.EnvironmentName != "Testing")
     {
         DbInitializer.SeedDatabase(context);

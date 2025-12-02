@@ -1,7 +1,4 @@
 using Microsoft.Playwright;
-using System;
-using System.Threading.Tasks;
-using NUnit.Framework;
 
 namespace PlaywrightTests
 {
@@ -9,7 +6,7 @@ namespace PlaywrightTests
     {
         private IPlaywright _playwright;
         private IBrowser _browser;
-
+        
         [SetUp]
         public async Task Setup()
         {
@@ -35,6 +32,9 @@ namespace PlaywrightTests
             var page = await context.NewPageAsync();
 
             await page.GotoAsync("https://localhost:5273/");
+            /* 
+            User already registered !!!
+            ¨
             await page.GetByRole(AriaRole.Link, new() { Name = "Register" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("testemail@example.com");
@@ -44,6 +44,8 @@ namespace PlaywrightTests
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).FillAsync("Qwerty123!");
             await page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
+            
+            */
             await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("testemail@example.com");

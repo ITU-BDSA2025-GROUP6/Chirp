@@ -33,7 +33,7 @@ namespace PlaywrightTests
 
             await page.GotoAsync("https://localhost:5273/");
             /* 
-            User already registered !!!
+            User already registered !!! - CHECK issue #139 !!!
             ¨
             await page.GetByRole(AriaRole.Link, new() { Name = "Register" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();

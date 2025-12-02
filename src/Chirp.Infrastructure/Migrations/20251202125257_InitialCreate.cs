@@ -180,8 +180,8 @@ namespace Chirp.Infrastructure.Migrations
                 name: "Follows",
                 columns: table => new
                 {
-                    FollowsId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
-                    FollowedById = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false)
+                    FollowsId = table.Column<string>(type: "TEXT", nullable: false),
+                    FollowedById = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

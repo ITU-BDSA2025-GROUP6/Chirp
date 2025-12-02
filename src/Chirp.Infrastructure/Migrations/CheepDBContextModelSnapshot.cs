@@ -108,11 +108,9 @@ namespace Chirp.Infrastructure.Migrations
             modelBuilder.Entity("Chirp.Core.Follows", b =>
                 {
                     b.Property<string>("FollowsId")
-                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FollowedById")
-                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.HasKey("FollowsId", "FollowedById");

@@ -3,8 +3,6 @@ using Chirp.Core;
 using Chirp.Infrastructure;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Xunit;
 
 namespace Database_Test;
 
@@ -164,6 +162,77 @@ public class CheepRepositoryTests : IDisposable
 
             // Assert
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await _repository.CreateCheep(cheep2));
+        }
+    }
+
+    public class UpdateCheep : CheepRepositoryTests
+    {
+        [Fact]
+        public async Task UpdateCheep_ShouldUpdateCheepText()
+        {
+            // Arrange 
+            var id = 1;
+            var originalCheep = new CheepDTO
+            {
+                CheepID = id,
+                AuthorName = "Test Author",
+                Text = "Hello, this is a test cheep!"
+            };
+            
+            await _repository.CreateCheep(originalCheep);
+            
+            var updatedCheep = new CheepDTO
+            {
+                CheepID = id,
+                AuthorName = "Test Author",
+                Text = "Updated text"
+            };
+            
+            // Act
+            await _repository.UpdateCheep(updatedCheep);
+
+            // Assert
+            var result = await _context.Cheeps.FindAsync(id);
+            Assert.Equal("Updated text", result?.Text);
+        }
+    }
+
+    public class DeleteCheep : CheepRepositoryTests
+    {
+        [Fact]
+        public async Task DeleteCheep_ShouldDeleteCheep()
+        {
+            // Arrange
+            var cheepDto = new CheepDTO
+            {
+                AuthorName = "Test Author",
+                Text = "Hello, this is a test cheep!",
+            };
+            await _repository.CreateCheep(cheepDto);
+
+            var cheep = await _context.Cheeps
+                .Include(c => c.Author)
+                .FirstAsync();
+            
+            // Act
+            var result = await _repository.DeleteCheep(cheep.CheepID, cheep.Author.UserName);
+            
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task DeleteCheep_ShouldThrowExceptionIfCheepNotFound()
+        {
+            // Arrange
+            var id = 2; 
+            var name = "Test";
+            
+            // Act
+            var result = await _repository.DeleteCheep(id, name);
+            
+            // Assert
+            Assert.False(result);
         }
     }
 }

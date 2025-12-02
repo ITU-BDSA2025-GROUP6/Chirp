@@ -4,13 +4,9 @@ namespace Chirp.Core;
 
 public class Follows
 {
-    [Required]
-    [MaxLength(36)]
-    public string? FollowsId { get; set; }
+    [Required] public string FollowsId { get; set; } = string.Empty;
     public Author? FollowsAuthor { get; set; }
 
-    [Required]
-    [MaxLength(36)]
-    public string? FollowedById { get; set; } 
+    [Required] public string FollowedById { get; set; } = string.Empty;
     public Author? FollowedByAuthor { get; set; }
 }

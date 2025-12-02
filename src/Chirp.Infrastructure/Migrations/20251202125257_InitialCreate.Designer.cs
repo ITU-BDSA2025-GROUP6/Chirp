@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chirp.Infrastructure.Migrations
 {
     [DbContext(typeof(CheepDBContext))]
-    [Migration("20251202104508_InitialCreate")]
+    [Migration("20251202125257_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -111,11 +111,9 @@ namespace Chirp.Infrastructure.Migrations
             modelBuilder.Entity("Chirp.Core.Follows", b =>
                 {
                     b.Property<string>("FollowsId")
-                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FollowedById")
-                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.HasKey("FollowsId", "FollowedById");

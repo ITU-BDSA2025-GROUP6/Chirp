@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Chirp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddFollows : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -180,8 +180,8 @@ namespace Chirp.Infrastructure.Migrations
                 name: "Follows",
                 columns: table => new
                 {
-                    FollowsId = table.Column<string>(type: "TEXT", nullable: false),
-                    FollowedById = table.Column<string>(type: "TEXT", nullable: false)
+                    FollowsId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    FollowedById = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false)
                 },
                 constraints: table =>
                 {

@@ -9,20 +9,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="8.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="8.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
+    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0.21" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.21" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="8.0.21" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.21" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.21" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.21">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.22" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.22">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.21" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.21">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -36,15 +35,5 @@
   <ItemGroup>
     <Folder Include="Areas\Identity\Data\" />
   </ItemGroup>
-
-   <PropertyGroup>
-      <TargetFramework>net8.0</TargetFramework>
-      <Nullable>enable</Nullable>
-      <ImplicitUsings>enable</ImplicitUsings>
-      <RootNamespace>Chirp.Web</RootNamespace>
-
-      <!-- Add this -->
-      <UserSecretsId>chirp-web-dev</UserSecretsId>
-    </PropertyGroup>
 
 </Project>

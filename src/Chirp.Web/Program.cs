@@ -21,7 +21,14 @@ if (builder.Environment.IsProduction())
                        ?? throw new InvalidOperationException(
                            "AzureSQL connection string not found.  Configure it in Azure Portal.");
 
-    builder.Services.AddDbContext<CheepDBContext>(options => options.UseSqlServer(connectionString));
+    builder.Services.AddDbContext<CheepDBContext>(options => 
+        options.UseSqlServer(connectionString, sqlOptions =>
+            {
+                sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 5,
+                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                    errorNumbersToAdd: null);
+            }));
 } 
 else 
 { 

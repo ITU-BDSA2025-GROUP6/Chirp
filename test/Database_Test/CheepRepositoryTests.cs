@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations;
 using Chirp.Core;
 using Chirp.Infrastructure;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Xunit;
 
 namespace Database_Test;
@@ -60,7 +62,96 @@ public class CheepRepository_Tests : IDisposable
     [Fact]
     public async Task CreateCheep_ShouldThrowExecptionIfCheepTooLong()
     {
+        //Arrange
+        var invalidCheep = new CheepDTO
+        {
+            AuthorName = "Test Author",
+            Text = new string('*', 200),
+            Timestamp = DateTime.UtcNow
+        };
+
+        var validCheep = new CheepDTO
+        {
+            AuthorName = "Test Author",
+            Text = new string('*', 160),
+            Timestamp = DateTime.UtcNow
+        };
         
+        
+        var resultId = await _repository.CreateCheep(validCheep);
+        Assert.True(resultId > 0);
+
+        await Assert.ThrowsAsync<ValidationException>(async () => await _repository.CreateCheep(invalidCheep));
+    }
+
+    [Fact]
+    public async Task CreateCheep_ShouldThrowExceptionIfAuthorNotFound()
+    {
+        var cheep = new CheepDTO
+        {
+            AuthorName = "No Author",
+            Text = "Hello, this is a test cheep!",
+            Timestamp = DateTime.UtcNow
+        };
+        
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _repository.CreateCheep(cheep));
+    }
+
+    [Fact]
+    public async Task CreateCheep_ShouldSetTimestampIfNotProvided()
+    {
+        var cheep = new CheepDTO
+        {
+            AuthorName = "Test Author",
+            Text = "Hello, this is a test cheep!",
+        };
+        
+        var resultId = await _repository.CreateCheep(cheep);
+        var savedCheep = await _context.Cheeps.FindAsync(resultId);
+        
+        Assert.NotNull(savedCheep);
+        Assert.True(savedCheep.Timestamp < DateTime.UtcNow);
+        Assert.True(DateTime.UtcNow - savedCheep.Timestamp < TimeSpan.FromSeconds(1));
+    }
+
+    [Fact]
+    public async Task CreateCheep_ShouldHandleProvidedCheepId()
+    {
+        var cheep = new CheepDTO
+        {
+            CheepID = 100,
+            AuthorName = "Test Author",
+            Text = "Hello, this is a test cheep!",
+            Timestamp = DateTime.UtcNow
+        };
+        var resultId = await _repository.CreateCheep(cheep);
+        Assert.True(resultId > 0);
+        Assert.NotEqual(0, resultId);
+        Assert.Equal(100, resultId);
+    }
+
+    [Fact]
+    public async Task CreateCheep_ShouldThrowExceptionIfCheepIdAlreadyExists()
+    {
+        // Arrange
+        var cheep1 = new CheepDTO
+        {
+            CheepID = 1,
+            AuthorName = "Test Author",
+            Text = "Hello, this is a test cheep!",
+        };
+        var cheep2 = new CheepDTO
+        {
+            CheepID = 1,
+            AuthorName = "Test Author",
+            Text = "Hello, this is a test cheep!",
+        };
+        
+        // Act
+        await _repository.CreateCheep(cheep1);
+        
+        // Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _repository.CreateCheep(cheep2));
     }
 
     [Fact]

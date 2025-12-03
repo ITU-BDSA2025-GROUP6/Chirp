@@ -12,7 +12,7 @@ public class AuthorDTO
     
     public ICollection<Cheep> Cheeps { get; set; } = new List<Cheep>();
 
-    public ICollection<int> RecheepIDs { get; set; } = new List<int>();
+    public List<Recheep> Recheeps { get; set; } = new();
 
     public List<Follows> Following { get; set; } = new();
 }

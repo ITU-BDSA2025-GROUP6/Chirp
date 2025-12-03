@@ -11,7 +11,7 @@ public class CheepDBContext : IdentityDbContext<Author>
 {
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
-    
+    public DbSet<Recheep> Recheeps { get; set; }
     public DbSet<Follows> Follows { get; set; }
     
     public CheepDBContext(DbContextOptions<CheepDBContext> options) : base(options)
@@ -24,6 +24,9 @@ public class CheepDBContext : IdentityDbContext<Author>
 
         builder.Entity<Follows>()
             .HasKey(f => new { f.FollowsId, f.FollowedById });
+
+        builder.Entity<Recheep>()
+            .HasKey(r => new { r.AuthorID, r.CheepID });
 
         builder.Entity<Follows>()
             .HasOne(f => f.FollowsAuthor)

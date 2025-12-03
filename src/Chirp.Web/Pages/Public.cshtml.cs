@@ -40,14 +40,8 @@ public class PublicModel : PageModel
     return Redirect("/");
    }
 
-    // fallback
-   if (author.RecheepIDs == null) { author.RecheepIDs = new List<int>(); }
-
-   author.RecheepIDs.Add(CheepID);
-   foreach (var a in author.RecheepIDs) {
-   Console.WriteLine("Recheep IDs for Author: " + a);
-   }
-
+    AuthorDTO authorDTO = new AuthorDTO { Id = author.Id };
+   _authorService.createRecheep(authorDTO, CheepID);
    return RedirectToPage();
    }
 

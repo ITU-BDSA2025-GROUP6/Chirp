@@ -8,7 +8,8 @@ namespace Chirp.Core
     public class Author : IdentityUser
     { 
         public ICollection<Cheep> Cheeps { get; set; } = new List<Cheep>();
-        public List<int> RecheepIDs = new List<int>(); // List of cheeps we've recheeped, for printing in MyTimeline
+
+        public List<Recheep> Recheeps { get; set; } = new List<Recheep>(); // List of cheeps we've recheeped, for printing in MyTimeline
 
         public List<Follows> Following { get; set; } = new List<Follows>();
 

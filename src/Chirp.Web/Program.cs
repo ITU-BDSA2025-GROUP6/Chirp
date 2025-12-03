@@ -25,9 +25,10 @@ if (builder.Environment.IsProduction())
         options.UseSqlServer(connectionString, sqlOptions =>
             {
                 sqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 5,
+                    maxRetryCount: 10,
                     maxRetryDelay: TimeSpan.FromSeconds(30),
-                    errorNumbersToAdd: null);
+                    errorNumbersToAdd: new List<int> { 0 });
+                sqlOptions.CommandTimeout(60);
             }));
 } 
 else 

@@ -109,9 +109,47 @@ public class PublicModel : PageModel
 
             await _authorService.SaveChangesAsync();
         }
+        else
+        {
+            currentUser.Following.RemoveAll(f => f.FollowedById == followTarget.Id);
+            await _authorService.SaveChangesAsync();
+        }
 
         Console.WriteLine($"Following.Count after add: {currentUser.Following.Count}");
         
         return RedirectToPage();
     }
+
+    public bool IsFollowing(string authorName)
+    {
+        var username = User.Identity?.Name;
+        if (string.IsNullOrEmpty(username)) return false;
+        
+        
+        var currentUser = _authorService.GetAuthorEntityByName(username).Result;
+        var followTarget = _authorService.GetAuthorEntityByName(authorName).Result;
+        if (currentUser == null || followTarget == null)
+            return false;
+
+
+        bool alreadyFollow = currentUser.Following
+            .Any(f => f.FollowedById == followTarget.Id);
+        return alreadyFollow;
+    }
+    
+    public async Task<bool> IsFollowingAsync(string authorName)
+    {
+        var username = User.Identity?.Name;
+        if (string.IsNullOrEmpty(username)) return false;
+
+        var currentUser = await _authorService.GetAuthorEntityByName(username);
+        var followTarget = await _authorService.GetAuthorEntityByName(authorName);
+
+        if (currentUser == null || followTarget == null)
+            return false;
+
+        return currentUser.Following.Any(f => f.FollowedById == followTarget.Id);
+    }
+
+
 }

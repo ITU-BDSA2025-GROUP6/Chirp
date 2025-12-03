@@ -41,6 +41,7 @@
                         
                         @if (User.Identity?.Name == cheep.AuthorName)
                         {
+                           
                             <form method="post" asp-page-handler="Delete" style="display:inline;">
                                 <input type="hidden" name="cheepID" value="@cheep.CheepID" />
                                 <button type="submit" onclick="return confirm('Delete this cheep');">
@@ -49,7 +50,11 @@
                             </form>
                         }
                         
-                        <a class="followbutton" asp-page-handler="FollowBtn" asp-route-authorName="@cheep.AuthorName"><button>Follow</button></a>
+                        @{
+                            var isFollowing = Model.IsFollowing(cheep.AuthorName);
+                        }
+                        
+                        <a class="followbutton" asp-page-handler="FollowBtn" asp-route-authorName="@cheep.AuthorName"><button>@(isFollowing ? "Unfollow" : "Follow")</button></a>
                     </div>
                 </li>
             }

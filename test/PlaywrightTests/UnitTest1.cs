@@ -9,9 +9,9 @@ namespace PlaywrightTests;
 [Parallelizable(ParallelScope.Self)]
 [TestFixture] 
 public class Tests : PageTest
-// Terminal command: pwsh bin/Debug/net8.0/playwright.ps1 codegen  http://localhost:5273 
+// Terminal command: pwsh bin/Debug/net8.0/playwright.ps1 codegen  https://localhost:5273 
 {
-    private const string Url = "http://localhost:5273"; 
+    private const string Url = "https://localhost:5273"; 
     //private const string Url = "https://bdsa2025group6chirp.azurewebsites.net/";
     
     [SetUp]
@@ -47,30 +47,6 @@ public class Tests : PageTest
     }
     
     [Test]
-    public async Task PlaywrightTest1()
-    {
-        await Page.GotoAsync(Url);
-
-        await Page.GetByRole(AriaRole.Paragraph)
-            .Filter(new() { HasText = "Jacqualine Gilcoine Starbuck" })
-            .GetByRole(AriaRole.Link)
-            .ClickAsync();
-
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Next »" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Public timeline" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Heading, new() { Name = "Log in", Exact = true }).ClickAsync();
-        await Page.GetByRole(AriaRole.Heading, new() { Name = "Use a local account to log in." }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Forgot your password?" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "article about setting up this" }).ClickAsync();
-        await Page.GotoAsync("http://localhost:5273/Identity/Account/Login");
-
-        // Assertion
-        StringAssert.Contains("Log in", await Page.TitleAsync());
-        Assert.AreEqual("Log in", await Page.TitleAsync());
-    }
-
-    [Test]
     public async Task GoToRegisterPage()
     {
         await Page.GotoAsync(Url);
@@ -101,5 +77,26 @@ public class Tests : PageTest
         await getStarted.ClickAsync();
         // Expects the URL to contain intro.
         await Expect(Page).ToHaveURLAsync(new Regex(".*intro"));
+    }
+
+    [Test]
+    public async Task UserCanLogin_NavigateTimelines_PostCheep_ThenLogout()
+    {
+        await Page.GotoAsync("https://localhost:5273/");
+        
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("test123@test.dk");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).PressAsync("Tab");
+        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync("Test123!");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "My Timeline" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Link, new() { Name = "Public Timeline" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = "Jacqualine Gilcoine Starbuck" }).GetByRole(AriaRole.Button).ClickAsync();
+        await Page.Locator("#Text").ClickAsync();
+        await Page.Locator("#Text").FillAsync("Test cheep!");
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
+        await Page.GetByRole(AriaRole.Button, new() { Name = "Logout [test123@test.dk]" }).ClickAsync();
+
     }
 }

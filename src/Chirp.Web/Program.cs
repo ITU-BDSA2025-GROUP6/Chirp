@@ -60,6 +60,12 @@ builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
 // External login options
+// HSTS necessary for the HSTS header for reasons
+builder.Services.AddHsts(options =>
+{
+    options.MaxAge = TimeSpan.FromHours(1);
+});
+// github authentication
 builder.Services.AddAuthentication()
     .AddGitHub(githubOptions =>
     {
@@ -82,6 +88,16 @@ builder.Services.AddAuthentication()
             googleOptions.Scope.Add("profile");
             googleOptions.Scope.Add("email");
 
+    */
+    .AddGitHub(o =>
+    {
+        o.ClientId = builder.Configuration["authentication:github:clientId"]
+                     ?? throw new InvalidOperationException("GitHub ClientId not configured");
+        o.ClientSecret = builder.Configuration["authentication:github:clientSecret"]
+                     ?? throw new  InvalidOperationException("GitHub ClientSecret not configured");
+        o.CallbackPath = "/signin-github";
+        o.Scope.Add("user:email"); // Explicitly asking for Email as Github can be difficult to get Email from
+        o.SaveTokens = true; // maybe
 
             googleOptions.SaveTokens = true;
 
@@ -91,6 +107,8 @@ builder.Services.AddAuthentication()
         });
 
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -115,6 +133,10 @@ using (var scope = app.Services.CreateScope())
     //context.Database.Migrate();
 }
 
+if(app.Environment.IsProduction())
+{
+    app.UseHsts(); // Send HSTS headers, but only in production
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

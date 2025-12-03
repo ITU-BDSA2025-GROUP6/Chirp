@@ -9,7 +9,7 @@ public class PaginationModel : PageModel
 {
     private readonly ICheepService _service;
 
-    public Task<List<CheepDTO>> Cheeps { get; set; } = Task.FromResult(new List<CheepDTO>());
+    public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
     public bool hasNextPage { get; set; }
     
     public int currentPage { get; set; }
@@ -19,15 +19,14 @@ public class PaginationModel : PageModel
         _service = service;
     }
 
-    public ActionResult OnGet(int index)
+    public async Task<IActionResult> OnGetAsync(int index)
     {
         currentPage = index < 1 ? 1 : index;
-        Cheeps = _service.GetCheeps(currentPage);
-
-        if (_service.GetCheeps((currentPage + 1)).Result.Any())
-        {
-            hasNextPage = true;
-        }
+        
+        Cheeps = await _service.GetCheeps(currentPage);
+        
+        var nextPageCheeps = await _service.GetCheeps(currentPage + 1);
+        hasNextPage = nextPageCheeps.Any();
             
         return Page();
     }

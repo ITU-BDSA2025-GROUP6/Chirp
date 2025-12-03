@@ -1,14 +1,18 @@
+using Chirp.Core;
 using Chirp.Infrastructure.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Infrastructure;
 
 public class AuthorService : IAuthorService
 {
     private readonly IAuthorRepository _repository;
+    private readonly CheepDBContext _context;
 
-    public AuthorService(IAuthorRepository repository)
+    public AuthorService(IAuthorRepository repository, CheepDBContext context)
     {
         _repository = repository;
+        _context = context;
     }
 
     public Task<AuthorDTO> GetAuthorByName(string name)
@@ -18,5 +22,19 @@ public class AuthorService : IAuthorService
     public Task<AuthorDTO> GetAuthorByEmail(string email)
     {
         return _repository.GetAuthorByEmail(email);
+    }
+    
+    
+    public Task<Author?> GetAuthorEntityByName(string name)
+    {
+        return _context.Authors
+            .Include(a => a.Following)
+            .ThenInclude(f => f.FollowedByAuthor)
+            .FirstOrDefaultAsync(a => a.UserName == name);
+    }
+    
+    public Task SaveChangesAsync()
+    {
+        return _context.SaveChangesAsync();
     }
 }

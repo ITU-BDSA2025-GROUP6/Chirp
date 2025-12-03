@@ -9,5 +9,9 @@ namespace Chirp.Core
     { 
         public ICollection<Cheep> Cheeps { get; set; } = new List<Cheep>();
         public List<int> RecheepIDs = new List<int>(); // List of cheeps we've recheeped, for printing in MyTimeline
+
+        public List<Follows> Following { get; set; } = new List<Follows>();
+
+        public List<Follows> FollowedBy { get; set; } = new List<Follows>();
     }
 }

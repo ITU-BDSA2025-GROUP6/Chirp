@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chirp.Infrastructure.Migrations
 {
     [DbContext(typeof(CheepDBContext))]
-    [Migration("20251112144250_IdentitySchema")]
-    partial class IdentitySchema
+    [Migration("20251202125257_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.21");
 
             modelBuilder.Entity("Chirp.Core.Author", b =>
                 {
@@ -91,7 +91,6 @@ namespace Chirp.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("AuthorID")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Text")
@@ -107,6 +106,21 @@ namespace Chirp.Infrastructure.Migrations
                     b.HasIndex("AuthorID");
 
                     b.ToTable("Cheeps");
+                });
+
+            modelBuilder.Entity("Chirp.Core.Follows", b =>
+                {
+                    b.Property<string>("FollowsId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FollowedById")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("FollowsId", "FollowedById");
+
+                    b.HasIndex("FollowedById");
+
+                    b.ToTable("Follows");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -241,11 +255,28 @@ namespace Chirp.Infrastructure.Migrations
                 {
                     b.HasOne("Chirp.Core.Author", "Author")
                         .WithMany("Cheeps")
-                        .HasForeignKey("AuthorID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AuthorID");
 
                     b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Chirp.Core.Follows", b =>
+                {
+                    b.HasOne("Chirp.Core.Author", "FollowedByAuthor")
+                        .WithMany("FollowedBy")
+                        .HasForeignKey("FollowedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Chirp.Core.Author", "FollowsAuthor")
+                        .WithMany("Following")
+                        .HasForeignKey("FollowsId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FollowedByAuthor");
+
+                    b.Navigation("FollowsAuthor");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -302,6 +333,10 @@ namespace Chirp.Infrastructure.Migrations
             modelBuilder.Entity("Chirp.Core.Author", b =>
                 {
                     b.Navigation("Cheeps");
+
+                    b.Navigation("FollowedBy");
+
+                    b.Navigation("Following");
                 });
 #pragma warning restore 612, 618
         }

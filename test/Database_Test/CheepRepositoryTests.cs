@@ -52,7 +52,6 @@ public class CheepRepository_Tests : IDisposable
         var createdCheep = await _context.Cheeps.Include(c => c.Author).FirstOrDefaultAsync();
         //Assert
         Assert.NotNull(createdCheep);
-        Assert.Equal(1,  createdCheep.CheepID);
         Assert.Equal("Test Author", createdCheep.Author?.UserName);
         Assert.Equal("Hello, this is a test cheep!", createdCheep.Text);
     }

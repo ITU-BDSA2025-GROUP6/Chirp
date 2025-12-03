@@ -37,6 +37,43 @@ public class CheepRepository_Tests : IDisposable
     }
 
     [Fact]
+    public async Task CreateCheep_ShouldAutoGenerateId()
+    {
+        var cheep = new CheepDTO
+        {
+            AuthorName = "Test Author",
+            Text = "Oh My Gah",
+            Timestamp = DateTime.UtcNow,
+        };
+        var resultId = await _repository.CreateCheep(cheep);
+        Assert.True(resultId > 0);
+    }
+
+    [Fact]
+    public async Task CreateCheep_ShouldGenerateUniqueId()
+    {
+        var cheep1 = new CheepDTO
+        {
+            AuthorName = "Test Author",
+            Text = "First cheep",
+            Timestamp = DateTime. UtcNow
+        };
+        var cheep2 = new CheepDTO
+        {
+            AuthorName = "Test Author",
+            Text = "Second cheep",
+            Timestamp = DateTime. UtcNow
+        };
+
+        var id1 = await _repository.CreateCheep(cheep1);
+        var id2 = await _repository.CreateCheep(cheep2);
+
+        Assert.NotEqual(id1, id2);
+        Assert.True(id1 > 0);
+        Assert.True(id2 > 0);
+    }
+    
+    [Fact]
     public async Task createCheep_ShouldAddCheepToDatabase()
     {
         //Arrange

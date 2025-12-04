@@ -113,20 +113,48 @@ public class CheepRepository : ICheepRepository
     }
     public async Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int page)
     {
-        var query = _dbContext.Cheeps
-            .Include(c => c.Author)
-            .Where(c => c.Author!.UserName == author)
-            .OrderByDescending(c => c.Timestamp)
-            .Select(c => new CheepDTO   
+        const int pageSize = 32;
+
+        // Get the author's ID
+        var authorId = await _dbContext.Authors
+            .Where(a => a.UserName == author)
+            .Select(a => a.Id)
+            .FirstOrDefaultAsync();
+
+        if (authorId == null)
+            return new List<CheepDTO>();
+
+        // Cheeps written by user
+        var authored = _dbContext.Cheeps
+            .Where(c => c.AuthorID == authorId)
+            .Select(c => new CheepDTO
             {
                 Text = c.Text,
-                AuthorName = c.Author!.UserName ?? string.Empty,
+                AuthorName = c.Author.UserName,
                 Timestamp = c.Timestamp
-            })
-            .Skip((page - 1) * 32)                 
-            .Take(32);
+            });
 
-        return await query.ToListAsync();
+        // Cheeps the user recheeped
+        var recheeped = _dbContext.Recheeps
+            .Where(r => r.AuthorID == authorId)
+            .Join(
+                _dbContext.Cheeps,
+                r => r.CheepID,
+                c => c.CheepID,
+                (r, c) => new CheepDTO
+                {
+                    Text = c.Text,
+                    AuthorName = c.Author.UserName,
+                    Timestamp = c.Timestamp
+                }
+            );
+
+        return await authored
+            .Concat(recheeped)
+            .OrderByDescending(c => c.Timestamp)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
     }
     
 }

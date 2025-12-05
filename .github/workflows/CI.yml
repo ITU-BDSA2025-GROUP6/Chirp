@@ -49,7 +49,7 @@ jobs:
           dotnet-version: 8.x
           
       - name: Run tests
-        run: dotnet test -c Release --filter "FullyQualifiedName!~PlaywrightTests"
+        run: dotnet test -c Release --filter "FullyQualifiedName!~End2End"
         env:
           ASPNETCORE_ENVIRONMENT: Testing
 

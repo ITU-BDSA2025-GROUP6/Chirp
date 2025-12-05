@@ -1,6 +1,6 @@
 using Microsoft.Playwright;
 
-namespace PlaywrightTests
+namespace End2End
 {
     public class RegisterAndLogInTest
     {

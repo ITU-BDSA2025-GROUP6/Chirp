@@ -3,7 +3,7 @@ using Chirp.Infrastructure;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace Database_Test;
+namespace UnitTests;
 
 public class AuthorRepositoryTests : IDisposable
 {

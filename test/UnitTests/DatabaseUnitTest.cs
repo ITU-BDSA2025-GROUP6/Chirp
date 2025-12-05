@@ -1,4 +1,4 @@
-namespace Database_Test;
+namespace UnitTests;
 
 public class DatabaseUnitTest
 {

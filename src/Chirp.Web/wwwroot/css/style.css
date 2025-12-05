@@ -139,6 +139,13 @@ div.page ul.cheeps li {
   min-height: 48px;
 }
 
+div.page ul.cheeps li div.cheep-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
 div.page ul.cheeps p {
   margin: 0;
     display: flex;

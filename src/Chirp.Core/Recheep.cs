@@ -4,7 +4,8 @@ namespace Chirp.Core;
 
  public class Recheep
  {
-     [Required] public string AuthorID { get; set; }
-
-     [Required] public int CheepID { get; set; }
+     
+     [Required] public required string AuthorID { get; set; }
+    
+     [Required] public required int CheepID { get; set; }
  }

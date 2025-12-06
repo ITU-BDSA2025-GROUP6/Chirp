@@ -39,12 +39,15 @@
                         <br />
                         <span>@cheep.Text</span>
                         <br />
+                        @if (SignInManager.IsSignedIn(User) && User.Identity?.Name != cheep.AuthorName)
+                        {
+                            <form method="post" asp-page-handler="Recheep">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="CheepID" value="@cheep.CheepID" />
+                                <button type="submit" class="btn btn-sm btn-primary">Recheep</button>
+                            </form>
+                        }
 
-                         <form method="post" asp-page-handler="Recheep">
-                             @Html.AntiForgeryToken()
-                            <input type="hidden" name="CheepID" value="@cheep.CheepID" />
-                            <button type="submit" class="btn btn-sm btn-primary">Recheep</button>
-                         </form>
                         <small>&mdash; @cheep.Timestamp</small>
 
                         @if (User.Identity?.Name == cheep.AuthorName)
@@ -57,11 +60,13 @@
                             </form>
                         }
 
-                        <a class="followbutton" asp-page-handler="FollowBtn" asp-route-authorName="@cheep.AuthorName"><button>Follow</button></a>
+                        <a class="followbutton" asp-page-handler="FollowBtn" asp-route-authorName="@cheep.AuthorName">
+                            <button>Follow</button>
+                        </a>
                     </div>
                 </li>
             }
-        </ul>
+            </ul>
         
         <div class="navigation">
             @if (currentPage > 1)

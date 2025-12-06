@@ -102,7 +102,7 @@ public class CheepRepository : ICheepRepository
                 {
                     CheepID = c.CheepID,
                     Text = c.Text,
-                    AuthorName = c.Author!.UserName ?? string.Empty,
+                    AuthorName = c.Author != null ? c.Author.UserName : string.Empty,                    
                     Timestamp = c.Timestamp
                 })
                 .Skip((page - 1) * 32)    // TODO check if offset is correct 

@@ -145,6 +145,11 @@ div.page ul.cheeps li .cheep-header {
     gap: 5px;
     margin-bottom: 8px;
 }
+div.page ul.cheeps li .cheep-content .cheep-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
 div.page ul.cheeps p {
   margin: 0;
@@ -179,22 +184,25 @@ div.page ul.cheeps li .cheep-header .unfollowbutton {
     background: #571010;
     color: white;
 }
-
-div.page ul.cheeps li .cheep-header .deletebutton {
-    background: #68b1ff;
-    color: white;
+div.page ul.cheeps li .cheep-content .cheep-footer form.deleter {
+    margin: 0;
+    display: inline-block;
+}
+div.page ul.cheeps li .cheep-content .cheep-footer button.deletebutton {
+    background: transparent;
+    color: #888;
     border: 1px solid #ccc;
-    padding: 3px 8px;
+    padding: 2px 8px;
     font-size: 0.85em;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-div.page ul.cheeps li .cheep-header .deletebutton:hover {
-    background: #571010;
+div.page ul.cheeps li .cheep-content .cheep-footer button.deletebutton:hover {
+    background: #e29494;
     color: white;
-    border-color: #571010;
+    border-color: #e29494;
 }
 
 div.page ul.cheeps li .cheep-content {

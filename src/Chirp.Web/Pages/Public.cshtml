@@ -50,16 +50,18 @@
                     </div>
                     <div class="cheep-content">
                         <p>@cheep.Text</p>
+                        <div class="cheep-footer">
                         <small>&mdash; @cheep.Timestamp</small>
                         @if (User.Identity?.Name == cheep.AuthorName)
                         {
-                            <form method="post" asp-page-handler="Delete" class="delete-form">
+                            <form method="post" asp-page-handler="Delete" class="deleter">
                                 <input type="hidden" name="cheepID" value="@cheep.CheepID"/>
                                 <button type="submit" class="deletebutton" onClick="return confirm('Delete this cheep?');">
                                     🗑️
                                 </button>
                             </form>
                         }
+                        </div>
                     </div>
                 </li>
             }

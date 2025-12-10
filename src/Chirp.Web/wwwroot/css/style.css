@@ -129,7 +129,7 @@ div.page ul.cheeps li {
   min-height: 48px;
 }
 
-.cheep-item {
+div.page ul.cheeps li .cheep-item {
     display: flex;
     align-items: flex-start;
     gap: 10px;
@@ -145,6 +145,33 @@ div.page ul.cheeps li {
     padding: 0;
 }
 
+div.page ul.cheeps li .cheep-item .cheep-body {
+    flex: 1;
+    min-width: 0;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-content {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-content p {
+    margin: 0 0 8px 0;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-content .cheep-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
 div.page ul.cheeps p {
   margin: 0;
@@ -152,13 +179,52 @@ div.page ul.cheeps p {
   align-items: center;
 }
 
-div.page ul.cheeps p .followbutton {
-    margin-left: auto;
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-header .followbutton {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 8px;
+    background-color: #e29494;
+    color: white;
+    text-decoration: none;
+    font-size: 0.85em;      
+    font-weight: 300;
+    white-space: nowrap;
+}
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-header .followbutton:hover {
+    background: #e29494;
+    color: white;
+}
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-header .followbutton.following {
+    background-color: #571010;
 }
 
-div.page ul.cheeps p .unfollowbutton {
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-header .followbutton.following:hover {
+    background-color: #7a1616;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-header .unfollowbutton {
     background: #571010;
     color: white;
+}
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-content .cheep-footer form.deleter {
+    margin: 0;
+    display: inline-block;
+}
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-content .cheep-footer button.deletebutton {
+    background: transparent;
+    color: #888;
+    border: 1px solid #ccc;
+    padding: 2px 8px;
+    font-size: 0.85em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-content .cheep-footer button.deletebutton:hover {
+    background: #e29494;
+    color: white;
+    border-color: #e29494;
 }
 
 div.page ul.cheeps li img {

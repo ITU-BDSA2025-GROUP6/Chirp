@@ -28,16 +28,19 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
-      
+          
+      - name: Install EF Tool
+        run: dotnet tool install --global dotnet-ef
+        
       - name: Restore
         run: dotnet restore ${{ env.SOLUTION_PATH }}
         
-      - name: Build with dotnet
+      - name: Build
         run: dotnet build ${{ env.SOLUTION_PATH }} --configuration Release --no-restore
-
-      - name: dotnet publish
-        run: dotnet publish ${{ env.CHIRP_WEB_PATH }} -c Release --no-restore --no-build -o ${{env.DOTNET_ROOT}}/myapp
-
+        
+      - name: Test migrations (SQLite)
+          run: dotnet ef database update --project src/Chirp. Infrastructure --startup-project src/Chirp.Web
+          
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:

@@ -11,10 +11,10 @@ on:
   pull_request:
     branches:
       - main
-permissions: 
+permissions:
   contents: write
 jobs:
- 
+  
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -22,21 +22,41 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-        
+
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
-          
+
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Test migrations (SQLite)
-          run: dotnet ef database update --project src/Chirp. Infrastructure --startup-project src/Chirp.Web  
-      
       - name: Build project
         run: dotnet build -c Release --no-restore
+  
+  migration:
+    name: Verify Migrations
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
 
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Install EF Core tools
+        run: dotnet tool install --global dotnet-ef
+
+      - name: Verify migrations are valid
+        run: dotnet ef migrations script --idempotent --project src/Chirp. Infrastructure --startup-project src/Chirp.Web -o /dev/null
+        
   test:
     name: Test
     needs: build
@@ -45,12 +65,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-        
+
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
-          
+
       - name: Run tests
         run: dotnet test -c Release --filter "FullyQualifiedName!~End2End"
         env:
@@ -65,17 +85,17 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v5
-        
+
       - name: Setup .Net 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
-          
+
       - name: Publish Web App for Release
         run: |
           dotnet publish "src/Chirp.Web/Chirp.Web.csproj" -c Release -o release-output --self-contained false
           zip -r "Chirp-Web-${{ github.ref_name }}.zip" ./release-output
-          
+
       - name: Create GitHub Release and Upload Artifact
         uses: softprops/action-gh-release@v2
         with:

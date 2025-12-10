@@ -33,37 +33,44 @@
             {
                 var isFollowing = Model.IsFollowing(cheep.AuthorName);
                 <li>
-                    <div class="cheep-header">
-                        <strong>
-                            <a href="/@cheep.AuthorName">
-                                @cheep.AuthorName
-                            </a>
-                        </strong>
-                        @if (User.Identity?.Name != cheep.AuthorName && User.Identity?.IsAuthenticated == true)
-                        {
-                            <a class="followbutton @(isFollowing ? "following" : "")"
-                               asp-page-handler="FollowBtn"
-                               asp-route-authorname="@cheep.AuthorName">
-                                @(isFollowing ? "Unfollow" : "Follow")
-                            </a>
-                        }
-                    </div>
-                    <div class="cheep-content">
-                        <p>@cheep.Text</p>
-                        <div class="cheep-footer">
-                        <small>&mdash; @cheep.Timestamp</small>
-                        @if (User.Identity?.Name == cheep.AuthorName)
-                        {
-                            <form method="post" asp-page-handler="Delete" class="deleter">
-                                <input type="hidden" name="cheepID" value="@cheep.CheepID"/>
-                                <button type="submit" class="deletebutton" onClick="return confirm('Delete this cheep?');">
-                                    🗑️
-                                </button>
-                            </form>
-                        }
+                    <div class="cheep-item">
+                        <!-- Her tilføjes Pfp -->
+                        <img src="@cheep.ProfilePicturePath" class="pfp" alt="pfp"/>
+                        
+                        <div class="cheep-body">
+                            <div class="cheep-header">
+                                <strong>
+                                    <a href="/@cheep.AuthorName">
+                                        @cheep.AuthorName
+                                    </a>
+                                </strong>
+                                @if (User.Identity?.Name != cheep.AuthorName && User.Identity?.IsAuthenticated == true)
+                                {
+                                    <a class="followbutton @(isFollowing ? "following" : "")"
+                                       asp-page-handler="FollowBtn"
+                                       asp-route-authorname="@cheep.AuthorName">
+                                        @(isFollowing ? "Unfollow" : "Follow")
+                                    </a>
+                                }
+                            </div>
+                            <div class="cheep-content">
+                                <p>@cheep.Text</p>
+                                <div class="cheep-footer">
+                                    <small>&mdash; @cheep.Timestamp</small>
+                                    @if (User.Identity?.Name == cheep.AuthorName)
+                                    {
+                                        <form method="post" asp-page-handler="Delete" class="deleter">
+                                            <input type="hidden" name="cheepID" value="@cheep.CheepID"/>
+                                            <button type="submit" class="deletebutton" onClick="return confirm('Delete this cheep?');">
+                                                🗑️
+                                            </button>
+                                        </form> 
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </li>
+                </li> 
             }
         </ul>
         
@@ -92,7 +99,7 @@
                 btn.classList.add("unfollowbutton");
             } else {
                 btn.innerText = "Follow";
-                btn. classList.remove("unfollowbutton");
+                btn.classList.remove("unfollowbutton");
             }
         }
     </script>

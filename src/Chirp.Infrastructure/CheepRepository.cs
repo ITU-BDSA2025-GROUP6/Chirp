@@ -103,6 +103,7 @@ public class CheepRepository : ICheepRepository
                     CheepID = c.CheepID,
                     Text = c.Text,
                     AuthorName = c.Author!.UserName ?? string.Empty,
+                    ProfilePicturePath = c.Author.ProfilePicturePath,
                     Timestamp = c.Timestamp
                 })
                 .Skip((page - 1) * 32)    // TODO check if offset is correct 

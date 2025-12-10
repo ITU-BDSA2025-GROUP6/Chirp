@@ -8,7 +8,7 @@ public class CheepDbContextFactory : IDesignTimeDbContextFactory<CheepDBContext>
     public CheepDBContext CreateDbContext(string[] args)
     {
         var options = new DbContextOptionsBuilder<CheepDBContext>()
-            .UseSqlite("Data Source=Chirp.db")
+            .UseSqlServer("Server=localhost;Database=ChirpDesignTime;Trusted_Connection=True;TrustServerCertificate=True")
             .Options;
         
         return new CheepDBContext(options);

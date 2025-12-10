@@ -30,7 +30,10 @@ jobs:
           
       - name: Restore dependencies
         run: dotnet restore
-        
+
+      - name: Test migrations (SQLite)
+          run: dotnet ef database update --project src/Chirp. Infrastructure --startup-project src/Chirp.Web  
+      
       - name: Build project
         run: dotnet build -c Release --no-restore
 

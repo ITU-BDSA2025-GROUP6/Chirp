@@ -42,39 +42,6 @@ public class AuthorRepositoryTests : IDisposable
         _connection.Dispose();
         _context.Dispose();
     }
-
-    public class CreateAuthorTests : AuthorRepositoryTests
-    {
-        [Fact]
-        public async Task CreateAuthorTest_ShouldAddAuthorToDatabase()
-        {
-            /*
-            //Arrange
-            var newAuthor = new AuthorDTO
-            {
-                Name = "Test Author2",
-                Email = "test@email.com",
-            };
-
-            //Act
-            await _repository.CreateAuthor(newAuthor);
-            var createdAuthor = await _context.Authors.FirstOrDefaultAsync(a => a.Email == newAuthor.Email);
-
-            //Assert
-            Assert.NotNull(createdAuthor);
-            Assert.NotEqual("1", createdAuthor.Id);
-            Assert.Equal("3", createdAuthor.Id);
-            Assert.Equal("Test Author2", createdAuthor.UserName);
-            Assert.Equal("test@email.com", createdAuthor.Email);
-            */
-        }
-
-        [Fact]
-        public async Task InsertAuthor_ShouldThrowExceptionIfNameNotUnique()
-        {
-        }
-    }
-
     public class GetAuthorTests : AuthorRepositoryTests
     {
         [Fact]

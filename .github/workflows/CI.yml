@@ -1,6 +1,6 @@
 #Co-Author: sesv@itu.dk, anys@itu.dk, luki@itu.dk, LLM (Chatgpt.com) samt inspiration fået fra Oliver Flinck Sheye 189235422+osheITU@users.noreply.github.com
 
-name: Build, Test, and Release
+name: CI -- Build, Test, and Release
 run-name: ${{ github.actor }} is building and possibly releasing ${{ github.ref_name }}
 on:
   push:

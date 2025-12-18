@@ -55,7 +55,7 @@ jobs:
         run: dotnet tool install --global dotnet-ef
 
       - name: Verify migrations are valid
-        run: dotnet ef migrations script --idempotent --project src/Chirp. Infrastructure --startup-project src/Chirp.Web -o /dev/null
+        run: dotnet ef migrations script --idempotent --project src/Chirp.Infrastructure --startup-project src/Chirp.Web -o /dev/null
         
   test:
     name: Test

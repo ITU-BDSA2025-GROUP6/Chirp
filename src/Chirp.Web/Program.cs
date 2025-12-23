@@ -124,8 +124,19 @@ if (!app.Environment.IsDevelopment())
 // Create a disposable service scope
 using (var scope = app.Services.CreateScope())
 {
-    using var context = scope.ServiceProvider.GetRequiredService<CheepDBContext>();
-    context.Database.Migrate();
+    using var context =
+        scope.ServiceProvider.GetRequiredService<CheepDBContext>();
+    if (app.Environment.IsProduction())
+    {
+        //For Azure SQL: applies SQL server migration
+        context.Database.Migrate();
+    }
+    else
+    {
+        //For localhost/testing: create Schema directly
+        context.Database.EnsureCreated();
+    }
+    
     if (app.Environment.EnvironmentName != "Testing")
     {
         DbInitializer.SeedDatabase(context);

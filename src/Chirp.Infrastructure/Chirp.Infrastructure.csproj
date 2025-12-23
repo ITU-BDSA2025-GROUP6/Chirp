@@ -23,9 +23,4 @@
       <ProjectReference Include="..\Chirp.Core\Chirp.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Migrations\SQLite\" />
-      <Folder Include="Migrations\SQLserver\" />
-    </ItemGroup>
-
 </Project>

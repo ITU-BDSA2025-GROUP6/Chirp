@@ -10,6 +10,7 @@ public class CheepDbContextFactory : IDesignTimeDbContextFactory<CheepDBContext>
 
         var provider = "sqlite"; //default
 
+        //Check if provider given in migration command
         for (int i = 0; i < args.Length; i++)
         {
             if (args[i] == "--provider" && i + 1 < args.Length)
@@ -29,8 +30,8 @@ public class CheepDbContextFactory : IDesignTimeDbContextFactory<CheepDBContext>
 
         if (provider == "sqlserver")
         {
-            // For migration generation, we just need a valid connection string format
-            // The actual connection doesn't need to work
+            // for migration generation, we just need a valid connection string format
+            // the actual connection doesn't need to work
             optionsBuilder.UseSqlServer(
                 "Server=. ;Database=Chirp;Trusted_Connection=True;",
                 x => x.MigrationsAssembly("Chirp.Infrastructure")

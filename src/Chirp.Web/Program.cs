@@ -126,7 +126,6 @@ using (var scope = app.Services.CreateScope())
 {
     using var context =
         scope.ServiceProvider.GetRequiredService<CheepDBContext>();
-    context.Database.Migrate();
     if (app.Environment.IsProduction())
     {
         //For Azure SQL: applies SQL server migration

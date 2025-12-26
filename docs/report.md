@@ -15,9 +15,19 @@ numbersections: true
 
 ## Domain model
 
-Here comes a description of our domain model.
+Chirp has the following key entities:
+    
+    - Author: Enables user management through extending ASP.NETs IdentityUser
+    - Cheep: Represents posts by authors using timestamps and text.
+    - Follows: Tracks following, and being followed by, other authors.
+    - Recheep: Allows reposting specific cheeps by other authors on our own timeline.
+    
+Below is an UML class diagram of our domain model: 
 
-<img width="1070" height="1212" alt="image" src="https://github.com/user-attachments/assets/4bfef960-0365-4948-9dba-3523d2b4dece" />
+<img width="800" height="880" alt="image" src="https://github.com/user-attachments/assets/4bfef960-0365-4948-9dba-3523d2b4dece" />
+
+**_NOTE:_** 1. The IdentityUser only shows the first link of the Library its from. The whole library is: Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUser
+**_NOTE:_** 2. While not shown in the diagram, all three classes connected to Author (Cheep, Recheep and Follows) use the library System.ComponentModel.DataAnnotations for allowing "required" parameters, among others.
 
 ## Architecture — In the small
 

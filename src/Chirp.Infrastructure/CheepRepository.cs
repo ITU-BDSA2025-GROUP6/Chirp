@@ -37,6 +37,7 @@ public class CheepRepository : ICheepRepository
             CheepID = cheep.CheepID, // *** Check if ID is set correct when method is used. ***
             Text = cheep.Text,
             Author = author,
+            AuthorID = author.Id,
             Timestamp = cheep.Timestamp == default
                 ? DateTime.UtcNow
                 : cheep.Timestamp // if no time is found we set a current time
@@ -102,7 +103,8 @@ public class CheepRepository : ICheepRepository
                 {
                     CheepID = c.CheepID,
                     Text = c.Text,
-                    AuthorName = c.Author != null ? c.Author.UserName : string.Empty,                    
+                    AuthorName = c.Author!.UserName ?? string.Empty,
+                    ProfilePicturePath = c.Author.ProfilePicturePath,
                     Timestamp = c.Timestamp
                 })
                 .Skip((page - 1) * 32)    // TODO check if offset is correct 
@@ -130,7 +132,7 @@ public class CheepRepository : ICheepRepository
             .Select(c => new CheepDTO
             {
                 Text = c.Text,
-                AuthorName = c.Author.UserName,
+                AuthorName = c.Author!.UserName ?? string.Empty,
                 Timestamp = c.Timestamp
             });
 

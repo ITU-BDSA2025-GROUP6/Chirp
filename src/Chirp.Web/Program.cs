@@ -25,9 +25,10 @@ if (builder.Environment.IsProduction())
         options.UseSqlServer(connectionString, sqlOptions =>
             {
                 sqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 5,
+                    maxRetryCount: 10,
                     maxRetryDelay: TimeSpan.FromSeconds(30),
-                    errorNumbersToAdd: null);
+                    errorNumbersToAdd: new List<int> { 0 });
+                sqlOptions.CommandTimeout(60);
             }));
 } 
 else 
@@ -123,15 +124,19 @@ if (!app.Environment.IsDevelopment())
 // Create a disposable service scope
 using (var scope = app.Services.CreateScope())
 {
-    using var context = scope.ServiceProvider.GetRequiredService<CheepDBContext>();
+    using var context =
+        scope.ServiceProvider.GetRequiredService<CheepDBContext>();
     if (app.Environment.IsProduction())
     {
-        context.Database.EnsureCreated();
+        //For Azure SQL: applies SQL server migration
+        context.Database.Migrate();
     }
     else
     {
-        context.Database.Migrate();
+        //For localhost/testing: create Schema directly
+        context.Database.EnsureCreated();
     }
+    
     if (app.Environment.EnvironmentName != "Testing")
     {
         DbInitializer.SeedDatabase(context);

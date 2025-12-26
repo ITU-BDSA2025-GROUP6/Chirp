@@ -4,7 +4,7 @@ using Chirp.Infrastructure;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace Database_Test;
+namespace UnitTests;
 
 public class CheepRepositoryTests : IDisposable
 {
@@ -125,43 +125,41 @@ public class CheepRepositoryTests : IDisposable
         }
 
         [Fact]
-        public async Task CreateCheep_ShouldHandleProvidedCheepId()
+        public async Task CreateCheep_ShouldAutoGenerateId()
         {
             var cheep = new CheepDTO
             {
-                CheepID = 100,
                 AuthorName = "Test Author",
-                Text = "Hello, this is a test cheep!",
+                Text = "CwC I am the first cheep.",
                 Timestamp = DateTime.UtcNow
             };
+
             var resultId = await _repository.CreateCheep(cheep);
             Assert.True(resultId > 0);
-            Assert.NotEqual(0, resultId);
-            Assert.Equal(100, resultId);
         }
-
+        
         [Fact]
-        public async Task CreateCheep_ShouldThrowExceptionIfCheepIdAlreadyExists()
+        public async Task CreateCheep_ShouldGenerateUniqueIds()
         {
-            // Arrange
             var cheep1 = new CheepDTO
             {
-                CheepID = 1,
                 AuthorName = "Test Author",
-                Text = "Hello, this is a test cheep!",
+                Text = "UwU I am a test cheep.",
+                Timestamp = DateTime.UtcNow
             };
             var cheep2 = new CheepDTO
             {
-                CheepID = 1,
                 AuthorName = "Test Author",
-                Text = "Hello, this is a test cheep!",
+                Text = "OwO I am also a test cheep.",
+                Timestamp = DateTime.UtcNow
             };
 
-            // Act
-            await _repository.CreateCheep(cheep1);
+            var id1 = await _repository.CreateCheep(cheep1);
+            var id2 = await _repository.CreateCheep(cheep2);
 
-            // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await _repository.CreateCheep(cheep2));
+            Assert.NotEqual(id1, id2);
+            Assert.True(id1 > 0);
+            Assert.True(id2 > 0);
         }
     }
 

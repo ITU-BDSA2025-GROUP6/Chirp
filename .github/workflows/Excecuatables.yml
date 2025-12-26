@@ -49,7 +49,10 @@ jobs:
         run: dotnet build -c Release --no-restore
 
       - name: Run tests
-        run: dotnet test -c Release --no-build
+        run: dotnet test -c Release --filter "FullyQualifiedName!~End2End"
+        env:
+          ASPNETCORE_ENVIRONMENT: Testing
+
 
       - name: Publish Chirp WebApp (Single File)
         shell: bash

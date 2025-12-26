@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace PlaywrightTests;
+namespace End2End;
 
 [Parallelizable(ParallelScope.Self)]
 [TestFixture] 

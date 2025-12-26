@@ -14,5 +14,7 @@ namespace Chirp.Core
         public List<Follows> Following { get; set; } = new List<Follows>();
 
         public List<Follows> FollowedBy { get; set; } = new List<Follows>();
+        
+        public string ProfilePicturePath { get; set; } = "/images/default.png";
     }
 }

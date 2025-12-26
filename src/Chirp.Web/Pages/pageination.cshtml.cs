@@ -9,7 +9,8 @@ public class PaginationModel : PageModel
 {
     private readonly ICheepService _service;
 
-    public Task<List<CheepDTO>> Cheeps { get; set; } = Task.FromResult(new List<CheepDTO>());
+    // materialized list
+    public List<CheepDTO> Cheeps { get; set; } = new();
     public bool hasNextPage { get; set; }
     
     public int currentPage { get; set; }
@@ -18,17 +19,19 @@ public class PaginationModel : PageModel
     {
         _service = service;
     }
-
-    public ActionResult OnGet(int index)
+    // with ChatGPT:
+    // Async handler, awaits the service calls to avoid sync-over-async and concurrent DbContext issues
+    public async Task<IActionResult> OnGetAsync(int index = 1)
     {
         currentPage = index < 1 ? 1 : index;
-        Cheeps = _service.GetCheeps(currentPage);
 
-        if (_service.GetCheeps((currentPage + 1)).Result.Any())
-        {
-            hasNextPage = true;
-        }
-            
+        // Make current page cheeps appear inside the request scope
+        Cheeps = await _service.GetCheeps(currentPage) ?? new List<CheepDTO>();
+
+        // Check if the next page has any items, awaits instead of blocking
+        var nextPageCheeps = await _service.GetCheeps(currentPage + 1);
+        hasNextPage = (nextPageCheeps != null && nextPageCheeps.Any());
+
         return Page();
     }
 }

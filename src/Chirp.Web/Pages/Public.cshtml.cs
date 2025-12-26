@@ -11,7 +11,7 @@ public class PublicModel : PageModel
 {
     private readonly ICheepService _service;
     private readonly IAuthorService _authorService;
-    public Task<List<CheepDTO>> Cheeps { get; set; } = Task.FromResult(new List<CheepDTO>());
+    public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
     
     public Task<List<Author>>? Followers { get; set; }
 
@@ -24,10 +24,10 @@ public class PublicModel : PageModel
         _authorService = authorService;
     }
 
-    public ActionResult OnGet()
+    public async Task<IActionResult> OnGetAsync()
     {
         int currentPage = 1;
-        Cheeps = _service.GetCheeps(currentPage);
+        Cheeps = await _service.GetCheeps(currentPage);
         return Page();
     }
 
@@ -45,11 +45,11 @@ public class PublicModel : PageModel
    return RedirectToPage();
    }
 
-    public IActionResult OnPost()
+    public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {
-            Cheeps = _service.GetCheeps(1);
+            Cheeps = await _service.GetCheeps(1);
             return Page();
         }
         if (!(User.Identity?.IsAuthenticated ?? false ))
@@ -67,13 +67,13 @@ public class PublicModel : PageModel
             Text = Text,
             Timestamp = DateTime.UtcNow
         };
-        _service.CreateCheep(newCheep);
+        await _service.CreateCheep(newCheep);
         
         
         return Redirect("/");
     }
 
-    public async Task<IActionResult> OnPostDelete(int cheepId)
+    public async Task<IActionResult> OnPostDeleteAsync(int cheepId)
     {
         if (! User.Identity?.IsAuthenticated ?? true)
         {
@@ -89,11 +89,8 @@ public class PublicModel : PageModel
     }
 
 
-    public async Task<IActionResult> OnGetFollowBtn(string authorName)
+    public async Task<IActionResult> OnGetFollowBtnAsync(string authorName)
     {
-        //if (!User.Identity.IsAuthenticated)
-           // return Redirect("/");
-
         var username = User.Identity?.Name;
         if (string.IsNullOrEmpty(username)) return Redirect("/");
 
@@ -102,7 +99,7 @@ public class PublicModel : PageModel
 
         if (currentUser == null || followTarget == null || currentUser.Id == followTarget.Id)
             return Redirect("/");
-
+        
         Console.WriteLine($"CurrentUser: {currentUser.UserName}");
         Console.WriteLine($"FollowTarget: {followTarget.UserName}");
         Console.WriteLine($"Following.Count before add: {currentUser.Following.Count}");
@@ -112,7 +109,7 @@ public class PublicModel : PageModel
             .Any(f => f.FollowedById == followTarget.Id);
 
         Console.WriteLine($"AlreadyFollowing: {alreadyFollow}");
-
+        
         if (!alreadyFollow)
         {
             currentUser.Following.Add(new Follows
@@ -123,9 +120,47 @@ public class PublicModel : PageModel
 
             await _authorService.SaveChangesAsync();
         }
+        else
+        {
+            currentUser.Following.RemoveAll(f => f.FollowedById == followTarget.Id);
+            await _authorService.SaveChangesAsync();
+        }
 
         Console.WriteLine($"Following.Count after add: {currentUser.Following.Count}");
-
+        
         return RedirectToPage();
     }
+
+    public bool IsFollowing(string authorName)
+    {
+        var username = User.Identity?.Name;
+        if (string.IsNullOrEmpty(username)) return false;
+        
+        
+        var currentUser = _authorService.GetAuthorEntityByName(username).Result;
+        var followTarget = _authorService.GetAuthorEntityByName(authorName).Result;
+        if (currentUser == null || followTarget == null)
+            return false;
+
+
+        bool alreadyFollow = currentUser.Following
+            .Any(f => f.FollowedById == followTarget.Id);
+        return alreadyFollow;
+    }
+    
+    public async Task<bool> IsFollowingAsync(string authorName)
+    {
+        var username = User.Identity?.Name;
+        if (string.IsNullOrEmpty(username)) return false;
+
+        var currentUser = await _authorService.GetAuthorEntityByName(username);
+        var followTarget = await _authorService.GetAuthorEntityByName(authorName);
+
+        if (currentUser == null || followTarget == null)
+            return false;
+
+        return currentUser.Following.Any(f => f.FollowedById == followTarget.Id);
+    }
+
+
 }

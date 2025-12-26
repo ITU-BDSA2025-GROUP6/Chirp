@@ -22,8 +22,6 @@ input[type="password"] {
     font-family: 'Trebuchet MS', sans-serif;
     font-size: 14px;
     border-radius: 2px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
     color: #571010;
 }
 
@@ -35,8 +33,6 @@ input[type="submit"] {
   font-size: 14px;
   font-weight: bold;
   border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
   color: white;
 }
 
@@ -90,8 +86,6 @@ div.page div.navigation form button {
     font-size: unset;
     cursor: pointer;
     text-decoration: underline;
-    font-family: unset;
-    letter-spacing: unset;
 }
 
 div.page h2 {
@@ -115,8 +109,6 @@ div.page div.followstatus {
   border: 1px solid #ccc;
   background: #E3EBEA;
   border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
   padding: 3px;
   font-size: 13px;
   text-align: right;
@@ -133,25 +125,106 @@ div.page ul.cheeps li {
   padding: 5px;
   background: #F0FAF9;
   border: 1px solid #DBF3F1;
-  border-radius: 2px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
+  border-radius: 5px;
   min-height: 48px;
+}
+
+div.page ul.cheeps li .cheep-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.pfp {
+    width: 48px;     
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+
+    float: none;
+    padding: 0;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body {
+    flex: 1;
+    min-width: 0;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 8px;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-content {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-content p {
+    margin: 0 0 8px 0;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-content .cheep-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 div.page ul.cheeps p {
   margin: 0;
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
-div.page ul.cheeps p .followbutton {
-    margin-left: auto;
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-header .followbutton {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 8px;
+    background-color: #e29494;
+    color: white;
+    text-decoration: none;
+    font-size: 0.85em;      
+    font-weight: 300;
+    white-space: nowrap;
+}
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-header .followbutton:hover {
+    background: #e29494;
+    color: white;
+}
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-header .followbutton.following {
+    background-color: #571010;
 }
 
-div.page ul.cheeps p .unfollowbutton {
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-header .followbutton.following:hover {
+    background-color: #7a1616;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-header .unfollowbutton {
     background: #571010;
     color: white;
+}
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-content .cheep-footer form.deleter {
+    margin: 0;
+    display: inline-block;
+}
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-content .cheep-footer button.deletebutton {
+    background: transparent;
+    color: #888;
+    border: 1px solid #ccc;
+    padding: 2px 8px;
+    font-size: 0.85em;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+div.page ul.cheeps li .cheep-item .cheep-body .cheep-content .cheep-footer button.deletebutton:hover {
+    background: #e29494;
+    color: white;
+    border-color: #e29494;
 }
 
 div.page ul.cheeps li img {
@@ -169,9 +242,7 @@ div.page div.cheepbox {
   padding: 5px;
   background: #F0FAF9;
   border: 1px solid #e29494;
-  border-radius: 2px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 div.page div.cheepbox h3 {
@@ -194,14 +265,10 @@ div.page div.cheepbox input[type="submit"] {
 }
 
 div.message {
-  list-style: none;
   margin: 10px 10px 0 10px;
-
   background: #f3b9b9;
   border: 1px solid #ce8181;
   border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
   padding: 4px;
   font-size: 13px;
 }
@@ -210,8 +277,6 @@ ul.message li {
   background: #f3b9b9;
   border: 1px solid #ce8181;
   border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
   padding: 4px;
   font-size: 13px;
 }
@@ -221,8 +286,6 @@ div.error {
   background: #FAE4E4;
   border: 1px solid #DD6F6F;
   border-radius: 2px;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
   padding: 4px;
   font-size: 13px;
 }
@@ -252,9 +315,7 @@ li.topic {
   padding: 5px;
   background: #F0FAF9;
   border: 1px solid #DBF3F1;
-  border-radius: 2px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
+  border-radius: 5px;
   min-height: 20px;
 }
 
@@ -268,7 +329,6 @@ button {
     color: white;
     padding: 8px 16px;
     text-align: center;
-    text-decoration: none;
     cursor: pointer;
 }
 
@@ -299,5 +359,3 @@ ul.nav li a {
 ul.nav li a:hover {
     background-color: #8b4949;
 }
-
-

@@ -17,7 +17,7 @@ numbersections: true
 
 Here comes a description of our domain model.
 
-![Illustration of the _Chirp!_ data model as UML class diagram.](docs/images/domain_model.png)
+<img width="1070" height="1212" alt="image" src="https://github.com/user-attachments/assets/4bfef960-0365-4948-9dba-3523d2b4dece" />
 
 ## Architecture — In the small
 

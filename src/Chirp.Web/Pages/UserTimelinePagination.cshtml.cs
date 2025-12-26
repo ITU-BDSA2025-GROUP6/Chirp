@@ -8,21 +8,39 @@ namespace Chirp.Web.Pages;
 public class UserTimelinePaginationModel : PageModel
 {
     private readonly ICheepService _cheepService;
+    private readonly IAuthorService _authorService;
     
-    public Task<List<CheepDTO>> Cheeps { get; set; } = Task.FromResult(new List<CheepDTO>());
+    public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
     public bool hasNextPage { get; set; }
     public int currentPage { get; set; }
+    public bool IsOwnTimeline { get; set; }
 
-    public UserTimelinePaginationModel(ICheepService cheepService)
+    public UserTimelinePaginationModel(ICheepService cheepService,  IAuthorService authorService)
     {
         _cheepService = cheepService;
+        _authorService = authorService;
     }
     
-    public ActionResult OnGet(string author, int index)
+    public async Task<ActionResult> OnGetAsync(string author, int index)
     {
         currentPage = index < 1 ? 1 : index;
-        Cheeps = _cheepService.GetCheepsFromAuthor(author, currentPage);
+        var currentUserName = User.Identity?.Name;
         
+        IsOwnTimeline = currentUserName != null && currentUserName == author;
+
+        if (IsOwnTimeline)
+        {
+            var currentUser = await _authorService.GetAuthorEntityByName(currentUserName!);
+            if (currentUser != null)
+            {
+                Cheeps = await _cheepService.GetCheepsFromFollowedAuthor(currentUser.Id, currentPage);
+            }
+            else
+            {
+                Cheeps = await _cheepService.GetCheepsFromFollowedAuthor(author, currentPage);
+            }
+            
+        }
         return Page();
     }
 }

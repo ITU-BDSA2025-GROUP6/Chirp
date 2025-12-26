@@ -7,6 +7,7 @@ public interface ICheepService
     Task<List<CheepDTO>> GetCheepsFromAuthor(string authorName, int page);
     Task<int> UpdateCheep(CheepDTO alteredMessage);
     Task<bool>  DeleteCheep(int cheepId, string authorName);
+    Task<List<CheepDTO>> GetCheepsFromFollowedAuthor(string userId, int page);
     
     
 

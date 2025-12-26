@@ -41,7 +41,7 @@ public class PublicModel : PageModel
    }
 
     AuthorDTO authorDTO = new AuthorDTO { Id = author.Id };
-   _authorService.createRecheep(authorDTO, CheepID);
+   await _authorService.createRecheep(authorDTO, CheepID);
    return RedirectToPage();
    }
 

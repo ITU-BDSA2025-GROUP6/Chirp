@@ -54,8 +54,28 @@ The Deployed Application Architecture can be seen below.
 <img width="800" height="880" alt="image" src="images/Deployed Application Architecture Improved.png" />
 
 ## User activities
+We have two types of users: `Authorized `and `Unauthorized`.
 
+**Access Restriction**
 
+An `Unauthorized User` may...
+
+    - Login and Register 
+    - View Public and Private timelines
+    - View multiple pages of content
+
+An `Authorized User` may...
+
+    - Logout
+    - View Public and Private timelines
+    - View own Timeline, with own posted Cheeps
+    - View multiple pages of content
+    - Access an "About me" page, with account information and account deletion ("Forget me")
+    - Set a Profile Picture in the "About me" page
+    - Post new Cheeps
+    - Recheep other Authors' Cheeps
+
+<img width="800" height="880" alt="image" src="images/Unauthorized User Activity.png" />
 
 ## Sequence of functionality/calls trough _Chirp!_
 

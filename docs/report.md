@@ -36,6 +36,13 @@ Below is an UML class diagram of our domain model:
 
 
 ## Architecture — In the small
+The Onion Architecture of Chirp is seen in the below UML. 
+    - UI Layer: Outer layer seen by the Client. Includes Pages, Identity Core scaffolded Pages, Startup code through Program.cs.
+    - Service Layer: Data flow between our repository, the UI layer and the Client.
+    - Repository Layer: Functionality, DTOs, Interfaces and database retrieval methods supported by Entity Core.
+    - Domain Layer: Contains our domain entities only.
+
+<img width="800" height="880" alt="image" src="images/Onion Architecture.png" />
 
 ## Architecture of deployed application
 

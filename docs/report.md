@@ -51,9 +51,11 @@ The Deployed Application Architecture can be seen below.
     - Remote Architecture (Left): Client interacts with an Azure Database through the Internet, hosted offshore. 
     - Local Architecture (Right): Client interacts directly with a local database.
     
-<img width="800" height="880" alt="image" src="images/Deployed Application Architecture.png" />
+<img width="800" height="880" alt="image" src="images/Deployed Application Architecture Improved.png" />
 
 ## User activities
+
+
 
 ## Sequence of functionality/calls trough _Chirp!_
 

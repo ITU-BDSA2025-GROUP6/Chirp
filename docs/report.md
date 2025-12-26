@@ -48,8 +48,8 @@ The Onion Architecture of Chirp is seen in the below UML.
 ## Architecture of deployed application
 The Deployed Application Architecture can be seen below.
 
-    - Remote Architecture (Left): Client interacts directly with a local database.
-    - Local Architecture (Right): Client interacts with an Azure Database through the Internet, hosted offshore. 
+    - Remote Architecture (Left): Client interacts with an Azure Database through the Internet, hosted offshore. 
+    - Local Architecture (Right): Client interacts directly with a local database.
     
 <img width="800" height="880" alt="image" src="images/Deployed Application Architecture.png" />
 

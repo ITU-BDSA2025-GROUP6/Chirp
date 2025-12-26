@@ -14,7 +14,7 @@ public class PublicModel : PageModel
     public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
     
     public Task<List<Author>>? Followers { get; set; }
-    
+
     [BindProperty]
     [StringLength(160, ErrorMessage = "The {0} must be at max {1} characters long.")]
     public string Text { get; set; } = string.Empty;
@@ -30,6 +30,20 @@ public class PublicModel : PageModel
         Cheeps = await _service.GetCheeps(currentPage);
         return Page();
     }
+
+   public async Task<IActionResult> OnPostRecheepAsync(int CheepID)
+   {
+   var authorName = User.Identity?.Name;
+   var author = await _authorService.GetAuthorByName(authorName);
+
+   if (author == null) {
+    return Redirect("/");
+   }
+
+    AuthorDTO authorDTO = new AuthorDTO { Id = author.Id };
+   _authorService.createRecheep(authorDTO, CheepID);
+   return RedirectToPage();
+   }
 
     public async Task<IActionResult> OnPostAsync()
     {

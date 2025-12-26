@@ -58,6 +58,23 @@ public class AuthorRepository : IAuthorRepository
             throw new InvalidOperationException("No such author with email: " + email);
         }
     }
-    
-    
+
+    public async Task<int> CreateRecheep(AuthorDTO Author, int cheepID)
+    {
+
+        if (Author == null)
+        {
+            throw new InvalidOperationException("No such author");
+        }
+
+        Recheep newRecheep = new Recheep
+        {
+        AuthorID = Author.Id,
+        CheepID = cheepID
+        };
+
+        var queryResult = await _dbContext.Recheeps.AddAsync(newRecheep); // does not write to the database!
+        await _dbContext.SaveChangesAsync(); // persist the changes in the database
+        return queryResult.Entity.CheepID;
+    }
 }

@@ -33,46 +33,79 @@
             {
                 var isFollowing = Model.IsFollowing(cheep.AuthorName);
                 <li>
-                    <div class="cheep-item">
-                        <!-- Her tilføjes Pfp -->
-                        <img src="@cheep.ProfilePicturePath" class="pfp" alt="pfp"/>
+                    <div>
+                        <strong>
+                            <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
+                        </strong>
+                        <br />
+                        <span>@cheep.Text</span>
+                        <br />
+                        @if (SignInManager.IsSignedIn(User) && User.Identity?.Name != cheep.AuthorName)
+                        {
+                            <form method="post" asp-page-handler="Recheep">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="CheepID" value="@cheep.CheepID" />
+                                <button type="submit" class="btn btn-sm btn-primary">Recheep</button>
+                            </form>
+                        }
+
+                        <small>&mdash; @cheep.Timestamp</small>
+
+                        @if (User.Identity?.Name == cheep.AuthorName)
+                        {
+                            <form method="post" asp-page-handler="Delete" style="display:inline;">
+                                <input type="hidden" name="cheepID" value="@cheep.CheepID" />
+                                <button type="submit" onclick="return confirm('Delete this cheep');">
+                                    Delete
+                                </button>
+                            </form>
+                        }
+
+                        <a class="followbutton" asp-page-handler="FollowBtn" asp-route-authorName="@cheep.AuthorName">
+                            <button>Follow</button>
+                        </a>
+                        <div class="cheep-item">
+                            <!-- Her tilføjes Pfp -->
+                            <img src="@cheep.ProfilePicturePath" class="pfp" alt="pfp"/>
                         
-                        <div class="cheep-body">
-                            <div class="cheep-header">
-                                <strong>
-                                    <a href="/@cheep.AuthorName">
-                                        @cheep.AuthorName
-                                    </a>
-                                </strong>
-                                @if (User.Identity?.Name != cheep.AuthorName && User.Identity?.IsAuthenticated == true)
-                                {
-                                    <a class="followbutton @(isFollowing ? "following" : "")"
-                                       asp-page-handler="FollowBtn"
-                                       asp-route-authorname="@cheep.AuthorName">
-                                        @(isFollowing ? "Unfollow" : "Follow")
-                                    </a>
-                                }
-                            </div>
-                            <div class="cheep-content">
-                                <p>@cheep.Text</p>
-                                <div class="cheep-footer">
-                                    <small>&mdash; @cheep.Timestamp</small>
-                                    @if (User.Identity?.Name == cheep.AuthorName)
+                            <div class="cheep-body">
+                                <div class="cheep-header">
+                                    <strong>
+                                        <a href="/@cheep.AuthorName">
+                                            @cheep.AuthorName
+                                        </a>
+                                    </strong>
+                                    @if (User.Identity?.Name != cheep.AuthorName && User.Identity?.IsAuthenticated == true)
                                     {
-                                        <form method="post" asp-page-handler="Delete" class="deleter">
-                                            <input type="hidden" name="cheepID" value="@cheep.CheepID"/>
-                                            <button type="submit" class="deletebutton" onClick="return confirm('Delete this cheep?');" aria-label="Delete cheep">
-                                                🗑️
-                                            </button>
-                                        </form> 
+                                        <a class="followbutton @(isFollowing ? "following" : "")"
+                                           asp-page-handler="FollowBtn"
+                                           asp-route-authorname="@cheep.AuthorName">
+                                            @(isFollowing ? "Unfollow" : "Follow")
+                                        </a>
                                     }
+                                </div>
+                                <div class="cheep-content">
+                                    <p>@cheep.Text</p>
+                                    <div class="cheep-footer">
+                                        <small>&mdash; @cheep.Timestamp</small>
+                                        @if (User.Identity?.Name == cheep.AuthorName)
+                                        {
+                                            <form method="post" asp-page-handler="Delete" class="deleter">
+                                                <input type="hidden" name="cheepID" value="@cheep.CheepID"/>
+                                                <button type="submit" class="deletebutton" onClick="return confirm('Delete this cheep?');" aria-label="Delete cheep">
+                                                    🗑️
+                                                </button>
+                                            </form> 
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        </div>
+
                 </li> 
             }
-        </ul>
+            </ul>
         
         <div class="navigation">
             @if (currentPage > 1)

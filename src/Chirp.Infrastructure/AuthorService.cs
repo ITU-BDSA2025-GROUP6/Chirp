@@ -37,4 +37,9 @@ public class AuthorService : IAuthorService
     {
         return _context.SaveChangesAsync();
     }
+
+    public async Task<int> createRecheep(AuthorDTO Author, int cheepID) {
+        return await _repository.CreateRecheep(Author, cheepID);
+    }
+
 }

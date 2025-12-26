@@ -1,9 +1,13 @@
 ---
 title: _Chirp!_ Project Report
-subtitle: ITU BDSA 2025 Group `<no>`
+subtitle: ITU BDSA 2025 Group `6`
 author:
-- "Helge Pfeiffer <ropf@itu.dk>"
-- "Adrian Hoff <adho@itu.dk>"
+- "Andreas <anys@itu.dk>"
+- "Maja <mcls@itu.dk>"
+- "Sebastian <sebseb10@gmail.com>"
+- "Ludvig <ludvig.elias.kirkeby@gmail.com>"
+- "Anna <anna.kirstine.hoff@gmail.com>"
+- "Nina <cenh@itu.dk>"
 numbersections: true
 ---
 

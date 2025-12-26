@@ -19,6 +19,7 @@ public class UserTimelineModel : PageModel
     {
         int currentPage = 1;
         Cheeps = _service.GetCheepsFromAuthor(author, currentPage);
+        
         return Page();
     }
 }

@@ -16,7 +16,7 @@ numbersections: true
 ## Domain model
 
 Chirp has the following key entities:
-    
+
     - Author: Enables user management through extending ASP.NETs IdentityUser
     - Cheep: Represents posts by authors using timestamps and text.
     - Follows: Tracks following, and being followed by, other authors.
@@ -37,6 +37,7 @@ Below is an UML class diagram of our domain model:
 
 ## Architecture — In the small
 The Onion Architecture of Chirp is seen in the below UML. 
+
     - UI Layer: Outer layer seen by the Client. Includes Pages, Identity Core scaffolded Pages, Startup code through Program.cs.
     - Service Layer: Data flow between our repository, the UI layer and the Client.
     - Repository Layer: Functionality, DTOs, Interfaces and database retrieval methods supported by Entity Core.

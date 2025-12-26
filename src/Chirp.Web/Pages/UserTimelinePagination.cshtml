@@ -11,12 +11,18 @@
 }
 
 <div>
-    <h2> @routeName's Timeline - Page @currentPage </h2>
-    
-    @if (Model.Cheeps.Result.Any())
+    @if (Model.IsOwnTimeline)
+    {
+        <h2>My Timeline - Page @currentPage</h2>
+    }
+    else
+    {
+        <h2>@routeName's Timeline - Page @currentPage</h2>
+    }    
+    @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
-            @foreach (var cheep in Model.Cheeps.Result)
+            @foreach (var cheep in Model.Cheeps)
             {
                 <li>
                     <p>

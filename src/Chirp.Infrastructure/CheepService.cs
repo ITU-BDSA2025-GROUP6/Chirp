@@ -42,5 +42,9 @@ public class CheepService : ICheepService
         return _repository.DeleteCheep(cheepId, authorName);
     }
 
+    public Task<List<CheepDTO>> GetCheepsFromFollowedAuthor(string userId, int page)
+    {
+        return _repository.GetCheepsFromFollowedAuthor(userId, page);
+    }
    
 }

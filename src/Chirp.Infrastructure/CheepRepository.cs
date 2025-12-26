@@ -129,5 +129,32 @@ public class CheepRepository : ICheepRepository
 
         return await query.ToListAsync();
     }
+
+    public async Task<List<CheepDTO>> GetCheepsFromFollowedAuthor(string userId, int page)
+    {
+        var followedAuthorIds = await _dbContext.Follows
+            .Where(f => f.FollowsId == userId)
+            .Select(f => f.FollowedById)
+            .ToListAsync();
+        
+        followedAuthorIds.Add(userId);
+        
+        var query = _dbContext.Cheeps
+            .Include(c => c.Author)
+            .Where(c => followedAuthorIds.Contains(c.Author!.Id))
+            .OrderByDescending(c =>  c.Timestamp)
+            .Select(c => new CheepDTO
+            {
+                CheepID = c.CheepID,
+                Text = c.Text,
+                AuthorName = c.Author!.UserName ?? string.Empty,
+                ProfilePicturePath = c.Author.ProfilePicturePath,
+                Timestamp = c.Timestamp
+            })
+            .Skip((page - 1) * 32)
+            .Take(32);
+        
+        return await query.ToListAsync();
+    }
     
 }

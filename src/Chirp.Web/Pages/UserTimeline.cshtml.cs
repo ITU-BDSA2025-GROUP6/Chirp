@@ -34,7 +34,7 @@ public class UserTimelineModel : PageModel
         }
         else
         {
-            Cheeps = await _cheepService.GetCheepsFromFollowedAuthor(author, currentPage);
+            Cheeps = await _cheepService.GetCheepsFromAuthor(author, currentPage);
         }
         return Page();
     }

@@ -35,11 +35,10 @@ public class UserTimelinePaginationModel : PageModel
             {
                 Cheeps = await _cheepService.GetCheepsFromFollowedAuthor(currentUser.Id, currentPage);
             }
-            else
-            {
-                Cheeps = await _cheepService.GetCheepsFromFollowedAuthor(author, currentPage);
-            }
-            
+        }
+        else
+        {
+            Cheeps = await _cheepService.GetCheepsFromFollowedAuthor(author, currentPage);
         }
         return Page();
     }

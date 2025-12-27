@@ -21,7 +21,12 @@ public class CheepDBContext : IdentityDbContext<Author>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
+        
+        builder.Entity<Author>()
+            .HasMany(a => a.Cheeps)
+            .WithOne(c => c.Author)
+            .OnDelete(DeleteBehavior.Cascade);
+        
         builder.Entity<Follows>()
             .HasKey(f => new { f.FollowsId, f.FollowedById });
 

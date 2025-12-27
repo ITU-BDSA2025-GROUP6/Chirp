@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Chirp.Infrastructure.Migrations
 {
-    [DbContext(typeof(CheepDBContext))]
+    [DbContext(typeof(CheepDbContext))]
     [Migration("20251226173225_AddRecheepTable")]
     partial class AddRecheepTable
     {

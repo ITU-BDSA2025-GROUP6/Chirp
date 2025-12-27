@@ -7,9 +7,9 @@ namespace Chirp.Infrastructure;
 public class AuthorService : IAuthorService
 {
     private readonly IAuthorRepository _repository;
-    private readonly CheepDBContext _context;
+    private readonly CheepDbContext _context;
 
-    public AuthorService(IAuthorRepository repository, CheepDBContext context)
+    public AuthorService(IAuthorRepository repository, CheepDbContext context)
     {
         _repository = repository;
         _context = context;

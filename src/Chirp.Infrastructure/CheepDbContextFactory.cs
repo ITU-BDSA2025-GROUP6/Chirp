@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Chirp.Infrastructure;
 
-public class CheepDbContextFactory : IDesignTimeDbContextFactory<CheepDBContext>
+public class CheepDbContextFactory : IDesignTimeDbContextFactory<CheepDbContext>
 {
-    public CheepDBContext CreateDbContext(string[] args)
+    public CheepDbContext CreateDbContext(string[] args)
     {
 
         var provider = "sqlite"; //default
@@ -26,7 +26,7 @@ public class CheepDbContextFactory : IDesignTimeDbContextFactory<CheepDBContext>
             provider = envProvider.ToLower();
         }
 
-        var optionsBuilder = new DbContextOptionsBuilder<CheepDBContext>();
+        var optionsBuilder = new DbContextOptionsBuilder<CheepDbContext>();
 
         if (provider == "sqlserver")
         {
@@ -44,6 +44,6 @@ public class CheepDbContextFactory : IDesignTimeDbContextFactory<CheepDBContext>
                 x => x.MigrationsAssembly("Chirp.Infrastructure"));
         }
 
-        return new CheepDBContext(optionsBuilder.Options);
+        return new CheepDbContext(optionsBuilder.Options);
     }
 }

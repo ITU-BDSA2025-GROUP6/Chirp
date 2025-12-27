@@ -26,7 +26,7 @@ public class CheepDBContext : IdentityDbContext<Author>
             .HasMany(a => a.Cheeps)
             .WithOne(c => c.Author)
             .OnDelete(DeleteBehavior.Cascade);
-        
+            
         builder.Entity<Follows>()
             .HasKey(f => new { f.FollowsId, f.FollowedById });
 
@@ -37,12 +37,11 @@ public class CheepDBContext : IdentityDbContext<Author>
             .HasOne(f => f.FollowsAuthor)
             .WithMany(a => a.Following)
             .HasForeignKey(f => f.FollowsId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Follows>()
             .HasOne(f => f.FollowedByAuthor)
             .WithMany(a => a.FollowedBy)
-            .HasForeignKey(f => f.FollowedById)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

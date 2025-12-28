@@ -49,11 +49,13 @@ The Onion Architecture of Chirp is seen in the below UML.
 The Deployed Application Architecture can be seen below.
 
 
-Remote Architecture: Client interacts with an Azure Database through an HTTP (Converted to HTTPS) request. Hosted offshore. 
+#### Remote Architecture
+Client interacts with an Azure Database through an HTTP (Converted to HTTPS) request. Hosted offshore. 
 <img width="800" height="880" alt="image" src="images/Deployed Application Azure Architecture.png" />
 
-Local Architecture Client interacts directly with a local database. Does not require internet.
-<img width="500" height="580" alt="image" src="images/Deployed Application Locally Hosted Architecture.png" />
+#### Local Architecture 
+Client interacts directly with a local database. Does not require internet.
+<img width="400" height="480" alt="image" src="images/Deployed Application Locally Hosted Architecture.png" />
 
 ## User activities
 We have two types of users: `Authorized `and `Unauthorized`.

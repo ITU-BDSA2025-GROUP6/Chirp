@@ -6,7 +6,6 @@
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
-
     var currentPage = 1;
 }
 
@@ -21,13 +20,9 @@
             <form method="post">
                 @Html.AntiForgeryToken()
                 <div>
-                    <input type="text"
-                           asp-for="Text"
-                           maxlength="200"
-                           style="float:left" />
+                    <input type="text" asp-for="Text" maxlength="200" style="float:left" />
                     <input type="submit" value="Share" />
                 </div>
-
                 <span asp-validation-for="Text" class="text-danger"></span>
             </form>
         </div>
@@ -42,16 +37,12 @@
 
                 <li>
                     <div class="cheep-item">
-                        <img src="@cheep.ProfilePicturePath"
-                             class="pfp"
-                             alt="Profile picture" />
+                        <img src="@cheep.ProfilePicturePath" class="pfp" alt="Profile picture" />
 
                         <div class="cheep-body">
                             <div class="cheep-header">
                                 <strong>
-                                    <a href="/@cheep.AuthorName">
-                                        @cheep.AuthorName
-                                    </a>
+                                    <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
                                 </strong>
 
                                 @if (User.Identity?.IsAuthenticated == true &&
@@ -73,12 +64,8 @@
 
                                     @if (User.Identity?.Name == cheep.AuthorName)
                                     {
-                                        <form method="post"
-                                              asp-page-handler="Delete"
-                                              class="deleter">
-                                            <input type="hidden"
-                                                   name="cheepID"
-                                                   value="@cheep.CheepID" />
+                                        <form method="post" asp-page-handler="Delete" class="deleter">
+                                            <input type="hidden" name="cheepID" value="@cheep.CheepID" />
                                             <button type="submit"
                                                     class="deletebutton"
                                                     onclick="return confirm('Delete this cheep?');"
@@ -91,15 +78,13 @@
                                     @if (SignInManager.IsSignedIn(User) &&
                                          User.Identity?.Name != cheep.AuthorName)
                                     {
-                                        <form method="post"
-                                              asp-page-handler="Recheep">
+                                        <form method="post" asp-page-handler="Recheep">
                                             @Html.AntiForgeryToken()
-                                            <input type="hidden"
-                                                   name="CheepID"
-                                                   value="@cheep.CheepID" />
+                                            <input type="hidden" name="cheepId" value="@cheep.CheepID" />
+
                                             <button type="submit"
-                                                    class="btn btn-sm btn-primary">
-                                                Recheep
+                                                    class="btn btn-sm @(cheep.IsRecheepedByCurrentUser ? "btn-secondary" : "btn-primary")">
+                                                @(cheep.IsRecheepedByCurrentUser ? "Remove Recheep" : "Recheep")
                                             </button>
                                         </form>
                                     }

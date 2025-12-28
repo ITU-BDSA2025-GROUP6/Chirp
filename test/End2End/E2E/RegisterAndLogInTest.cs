@@ -46,7 +46,7 @@ namespace End2End
         {
             var page = await CreatePageAsync();
             
-            await page.GotoAsync("https://localhost:5273/");
+            await page.GotoAsync("http://localhost:5273/");
             await page.GetByRole(AriaRole.Link, new() { Name = "Register" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("testemail@example.com");
@@ -70,7 +70,7 @@ namespace End2End
         {
             var page = await CreatePageAsync();
             
-            await page.GotoAsync("https://localhost:5273/");
+            await page.GotoAsync("http://localhost:5273/");
             await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("testemail@example.com");

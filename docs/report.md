@@ -95,6 +95,12 @@ We have created three workflows for the different tasks:
 - **CI:** Automatically builds and tests the application on every change, and publishes a versioned release artifact when a release tag is pushed.
 - **CD:** Build and deploy to Azure Web App.
 - **Executables:** Builds, tests, and publishes single-file executables for multiple operating systems when a GitHub release is created.
+- **Auto Label:** Automatically labels issues based on keywords.
+
+
+
+The second diagram illustrates
+
 
 ## Team work
 

@@ -6,6 +6,20 @@ namespace End2End
     {
         private IPlaywright _playwright;
         private IBrowser _browser;
+        private LocalHostServer _server;
+
+        [OneTimeSetUp]
+        public async Task OneTimeSetup()
+        {
+            _server = new LocalHostServer();
+            await _server.StartAsync();
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            _server.Dispose();
+        }
         
         [SetUp]
         public async Task Setup()
@@ -14,7 +28,7 @@ namespace End2End
 
             _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
             {
-                Headless = false,
+                Headless = true,
             });
         }
 

@@ -1,5 +1,4 @@
 using Chirp.Core;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,21 +6,26 @@ using Microsoft.EntityFrameworkCore;
 namespace Chirp.Infrastructure;
 
 
-public class CheepDBContext : IdentityDbContext<Author>
+public class CheepDbContext : IdentityDbContext<Author>
 {
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
     public DbSet<Recheep> Recheeps { get; set; }
     public DbSet<Follows> Follows { get; set; }
     
-    public CheepDBContext(DbContextOptions<CheepDBContext> options) : base(options)
+    public CheepDbContext(DbContextOptions<CheepDbContext> options) : base(options)
     {
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
+        
+        builder.Entity<Author>()
+            .HasMany(a => a.Cheeps)
+            .WithOne(c => c.Author)
+            .OnDelete(DeleteBehavior.Cascade);
+            
         builder.Entity<Follows>()
             .HasKey(f => new { f.FollowsId, f.FollowedById });
 
@@ -32,12 +36,11 @@ public class CheepDBContext : IdentityDbContext<Author>
             .HasOne(f => f.FollowsAuthor)
             .WithMany(a => a.Following)
             .HasForeignKey(f => f.FollowsId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Follows>()
             .HasOne(f => f.FollowedByAuthor)
             .WithMany(a => a.FollowedBy)
-            .HasForeignKey(f => f.FollowedById)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

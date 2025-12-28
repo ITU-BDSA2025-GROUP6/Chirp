@@ -81,7 +81,7 @@ An `Authorized User` may...
     - Post new Cheeps
     - Recheep other Authors' Cheeps
 
-<img width="800" height="880" alt="image" src="images/Unauthorized User Activity.png" />
+<img width="800" height="880" alt="image" src="images/Unauthorized User Activity Diagram.vpp" />
 
 ## Sequence of functionality/calls trough _Chirp!_
 Below is a Diagram of an example functionality call of an Unauthorized user accessing the site, causing us to display all cheeps, which are grabbed from the database.

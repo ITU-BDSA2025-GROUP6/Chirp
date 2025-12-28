@@ -102,7 +102,7 @@ We have created three workflows for the different tasks:
 
 The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release artifacts on version tags.
 
-<img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:100%; height:auto;">
+<img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:80%; height:auto;">
 
 The second diagram illustrates
 

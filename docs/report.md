@@ -96,6 +96,11 @@ We have created three workflows for the different tasks:
 - **CD:** Build and deploy to Azure Web App.
 - **Executables:** Builds, tests, and publishes single-file executables for multiple operating systems when a GitHub release is created.
 
+The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release artifacts on version tags.
+
+<img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:100%; height:auto;">
+
+
 ## Team work
 
 ## How to make _Chirp!_ work locally

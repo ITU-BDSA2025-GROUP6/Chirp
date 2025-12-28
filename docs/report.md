@@ -106,6 +106,7 @@ The first diagram is over our Continuous Integration workflow, which ensures bui
 
 The second diagram illustrates
 
+<img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:100%; height:auto;">
 
 ## Team work
 

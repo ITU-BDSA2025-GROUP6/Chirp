@@ -22,7 +22,7 @@ public class LocalHostServer : IAsyncDisposable
         var info = new ProcessStartInfo
         {
             FileName = "dotnet",
-            Arguments = $"run --project \"{projectPath}\" --urls=https://localhost:5273",
+            Arguments = $"run --project \"{projectPath}\" --urls=http://localhost:5273",
             UseShellExecute = false,
             RedirectStandardOutput = false,
             RedirectStandardError = false,
@@ -32,7 +32,7 @@ public class LocalHostServer : IAsyncDisposable
         _process = Process.Start(info)
             ?? throw new InvalidOperationException("Could not start the server");
         
-        await WaitAsync("https://localhost:5273");
+        await WaitAsync("http://localhost:5273");
 
     }
 

@@ -97,14 +97,11 @@ We have created three workflows for the different tasks:
 - **Executables:** Builds, tests, and publishes single-file executables for multiple operating systems when a GitHub release is created.
 - **Auto Label:** Automatically labels issues based on keywords.
 
-
-
-The second diagram illustrates
-
-
 The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release artifacts on version tags.
 
 <img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:100%; height:auto;">
+
+The second diagram illustrates
 
 
 ## Team work

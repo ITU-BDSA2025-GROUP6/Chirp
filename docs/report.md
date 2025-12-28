@@ -91,6 +91,10 @@ Below is a Diagram of an example functionality call of an Unauthorized user acce
 # Process
 
 ## Build, test, release, and deployment
+We have created three workflows for the different tasks:
+- **CI:** Automatically builds and tests the application on every change, and publishes a versioned release artifact when a release tag is pushed.
+- **CD:** Build and deploy to Azure Web App.
+- **Executables:** 
 
 ## Team work
 

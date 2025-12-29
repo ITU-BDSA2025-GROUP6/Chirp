@@ -9,33 +9,46 @@ public class UserTimelineModel : PageModel
 {
     private readonly ICheepService _cheepService;
     private readonly IAuthorService _authorService;
-    public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
+
+    public List<CheepDTO> Cheeps { get; set; } = new();
     public bool IsOwnTimeline { get; set; }
 
-    public UserTimelineModel(ICheepService service,  IAuthorService authorService)
+    public int CurrentPage { get; set; } = 1;
+    public bool HasNextPage { get; set; }
+
+    public UserTimelineModel(ICheepService service, IAuthorService authorService)
     {
         _cheepService = service;
         _authorService = authorService;
     }
 
-    public async Task<ActionResult> OnGetAsync(string author)
+    public async Task<IActionResult> OnGetAsync(string author)
     {
-        int currentPage = 1;
+        CurrentPage = 1;
+
         var currentUserName = User.Identity?.Name;
-        
         IsOwnTimeline = currentUserName != null && currentUserName == author;
+
         if (IsOwnTimeline)
         {
             var currentUser = await _authorService.GetAuthorEntityByName(currentUserName!);
             if (currentUser != null)
             {
-                Cheeps = await _cheepService.GetCheepsFromFollowedAuthor(currentUser.Id, currentPage);
+                Cheeps = await _cheepService.GetCheepsFromFollowedAuthor(currentUser.Id, CurrentPage);
+
+                // Determine if there is a next page
+                HasNextPage = (await _cheepService
+                    .GetCheepsFromFollowedAuthor(currentUser.Id, CurrentPage + 1)).Any();
             }
         }
         else
         {
-            Cheeps = await _cheepService.GetCheepsFromAuthor(author, currentPage);
+            Cheeps = await _cheepService.GetCheepsFromAuthor(author, CurrentPage);
+
+            HasNextPage = (await _cheepService
+                .GetCheepsFromAuthor(author, CurrentPage + 1)).Any();
         }
+
         return Page();
     }
 }

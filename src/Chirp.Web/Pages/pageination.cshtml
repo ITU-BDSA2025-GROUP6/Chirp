@@ -1,47 +1,115 @@
-    @page "/page/{index:int}"
+@page "/page/{index:int}"
 @model Chirp.Web.Pages.PaginationModel
+@using Chirp.Core
+@inject SignInManager<Author> SignInManager
+
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
+
     var routeIndexStr = HttpContext.GetRouteValue("index")?.ToString() ?? "1";
     var currentPage = int.TryParse(routeIndexStr, out var tmp) && tmp > 0 ? tmp : 1;
 }
 
 <div>
-    <h2> Public Timeline — Page @currentPage </h2>
-    
+    <h2>Public Timeline — Page @currentPage</h2>
+
     @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in Model.Cheeps)
             {
+                var isFollowing = Model.IsFollowing(cheep.AuthorName);
+
                 <li>
-                    <p>
-                        <strong>
-                            <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
-                        </strong>
-                        @cheep.Text
-                        <small>&mdash; @cheep.Timestamp</small>
-                    </p>
+                    <div class="cheep-item">
+                        <img src="@cheep.ProfilePicturePath"
+                             class="pfp"
+                             alt="Profile picture" />
+
+                        <div class="cheep-body">
+                            <div class="cheep-header">
+                                <strong>
+                                    <a href="/@cheep.AuthorName">
+                                        @cheep.AuthorName
+                                    </a>
+                                </strong>
+
+                                @if (User.Identity?.IsAuthenticated == true &&
+                                     User.Identity.Name != cheep.AuthorName)
+                                {
+                                    <a class="followbutton @(isFollowing ? "following" : "")"
+                                       asp-page-handler="FollowBtn"
+                                       asp-route-authorname="@cheep.AuthorName">
+                                        @(isFollowing ? "Unfollow" : "Follow")
+                                    </a>
+                                }
+                            </div>
+
+                            <div class="cheep-content">
+                                <p>@cheep.Text</p>
+
+                                <div class="cheep-footer">
+                                    <small>&mdash; @cheep.Timestamp</small>
+
+                                    @if (User.Identity?.Name == cheep.AuthorName)
+                                    {
+                                        <form method="post"
+                                              asp-page-handler="Delete"
+                                              class="deleter">
+                                            <input type="hidden"
+                                                   name="cheepID"
+                                                   value="@cheep.CheepID" />
+                                            <button type="submit"
+                                                    class="deletebutton"
+                                                    onclick="return confirm('Delete this cheep?');"
+                                                    aria-label="Delete cheep">
+                                                🗑️
+                                            </button>
+                                        </form>
+                                    }
+
+                                    @if (SignInManager.IsSignedIn(User) &&
+                                         User.Identity?.Name != cheep.AuthorName)
+                                    {
+                                        <form method="post"
+                                              asp-page-handler="Recheep">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden"
+                                                   name="cheepId"
+                                                   value="@cheep.CheepID" />
+
+                                            <button type="submit"
+                                                    class="btn btn-sm @(cheep.IsRecheepedByCurrentUser
+                                                        ? "btn-secondary"
+                                                        : "btn-primary")">
+                                                @(cheep.IsRecheepedByCurrentUser
+                                                    ? "Remove Recheep"
+                                                    : "Recheep")
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </li>
             }
         </ul>
 
-        <nav class="pager" style="margin-top:1rem; display:flex; gap:.75rem;">
+        <div class="navigation">
             @if (currentPage > 1)
             {
                 <a href="/page/@(currentPage - 1)">« Prev</a>
             }
+
             @if (Model.hasNextPage)
             {
                 <a href="/page/@(currentPage + 1)">Next »</a>
             }
-            
-        </nav>
-        
-        <nav class="home" style="margin-top:1rem; display:flex; gap:.75rem;">
+
             <a href="/">Home</a>
-        </nav>
+        </div>
     }
     else
     {

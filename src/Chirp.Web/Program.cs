@@ -21,7 +21,7 @@ if (builder.Environment.IsProduction())
                        ?? throw new InvalidOperationException(
                            "AzureSQL connection string not found.  Configure it in Azure Portal.");
 
-    builder.Services.AddDbContext<CheepDBContext>(options => 
+    builder.Services.AddDbContext<CheepDbContext>(options => 
         options.UseSqlServer(connectionString, sqlOptions =>
             {
                 sqlOptions.EnableRetryOnFailure(
@@ -35,7 +35,7 @@ else
 { 
     connectionString = builder. Configuration.GetConnectionString("DefaultConnection")
                        ??  "Data Source=Chirp.db";
-    builder.Services.AddDbContext<CheepDBContext>(options => options.UseSqlite(connectionString));
+    builder.Services.AddDbContext<CheepDbContext>(options => options.UseSqlite(connectionString));
 } 
 
 // Adds the Identity services to the DI container and uses a custom user type, ApplicationUser
@@ -52,7 +52,7 @@ builder.Services.AddDefaultIdentity<Author>(options =>
         options.User.AllowedUserNameCharacters =
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.@";
     })
-    .AddEntityFrameworkStores<CheepDBContext>();
+    .AddEntityFrameworkStores<CheepDbContext>();
 
 builder.Services.ConfigureExternalCookie(options =>
 {
@@ -125,7 +125,7 @@ if (!app.Environment.IsDevelopment())
 using (var scope = app.Services.CreateScope())
 {
     using var context =
-        scope.ServiceProvider.GetRequiredService<CheepDBContext>();
+        scope.ServiceProvider.GetRequiredService<CheepDbContext>();
     if (app.Environment.IsProduction())
     {
         //For Azure SQL: applies SQL server migration
@@ -134,7 +134,7 @@ using (var scope = app.Services.CreateScope())
     else
     {
         //For localhost/testing: create Schema directly
-        context.Database.EnsureDeleted();
+        //context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
     }
     
@@ -153,6 +153,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
+
 app.UseAuthorization();
 app.MapRazorPages();
 

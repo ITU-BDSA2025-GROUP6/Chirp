@@ -48,10 +48,16 @@ The Onion Architecture of Chirp is seen in the below UML.
 ## Architecture of deployed application
 The Deployed Application Architecture can be seen below.
 
-    - Remote Architecture (Left): Client interacts with an Azure Database through the Internet, hosted offshore. 
-    - Local Architecture (Right): Client interacts directly with a local database.
-    
-<img width="800" height="880" alt="image" src="images/Deployed Application Architecture Improved.png" />
+
+#### Remote Architecture
+Client interacts with an Azure Database through an HTTP (Converted to HTTPS) request. Hosted offshore. 
+
+<img width="800" height="880" alt="image" src="images/Deployed Application Azure Architecture.png" />
+
+#### Local Architecture 
+Client interacts directly with a local database. Does not require internet.
+
+<img width="400" height="480" alt="image" src="images/Deployed Application Locally Hosted Architecture.png" />
 
 ## User activities
 We have two types of users: `Authorized `and `Unauthorized`.
@@ -75,19 +81,44 @@ An `Authorized User` may...
     - Post new Cheeps
     - Recheep other Authors' Cheeps
 
-<img width="800" height="880" alt="image" src="images/Unauthorized User Activity.png" />
+<img width="417" height="981" alt="image" src="images/Unauthorized User Activity Diagram.jpg" />
+
+
+<img width="1130" height="1691" alt="image" src="images/Authorized User Activity.jpg" />
 
 ## Sequence of functionality/calls trough _Chirp!_
 Below is a Diagram of an example functionality call of an Unauthorized user accessing the site, causing us to display all cheeps, which are grabbed from the database.
 
-<img width="800" height="880" alt="image" src="images/Functionality Calls.png" />
+<img src="images/Functionality Calls.png" alt="image" style="max-width: 150%; height=auto;"/>
 
 # Process
 
 ## Build, test, release, and deployment
+We have created three workflows for the different tasks:
+- **CI:** Automatically builds and tests the application on every change, and publishes a versioned release artifact when a release tag is pushed.
+- **CD:** Build and deploy to Azure Web App.
+- **Executables:** Builds, tests, and publishes single-file executables for multiple operating systems when a GitHub release is created.
+- **Auto Label:** Automatically labels issues based on keywords.
+
+The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release webapp artifact on tags, with both title and release notes.
+
+<img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:80%; height:auto;">
+
+The second diagram illustrates the Continuous Deployment workflow, which consists of a build- and deploy job. This workflow is triggered on 'push' to the main branch.
+The workflow ensures that the ASP.NET application is build, published and deployed to Azure App Service.
+
+<img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:100%; height:auto;">
+
+The fourth diagram is created over the Auto Label workflow. It shows how labels are automatically assigned to newly opened or edited issues based on predefined keywords, such as "bug", "layout", etc. 
+<img src="images/AutoLabel.png" alt="Auto Label diagram" style="max-width:100%; height:auto;">
+
 
 ## Team work
+This is our project board at hand-in. The following tasks remain unresolved:
+INSÆT BILLEDE AF PROJECT BOARD OG LISTE AF UNRESOLVED TASKS + FORKLARING
 
+The structure around which we have organised our work, can be described with the following sequence diagram.
+<img src=
 ## How to make _Chirp!_ work locally
 
 ## How to run test suite locally

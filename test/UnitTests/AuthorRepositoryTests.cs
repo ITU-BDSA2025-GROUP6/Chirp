@@ -9,18 +9,18 @@ public class AuthorRepositoryTests : IDisposable
 {
     private readonly SqliteConnection _connection;
     private readonly AuthorRepository _repository;
-    private readonly CheepDBContext _context;
+    private readonly CheepDbContext _context;
 
     public AuthorRepositoryTests()
     {
         _connection = new SqliteConnection("Data Source=:memory:");
         _connection.Open();
 
-        var options = new DbContextOptionsBuilder<CheepDBContext>()
+        var options = new DbContextOptionsBuilder<CheepDbContext>()
             .UseSqlite(_connection)
             .Options;
 
-        _context = new CheepDBContext(options);
+        _context = new CheepDbContext(options);
         _context.Database.EnsureCreated();
 
         var author = new Author

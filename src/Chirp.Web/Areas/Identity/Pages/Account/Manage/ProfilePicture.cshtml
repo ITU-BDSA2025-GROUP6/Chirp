@@ -1,0 +1,36 @@
+@page
+@model Chirp.Web.Areas.Identity.Pages.Account.Manage.ProfilePictureModel
+@{
+    ViewData["Title"] = "Profile picture";
+
+    // IMPORTANT: opt out of the Manage layout
+    Layout = "/Pages/Shared/_Layout.cshtml";}
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Select a new profile picture</label>
+        <input type="file"
+               asp-for="Input.Picture"
+               class="form-control"
+               accept="image/*" />
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.CurrentPicturePath))
+    {
+        <div style="margin-top:1rem;">
+            <p>Current picture:</p>
+            <img src="@Model.CurrentPicturePath"
+                 style="width:120px;height:120px;border-radius:50%;" />
+        </div>
+    }
+
+    <button type="submit"
+            class="btn btn-primary"
+            style="margin-top:1rem;">
+        Save
+    </button>
+</form>
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />

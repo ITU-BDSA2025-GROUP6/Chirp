@@ -8,9 +8,9 @@ namespace Chirp.Infrastructure;
 
 public class CheepRepository : ICheepRepository
 {
-    private readonly CheepDBContext _dbContext;
+    private readonly CheepDbContext _dbContext;
 
-    public CheepRepository(CheepDBContext dbContext)
+    public CheepRepository(CheepDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -95,24 +95,67 @@ public class CheepRepository : ICheepRepository
     /// <returns></returns>
     public async Task<List<CheepDTO>> GetCheeps(int page)
     {
+        const int pageSize = 32;
+
+        return await _dbContext.Cheeps
+            .Include(c => c.Author)
+            .OrderByDescending(c => c.Timestamp)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(c => new CheepDTO
+            {
+                CheepID = c.CheepID,
+                Text = c.Text,
+                AuthorName = c.Author!.UserName ?? string.Empty,
+                ProfilePicturePath = c.Author.ProfilePicturePath,
+                Timestamp = c.Timestamp
+            })
+            .ToListAsync();
+    }
+    public async Task<List<CheepDTO>> GetCheeps(int page, string? currentUserId)
+    {
+        const int pageSize = 32;
+
+        if (string.IsNullOrEmpty(currentUserId))
         {
-            var query = _dbContext.Cheeps
+            return await _dbContext.Cheeps
                 .Include(c => c.Author)
                 .OrderByDescending(c => c.Timestamp)
-                .Select(c => new CheepDTO   
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(c => new CheepDTO
                 {
                     CheepID = c.CheepID,
                     Text = c.Text,
                     AuthorName = c.Author!.UserName ?? string.Empty,
                     ProfilePicturePath = c.Author.ProfilePicturePath,
-                    Timestamp = c.Timestamp
+                    Timestamp = c.Timestamp,
+                    IsRecheepedByCurrentUser = false
                 })
-                .Skip((page - 1) * 32)    // TODO check if offset is correct 
-                .Take(32);
-
-            return await query.ToListAsync();
+                .ToListAsync();
         }
+
+        var recheepedIdsQuery = _dbContext.Recheeps
+            .Where(r => r.AuthorID == currentUserId)
+            .Select(r => r.CheepID);
+
+        return await _dbContext.Cheeps
+            .Include(c => c.Author)
+            .OrderByDescending(c => c.Timestamp)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(c => new CheepDTO
+            {
+                CheepID = c.CheepID,
+                Text = c.Text,
+                AuthorName = c.Author!.UserName ?? string.Empty,
+                ProfilePicturePath = c.Author.ProfilePicturePath,
+                Timestamp = c.Timestamp,
+                IsRecheepedByCurrentUser = recheepedIdsQuery.Contains(c.CheepID)
+            })
+            .ToListAsync();
     }
+    
     public async Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int page)
     {
         const int pageSize = 32;
@@ -126,7 +169,7 @@ public class CheepRepository : ICheepRepository
         if (authorId == null)
             return new List<CheepDTO>();
 
-        // Cheeps written by user
+        // users own cheeps
         var authored = _dbContext.Cheeps
             .Where(c => c.AuthorID == authorId)
             .Select(c => new CheepDTO
@@ -136,7 +179,6 @@ public class CheepRepository : ICheepRepository
                 Timestamp = c.Timestamp
             });
 
-        // Cheeps the user recheeped
         var recheeped = _dbContext.Recheeps
             .Where(r => r.AuthorID == authorId)
             .Join(
@@ -161,17 +203,18 @@ public class CheepRepository : ICheepRepository
 
     public async Task<List<CheepDTO>> GetCheepsFromFollowedAuthor(string userId, int page)
     {
-        var followedAuthorIds = await _dbContext.Follows
+        const int pageSize = 32;
+
+        // IDs of users followed + the user itself
+        var followedIds = await _dbContext.Follows
             .Where(f => f.FollowsId == userId)
             .Select(f => f.FollowedById)
             .ToListAsync();
-        
-        followedAuthorIds.Add(userId);
-        
-        var query = _dbContext.Cheeps
-            .Include(c => c.Author)
-            .Where(c => followedAuthorIds.Contains(c.Author!.Id))
-            .OrderByDescending(c =>  c.Timestamp)
+
+        followedIds.Add(userId);
+
+        var authoredCheeps = _dbContext.Cheeps
+            .Where(c => followedIds.Contains(c.AuthorID))
             .Select(c => new CheepDTO
             {
                 CheepID = c.CheepID,
@@ -179,11 +222,26 @@ public class CheepRepository : ICheepRepository
                 AuthorName = c.Author!.UserName ?? string.Empty,
                 ProfilePicturePath = c.Author.ProfilePicturePath,
                 Timestamp = c.Timestamp
-            })
-            .Skip((page - 1) * 32)
-            .Take(32);
-        
-        return await query.ToListAsync();
+            });
+
+        var recheepedCheeps =
+            from r in _dbContext.Recheeps
+            where followedIds.Contains(r.AuthorID)
+            join c in _dbContext.Cheeps on r.CheepID equals c.CheepID
+            select new CheepDTO
+            {
+                CheepID = c.CheepID,
+                Text = c.Text,
+                AuthorName = c.Author!.UserName ?? string.Empty,
+                ProfilePicturePath = c.Author.ProfilePicturePath,
+                Timestamp = c.Timestamp
+            };
+
+        return await authoredCheeps
+            .Concat(recheepedCheeps)
+            .OrderByDescending(c => c.Timestamp)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
     }
-    
 }

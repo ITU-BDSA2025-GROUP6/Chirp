@@ -6,15 +6,13 @@ namespace Chirp.Infrastructure;
 
 public class AuthorRepository : IAuthorRepository
 {
-    
-    private readonly CheepDBContext _dbContext;
+    private readonly CheepDbContext _dbContext;
 
-    public AuthorRepository(CheepDBContext dbContext)
+    public AuthorRepository(CheepDbContext dbContext)
     {
         _dbContext = dbContext;
     }
-    
-    
+
     public async Task<AuthorDTO> GetAuthorByName(string name)
     {
         try
@@ -31,12 +29,12 @@ public class AuthorRepository : IAuthorRepository
                 Cheeps = author.Cheeps
             };
         }
-        catch (InvalidOperationException) 
+        catch (InvalidOperationException)
         {
             throw new InvalidOperationException("No such author with name: " + name);
         }
     }
-    
+
     public async Task<AuthorDTO> GetAuthorByEmail(string email)
     {
         try
@@ -53,28 +51,35 @@ public class AuthorRepository : IAuthorRepository
                 Cheeps = author.Cheeps
             };
         }
+        
         catch (InvalidOperationException)
         {
             throw new InvalidOperationException("No such author with email: " + email);
         }
     }
-
-    public async Task<int> CreateRecheep(AuthorDTO Author, int cheepID)
+    public async Task<int> CreateRecheep(AuthorDTO author, int cheepID)
     {
-
-        if (Author == null)
-        {
+        if (author == null)
             throw new InvalidOperationException("No such author");
+
+        var existing = await _dbContext.Recheeps
+            .FirstOrDefaultAsync(r => r.AuthorID == author.Id && r.CheepID == cheepID);
+
+        if (existing != null)
+        {
+            _dbContext.Recheeps.Remove(existing);
+            await _dbContext.SaveChangesAsync();
+            return cheepID;
         }
 
-        Recheep newRecheep = new Recheep
+        var newRecheep = new Recheep
         {
-        AuthorID = Author.Id,
-        CheepID = cheepID
+            AuthorID = author.Id,
+            CheepID = cheepID
         };
 
-        var queryResult = await _dbContext.Recheeps.AddAsync(newRecheep); // does not write to the database!
-        await _dbContext.SaveChangesAsync(); // persist the changes in the database
-        return queryResult.Entity.CheepID;
+        await _dbContext.Recheeps.AddAsync(newRecheep);
+        await _dbContext.SaveChangesAsync();
+        return cheepID;
     }
 }

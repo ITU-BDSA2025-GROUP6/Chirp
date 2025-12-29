@@ -66,29 +66,4 @@ public class AuthorRepository : IAuthorRepository
             throw new InvalidOperationException("No such author with email: " + email);
         }
     }
-    public async Task<int> CreateRecheep(AuthorDTO author, int cheepID)
-    {
-        if (author == null)
-            throw new InvalidOperationException("No such author");
-
-        var existing = await _dbContext.Recheeps
-            .FirstOrDefaultAsync(r => r.AuthorID == author.Id && r.CheepID == cheepID);
-
-        if (existing != null)
-        {
-            _dbContext.Recheeps.Remove(existing);
-            await _dbContext.SaveChangesAsync();
-            return cheepID;
-        }
-
-        var newRecheep = new Recheep
-        {
-            AuthorID = author.Id,
-            CheepID = cheepID
-        };
-
-        await _dbContext.Recheeps.AddAsync(newRecheep);
-        await _dbContext.SaveChangesAsync();
-        return cheepID;
-    }
 }

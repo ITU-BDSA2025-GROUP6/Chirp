@@ -10,7 +10,7 @@ public interface ICheepService
     Task<bool>  DeleteCheep(int cheepId, string authorName);
     Task<List<CheepDTO>> GetCheepsFromFollowedAuthor(string userId, int page);
     
-    
+    Task<int> CreateRecheep(AuthorDTO Author, int cheepID);
 
     //Task<int> InsertAuthor(string username, string email);
 }

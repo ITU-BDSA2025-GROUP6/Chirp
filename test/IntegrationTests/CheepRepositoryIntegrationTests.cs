@@ -71,7 +71,34 @@ public class CheepRepositoryIntegrationTests : IDisposable
             Assert.Equal("Test Cheep", cheepInDb.Text);
             Assert.Equal("Test Author", cheepInDb.Author.UserName);
         }
-        
+
+
+        [Fact]
+        public async Task GetCheeps_ShouldReturnExpectedCheepsInOrder()
+        {
+            //arrange
+            for (int i = 0; i < 65; i++)
+            {
+                var newCheep = new CheepDTO
+                {
+                    AuthorName = "Test Author",
+                    Text = i.ToString(),
+                    Timestamp = DateTime.UtcNow
+                };
+                
+                await _repository.CreateCheep(newCheep);
+            }
+            
+            //act
+            var page1 = await _repository.GetCheeps(1);
+            var page2 = await _repository.GetCheeps(2);
+
+            //assert
+            Assert.NotNull(page1);
+            Assert.NotNull(page2);
+            Assert.Equal(32, page1.Count);
+            Assert.Equal(32, page2.Count);
+        }
     }
 
 }

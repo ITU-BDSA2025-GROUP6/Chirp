@@ -130,6 +130,45 @@ As illustrated in the picture, our process had the following main components:
 ## How to make _Chirp!_ work locally
 
 ## How to run test suite locally
+After cloning the project repository, you can run the entire test suite or individual types of tests using
+the following steps:
+
+### 1. Install Required Browsers for Playwright
+The E2E tests use Playwright, so browser binaries need to be installed locally.  
+From the project root, run:
+```
+pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
+```
+If `pwsh` is not available, install PowerShell first.
+
+This step is required for the E2E tests to run correctly.
+
+For any issues with Playwright or browser installation, see the official guide:
+https://playwright.dev/dotnet/docs/intro
+
+### 2. Run All tests:
+From the project root directory, run the command:
+```
+dotnet test
+```
+This will run all test cases across the project, including unit, integration, and end-to-end tests.
+
+### 3. Run Specific Test
+Each type of test can also be run separately from the project root:
+- Unit tests:
+```
+dotnet test test/UnitTests
+```
+
+- Integration tests:
+```
+dotnet test test/IntegrationTests
+```
+
+- E2E tests:
+```
+dotnet test test/End2End
+```
 
 # Ethics
 

@@ -9,18 +9,18 @@ public class CheepRepositoryIntegrationTests : IDisposable
 {
     private readonly SqliteConnection _connection;
     private readonly CheepRepository _repository;
-    private readonly CheepDBContext _context;
+    private readonly CheepDbContext _context;
     
     public CheepRepositoryIntegrationTests() 
     {
     _connection = new SqliteConnection("Data Source=:memory:");
         _connection.Open();
 
-        var options = new DbContextOptionsBuilder<CheepDBContext>()
+        var options = new DbContextOptionsBuilder<CheepDbContext>()
             .UseSqlite(_connection)
             .Options;
 
-        _context = new CheepDBContext(options);
+        _context = new CheepDbContext(options);
         _context.Database.EnsureCreated();
 
         var author = new Author
@@ -44,14 +44,32 @@ public class CheepRepositoryIntegrationTests : IDisposable
         _connection.Dispose();
         _context.Dispose();
     }
-
+    
     public class CreateCheepTests : CheepRepositoryIntegrationTests
     {
 
         [Fact]
         public async Task CreateCheep_SavesCheepToDatabase()
         {
+            //arrange
+            var newCheep = new CheepDTO
+            {
+                AuthorName = "Test Author",
+                Text = "Test Cheep",
+                Timestamp = DateTime.UtcNow
+            };
+
+            //act
+            await _repository.CreateCheep(newCheep);
+
+            //assert
+            var cheepInDb = _context.Cheeps
+                .Include(c => c.Author)
+                .FirstOrDefault(c => c.Text == "Test Cheep" && c.Author.UserName == "Test Author");
             
+            Assert.NotNull(cheepInDb);
+            Assert.Equal("Test Cheep", cheepInDb.Text);
+            Assert.Equal("Test Author", cheepInDb.Author.UserName);
         }
         
     }

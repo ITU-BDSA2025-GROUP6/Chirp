@@ -134,5 +134,6 @@ As illustrated in the picture, our process had the following main components:
 # Ethics
 
 ## License
+During this project, we have learned about the importance of licensing and the ethics of open source developement. This has added new understanding and new perspectives to the reality surrounding the Chirp! application. For licensing, we haven chosen the MIT License. This choice is based on the simplicity of the license, as well as the its broad use and familiarity. Having this lisence means that others are free to use, modify and distribute our application, as long as the original license and copyright notice are included.
 
 ## LLMs, ChatGPT, CoPilot, and others

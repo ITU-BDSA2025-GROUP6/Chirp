@@ -13,6 +13,9 @@ public class CheepDTO
     
     public string AuthorName { get; set; } = string.Empty;
     public string? ProfilePicturePath { get; set; }
+    
+    public bool IsRecheepedByCurrentUser { get; set; }
+
 
 }
 

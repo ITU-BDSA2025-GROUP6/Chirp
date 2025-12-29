@@ -46,5 +46,8 @@ public class CheepService : ICheepService
     {
         return _repository.GetCheepsFromFollowedAuthor(userId, page);
     }
-   
+    public Task<List<CheepDTO>> GetCheeps(int page, string? currentUserId)
+    {
+        return _repository.GetCheeps(page, currentUserId);
+    }
 }

@@ -89,7 +89,7 @@ An `Authorized User` may...
 ## Sequence of functionality/calls trough _Chirp!_
 Below is a Diagram of an example functionality call of an Unauthorized user accessing the site, causing us to display all cheeps, which are grabbed from the database.
 
-<img width="800" height="880" alt="image" src="images/Functionality Calls.png" />
+<img src="images/Functionality Calls.png" alt="image" style="max-width: 150%; height=auto;"/>
 
 # Process
 
@@ -102,13 +102,23 @@ We have created three workflows for the different tasks:
 
 The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release webapp artifact on tags, with both title and release notes.
 
-<img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:100%; height:auto;">
+<img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:80%; height:auto;">
 
-The second diagram illustrates
+The second diagram illustrates the Continuous Deployment workflow, which consists of a build- and deploy job. This workflow is triggered on 'push' to the main branch.
+The workflow ensures that the ASP.NET application is build, published and deployed to Azure App Service.
+
+<img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:100%; height:auto;">
+
+The fourth diagram is created over the Auto Label workflow. 
+<img src="images/AutoLabel.png" alt="Auto Label diagram" style="max-width:100%; height:auto;">
 
 
 ## Team work
+This is our project board at hand-in. The following tasks remain unresolved:
+INSÆT BILLEDE AF PROJECT BOARD OG LISTE AF UNRESOLVED TASKS + FORKLARING
 
+The structure around which we have organised our work, can be described with the following sequence diagram.
+<img src=
 ## How to make _Chirp!_ work locally
 
 ## How to run test suite locally

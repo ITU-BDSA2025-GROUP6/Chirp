@@ -13,8 +13,13 @@ public class AuthorRepository : IAuthorRepository
         _dbContext = dbContext;
     }
 
-    public async Task<AuthorDTO> GetAuthorByName(string name)
+    public async Task<AuthorDTO> GetAuthorByName(string? name)
     {
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new InvalidOperationException("Name cannot be null or empty");
+        }
         try
         {
             var author = await _dbContext.Authors
@@ -35,8 +40,12 @@ public class AuthorRepository : IAuthorRepository
         }
     }
 
-    public async Task<AuthorDTO> GetAuthorByEmail(string email)
+    public async Task<AuthorDTO> GetAuthorByEmail(string? email)
     {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new InvalidOperationException("Email cannot be null or empty");
+        }
         try
         {
             var author = await _dbContext.Authors

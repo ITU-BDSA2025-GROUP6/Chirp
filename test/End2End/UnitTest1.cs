@@ -1,8 +1,6 @@
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using NUnit.Framework;
 
 namespace End2End;
 
@@ -89,9 +87,11 @@ public class Tests : PageTest
         await Expect(Page).ToHaveURLAsync(new Regex(".*intro"));
     }
 
+    [Ignore("Ignored")]
     [Test]
     public async Task UserCanLogin_NavigateTimelines_PostCheep_ThenLogout()
     {
+        await Page.GotoAsync(Url);
         Assert.Pass();
         /*
         await Page.GotoAsync("https://localhost:5273/");

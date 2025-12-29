@@ -233,4 +233,109 @@ public class CheepRepositoryTests : IDisposable
             Assert.False(result);
         }
     }
+
+    public class CreateRecheepTests : CheepRepositoryTests
+    {
+        [Fact]
+        public async Task CreateRecheep_ShouldCreateRecheep()
+        {
+            // Arrange
+            var authorEntity = await _context.Authors.FirstAsync();
+            var authorDto = new AuthorDTO
+            {
+                Id = authorEntity.Id,
+                Name = authorEntity.UserName ?? string.Empty,
+                Email = authorEntity.Email  ?? string.Empty
+            };
+
+            var cheep = new Cheep
+            {
+                AuthorID = authorEntity.Id,
+                Text = "Hello, this is a test cheep!",
+                Timestamp = DateTime.UtcNow
+            };
+            
+            await _context.Cheeps.AddAsync(cheep);
+            await _context.SaveChangesAsync();
+            
+            // Act
+            var resultId = await _repository.CreateRecheep(authorDto, cheep.CheepID);
+            
+            // Assert
+            Assert.Equal(cheep.CheepID, resultId);
+            
+            var recheep = await _context.Recheeps
+                .FirstOrDefaultAsync(r => r.AuthorID == authorDto.Id &&  r.CheepID == cheep.CheepID);
+            
+            Assert.NotNull(recheep);
+            Assert.Equal(authorDto.Id, recheep.AuthorID);
+            Assert.Equal(cheep.CheepID, recheep.CheepID);
+        }
+
+        [Fact]
+        public async Task CreateRecheep_ShouldRemoveExistingRecheep()
+        {
+            // Arrange
+            var authorEntity = await _context.Authors.FirstAsync();
+            var authorDto = new AuthorDTO
+            {
+                Id = authorEntity.Id,
+                Name = authorEntity.UserName ?? string.Empty,
+                Email = authorEntity.Email ?? string.Empty
+            };
+            
+            
+            var cheep = new Cheep
+            {
+                Text = "Existing Cheep",
+                Timestamp = DateTime.UtcNow,
+                AuthorID = authorEntity.Id
+            };
+            await _context.Cheeps.AddAsync(cheep);
+            await _context.SaveChangesAsync();
+
+            var existingCheep = new Recheep()
+            {
+                AuthorID = authorDto.Id,
+                CheepID = cheep.CheepID
+            };
+            await _context.Recheeps.AddAsync(existingCheep);
+            await _context.SaveChangesAsync();
+            
+            // Act
+            var resultId = await _repository.CreateRecheep(authorDto, cheep.CheepID);
+            
+            // Assert
+            Assert.Equal(cheep.CheepID, resultId);
+            
+            var recheep = await _context.Recheeps
+                .FirstOrDefaultAsync(r  => r.AuthorID == authorDto.Id && r.CheepID == cheep.CheepID);
+            
+            Assert.Null(recheep);
+        }
+
+        [Fact]
+        public async Task CreateReceep_ShouldThrowExceptionIfAuthorIsNull()
+        {
+            // Arrange 
+            AuthorDTO? author = null;
+            int cheepId = 1;
+            InvalidOperationException? exception = null;
+            
+            // Act
+            try
+            {
+                await _repository.CreateRecheep(author, cheepId);
+            }
+            catch (InvalidOperationException e)
+            {
+                exception = e;
+            }
+            
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<InvalidOperationException>(exception);
+            Assert.Equal("No such author", exception.Message);
+        }
+    }
 }

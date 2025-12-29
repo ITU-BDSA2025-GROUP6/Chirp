@@ -245,29 +245,29 @@ public class CheepRepository : ICheepRepository
             .ToListAsync();
     }
     
-    public async Task<int> CreateRecheep(AuthorDTO author, int cheepID)
+    public async Task<int> CreateRecheep(AuthorDTO? author, int cheepId)
     {
         if (author == null)
             throw new InvalidOperationException("No such author");
 
         var existing = await _dbContext.Recheeps
-            .FirstOrDefaultAsync(r => r.AuthorID == author.Id && r.CheepID == cheepID);
+            .FirstOrDefaultAsync(r => r.AuthorID == author.Id && r.CheepID == cheepId);
 
         if (existing != null)
         {
             _dbContext.Recheeps.Remove(existing);
             await _dbContext.SaveChangesAsync();
-            return cheepID;
+            return cheepId;
         }
 
         var newRecheep = new Recheep
         {
             AuthorID = author.Id,
-            CheepID = cheepID
+            CheepID = cheepId
         };
 
         await _dbContext.Recheeps.AddAsync(newRecheep);
         await _dbContext.SaveChangesAsync();
-        return cheepID;
+        return cheepId;
     }
 }

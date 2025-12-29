@@ -76,7 +76,10 @@ namespace Chirp.Web.Areas.Identity.Pages.Account.Manage
 
             personalData.Add($"Authenticator Key", await _userManager.GetAuthenticatorKeyAsync(user));
 
-            personalData.Add("Cheeps", cheeps);
+            if (cheeps.Any())
+            {
+                personalData.Add("Cheeps", cheeps);
+            }
             
             Response.Headers.TryAdd("Content-Disposition", "attachment; filename=PersonalData.json");
             return new FileContentResult(JsonSerializer.SerializeToUtf8Bytes(personalData), "application/json");

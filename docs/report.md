@@ -86,6 +86,15 @@ An `Authorized User` may...
 
 <img width="1130" height="1691" alt="image" src="images/Authorized User Activity.jpg" />
 
+**Below are Sequence Diagrams showing a standard login and an open authentication one.**
+
+**Standard Login (Typing in details on the Registration or Login page)**
+<img width="948" height="455" alt="image" src="images/Authentication Diagram.jpg" />
+
+**Open Authentication Login**
+<img width="1330" height="982" alt="image" src="images/Open Authentication Diagram.jpg" />
+
+
 ## Sequence of functionality/calls trough _Chirp!_
 Below is a Diagram of an example functionality call of an Unauthorized user accessing the site, causing us to display all cheeps, which are grabbed from the database.
 

@@ -109,7 +109,11 @@ The second diagram illustrates
 <img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:100%; height:auto;">
 
 ## Team work
+This is our project board at hand-in. The following tasks remain unresolved:
+INSÆT BILLEDE AF PROJECT BOARD OG LISTE AF UNRESOLVED TASKS + FORKLARING
 
+The structure around which we have organised our work, can be described with the following sequence diagram.
+<img src=
 ## How to make _Chirp!_ work locally
 
 ## How to run test suite locally

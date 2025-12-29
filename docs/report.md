@@ -127,7 +127,37 @@ As illustrated in the picture, our process had the following main components:
 - **Code development:** The issue is then picked up by a developer from the team. In the next steps of the sequence, the developer creates a new designated branch for the issue, develops the feature, pushes the code to the GitHub repository, and finaly requests review of the implemented code.
 - **Code review:** GitHub then notifies the team about the pull request, and a reviewer reviews the code. The review is based on the success criteria defined when the issue was created. The reviwer summits the review through GitHub, which then notifies the developer whether the pull request apporved or changes are requested. If changes are requested, the developer updates the code, pushes the changes and sends a new review request thorugh the GitGub repository. If the pull request is approved, the sequence continues to the merge step.
 - **Closing the issue:** Once the pull request is merged, the branch is deleted and the issue is closed. The process starts again, with the creation of a new issue.
+
 ## How to make _Chirp!_ work locally
+### Clone Repository
+Open a terminal and navigate to preferred directory. 
+Then, run:
+```
+git clone https://github.com/ITU-BDSA2025-GROUP6/Chirp.git
+cd Chirp
+```
+The project files should now be visible in the terminal.
+
+### Restore Dependencies
+Install all required dependencies and tools for the project by running:
+```
+dotnet restore
+```
+A confirmation message should indicate that all packages have been restored successfully or that all projects are up-to-date for restore.
+
+### Run Application
+From project root directory, start the application by running:
+```
+dotnet run --project src/Chirp.Web/Chirp.Web.csproj
+```
+The terminal should display messages indicating that the application is building and starting.
+
+### Access the Application
+Once the application is running, open a browser and navigate to:
+```
+https://localhost:5273
+```
+The *Chirp!* web interface should now be running locally.
 
 ## How to run test suite locally
 After cloning the project repository, you can run the entire test suite or individual types of tests using

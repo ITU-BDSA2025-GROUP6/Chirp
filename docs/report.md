@@ -107,8 +107,11 @@ The first diagram is over our Continuous Integration workflow, which ensures bui
 The second diagram illustrates the Continuous Deployment workflow, which consists of a build- and deploy job. This workflow is triggered on 'push' to the main branch.
 The workflow ensures that the ASP.NET application is build, published and deployed to Azure App Service.
 
-
 <img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:100%; height:auto;">
+
+The fourth diagram is created over the Auto Label workflow. 
+<img src="images/AutoLabel.png" alt="Auto Label diagram" style="max-width:100%; height:auto;">
+
 
 ## Team work
 This is our project board at hand-in. The following tasks remain unresolved:

@@ -58,7 +58,7 @@ Client interacts with an Azure Database through an HTTP (Converted to HTTPS) req
 #### Local Architecture 
 Client interacts directly with a local database. Does not require internet.
 
-<img width="max-width:100%" height="auto" alt="image" src="images/Deployed Application Locally Hosted Architecture.png" />
+![Deployed_Application_Locally_Hosted_Architecture](images/Deployed_Application_Locally_Hosted_Architecture.png)
 
 ## User activities
 We have two types of users: `Authorized `and `Unauthorized`.

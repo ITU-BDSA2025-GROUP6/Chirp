@@ -134,7 +134,7 @@ using (var scope = app.Services.CreateScope())
     else
     {
         //For localhost/testing: create Schema directly
-        //context.Database.EnsureDeleted();
+        context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
     }
     

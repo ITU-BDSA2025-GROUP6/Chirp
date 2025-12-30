@@ -96,7 +96,7 @@ An `Authorized User` may...
 <img width="1330" height="982" alt="image" src="images/Open Authentication Diagram.jpg" />
 
 
-## Sequence of functionality/calls trough _Chirp!_
+## Sequence of functionality/calls through _Chirp!_
 Below is a Diagram of an example functionality call of an Unauthorized user accessing the site, causing us to display all cheeps, which are grabbed from the database.
 
 <img src="images/Functionality Calls.png" alt="image" style="max-width: 150%; height=auto;"/>

@@ -111,12 +111,18 @@ We have created three workflows for the different tasks:
 
 The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release webapp artifact on tags, with both title and release notes.
 
-<img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:80%; height:auto;">
+<img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:60%; height:auto;">
 
 The second diagram illustrates the Continuous Deployment workflow, which consists of a build- and deploy job. This workflow is triggered on 'push' to the main branch.
 The workflow ensures that the ASP.NET application is build, published and deployed to Azure App Service.
 
-<img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:100%; height:auto;">
+<img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:80%; height:auto;">
+
+
+The third diagram is over Executables.
+
+<img src="images/ExecutablesDiagram.png" alt="Executables workflow diagram" style="max-width:100%; height:auto;">
+
 
 The fourth diagram is created over the Auto Label workflow. It shows how labels are automatically assigned to newly opened or edited issues based on predefined keywords, such as "bug", "layout", etc. 
 

@@ -118,6 +118,10 @@ The workflow ensures that the ASP.NET application is build, published and deploy
 
 <img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:100%; height:auto;">
 
+The third diagram is for releasing executables. When a version tag and release is created, the workflow builds, tests, and publishes four platform-specific executables (Linux, Windows, and macOS for both x64 and arm64), which are packaged and uploaded to the GitHub release.
+
+<img src="images/ExecutablesDiagram.png" alt="Executables Diagram" styles="max-width:100%; height:auto;">
+
 The fourth diagram is created over the Auto Label workflow. It shows how labels are automatically assigned to newly opened or edited issues based on predefined keywords, such as "bug", "layout", etc. 
 
 <img src="images/AutoLabel.png" alt="Auto Label diagram" style="max-width:100%; height:auto;">

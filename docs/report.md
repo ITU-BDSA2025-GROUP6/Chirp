@@ -25,6 +25,7 @@ Chirp has the following key entities:
 Below is an UML class diagram of our domain model: 
 
 <img width="800" height="880" alt="image" src="images/DomainModel.png" />
+![DomainModel](images/DomainModel.png)
 
 - **NOTE:** `IdentityUser` only shows the first part of the library it comes from in the diagram.  
   The full library path is:  

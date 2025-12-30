@@ -51,7 +51,7 @@ public class PaginationModel : PageModel
         if (author == null)
             return RedirectToPage();
 
-        await _authorService.createRecheep(new AuthorDTO { Id = author.Id }, cheepId);
+        await _service.CreateRecheep(new AuthorDTO { Id = author.Id }, cheepId);
         return RedirectToPage();
     }
 

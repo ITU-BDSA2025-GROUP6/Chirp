@@ -159,6 +159,25 @@ dotnet restore
 ```
 A confirmation message should indicate that all packages have been restored successfully or that all projects are up-to-date for restore.
 
+### (Optional) Add Open Authentication Secrets
+####  Initialize User Secrets Storage
+Run the following in the terminal:
+```
+dotnet user-secrets init
+```
+
+#### Set Github Secrets
+```
+dotnet user-secrets set "authentication:github:clientId" "<ClientId>"
+dotnet user-secrets set "authentication:github:clientSecret" "<ClientSecret>"
+```
+
+#### Set Google Secrets
+```
+dotnet user-secrets set "authentication:google:clientId" "<ClientId>"
+dotnet user-secrets set "authentication:google:clientSecret" "<ClientSecret>"
+```
+
 ### Run Application
 From project root directory, start the application by running:
 ```

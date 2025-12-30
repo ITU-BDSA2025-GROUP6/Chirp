@@ -129,9 +129,6 @@ The fourth diagram is created over the Auto Label workflow. It shows how labels 
 
 
 ## Team work
-This is our project board at hand-in. The following tasks remain unresolved:
-INSÆT BILLEDE AF PROJECT BOARD OG LISTE AF UNRESOLVED TASKS + FORKLARING
-
 The structure around which we have organised our work, can be described with the following sequence diagram.
 
 <img src="images/image.png" alt="TeamworkSequenceUML" style="max-width:100%; height:auto;">
@@ -146,6 +143,12 @@ As illustrated in the picture, our process had the following main components:
 ### Snippet of Final Scrum Board
 We used a Scrum Board to keep track of current issues and their status.
 <img width="max-width:100%" height="auto" alt="image" src="images/Scrum Board.png" />
+
+
+### Unresolved Tasks
+We did not manage to cover all test cases for the initial part of the project (Chirp.Razor).
+We have prioritized getting Azure to work, but encountered issues with it during the final phases of the Follows functionality. Currently, we believe it to be functioning, but our Quota is exceeded. We hope to be able to test it around the date of delivery, when Quota resets.
+
 
 ## How to make _Chirp!_ work locally
 ### Prerequisites

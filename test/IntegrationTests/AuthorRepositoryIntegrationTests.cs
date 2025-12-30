@@ -5,11 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IntegrationTests;
 
-
 public class AuthorRepositoryIntegrationTests : IDisposable
 {
     private readonly SqliteConnection _connection;
-    private readonly CheepRepository _repository;
+    private readonly AuthorRepository _repository;
     private readonly CheepDbContext _context;
     
     public AuthorRepositoryIntegrationTests() 
@@ -34,7 +33,7 @@ public class AuthorRepositoryIntegrationTests : IDisposable
         _context.Authors.AddRange(author, author2);
         _context.SaveChanges();
 
-        _repository = new CheepRepository(_context);
+        _repository = new AuthorRepository(_context);
     }
     
     public void Dispose()
@@ -46,60 +45,21 @@ public class AuthorRepositoryIntegrationTests : IDisposable
         _context.Dispose();
     }
     
-    public class CreateCheepTests : CheepRepositoryIntegrationTests
+    public class AuthorTests : AuthorRepositoryIntegrationTests
     {
 
         [Fact]
-        public async Task CreateCheep_SavesCheepToDatabase()
+        public async Task GetAuthorByName_retrievesCorrectAuthorOrThrows()
         {
-            //arrange
-            var newCheep = new CheepDTO
-            {
-                AuthorName = "Test Author",
-                Text = "Test Cheep",
-                Timestamp = DateTime.UtcNow
-            };
-
+            var authorName = "Test Author";
             //act
-            await _repository.CreateCheep(newCheep);
+            var dto = await _repository.GetAuthorByName(authorName);
 
             //assert
-            var cheepInDb = _context.Cheeps
-                .Include(c => c.Author)
-                .FirstOrDefault(c => c.Text == "Test Cheep" && c.Author.UserName == "Test Author");
-            
-            Assert.NotNull(cheepInDb);
-            Assert.Equal("Test Cheep", cheepInDb.Text);
-            Assert.Equal("Test Author", cheepInDb.Author.UserName);
-        }
-
-
-        [Fact]
-        public async Task GetCheeps_ShouldReturnExpectedCheepsInOrder()
-        {
-            //arrange
-            for (int i = 0; i < 65; i++)
-            {
-                var newCheep = new CheepDTO
-                {
-                    AuthorName = "Test Author",
-                    Text = i.ToString(),
-                    Timestamp = DateTime.UtcNow
-                };
-                
-                await _repository.CreateCheep(newCheep);
-            }
-            
-            //act
-            var page1 = await _repository.GetCheeps(1);
-            var page2 = await _repository.GetCheeps(2);
-
-            //assert
-            Assert.NotNull(page1);
-            Assert.NotNull(page2);
-            Assert.Equal(32, page1.Count);
-            Assert.Equal(32, page2.Count);
+            Assert.NotNull(dto);
+            Assert.Equal("1", dto.Id);
+            Assert.Equal("Test Author", dto.Name);
+            Assert.Equal("test@author.com", dto.Email);
         }
     }
-    
 }

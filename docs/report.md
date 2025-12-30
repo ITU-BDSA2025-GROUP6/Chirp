@@ -111,12 +111,18 @@ We have created three workflows for the different tasks:
 
 The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release webapp artifact on tags, with both title and release notes.
 
-<img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:80%; height:auto;">
+<img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:60%; height:auto;">
 
 The second diagram illustrates the Continuous Deployment workflow, which consists of a build- and deploy job. This workflow is triggered on 'push' to the main branch.
 The workflow ensures that the ASP.NET application is build, published and deployed to Azure App Service.
 
-<img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:100%; height:auto;">
+<img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:80%; height:auto;">
+
+
+The third diagram is over Executables.
+
+<img src="images/ExecutablesDiagram.png" alt="Executables workflow diagram" style="max-width:100%; height:auto;">
+
 
 The third diagram is for releasing executables. When a version tag and release is created, the workflow builds, tests, and publishes four platform-specific executables (Linux, Windows, and macOS for both x64 and arm64), which are packaged and uploaded to the GitHub release.
 
@@ -220,3 +226,4 @@ dotnet test test/End2End
 During this project, we have learned about the importance of licensing and the ethics of open source developement. This has added new understanding and new perspectives to the reality surrounding the Chirp! application. For licensing, we haven chosen the MIT License. This choice is based on the simplicity of the license, as well as the its broad use and familiarity. Having this lisence means that others are free to use, modify and distribute our application, as long as the original license and copyright notice are included.
 
 ## LLMs, ChatGPT, CoPilot, and others
+ChatGPT and Copilot have been utalized in the making of this project. These LLMs were used primarily for debugging and understanding different frameworks. Deployment to Azure was especially difficult, and Copilot aided in correctly resolving the issues based on Azure logs.

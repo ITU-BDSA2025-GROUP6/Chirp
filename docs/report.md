@@ -2,12 +2,12 @@
 title: _Chirp!_ Project Report
 subtitle: ITU BDSA 2025 Group `6`
 author:
-- "Andreas <anys@itu.dk>"
-- "Maja <mcls@itu.dk>"
-- "Sebastian <sebseb10@gmail.com>"
-- "Ludvig <ludvig.elias.kirkeby@gmail.com>"
-- "Anna <anna.kirstine.hoff@gmail.com>"
-- "Nina <cenh@itu.dk>"
+- "Andreas Schiøtt <anys@itu.dk>"
+- "Maja Schewe-Jensen <mcls@itu.dk>"
+- "Sebastian Holt Svendsen <sebseb10@gmail.com>"
+- "Ludvig Kjæp Kirkeby <ludvig.elias.kirkeby@gmail.com>"
+- "Anna Bohn Hoff <anna.kirstine.hoff@gmail.com>"
+- "Nina Hansson <cenh@itu.dk>"
 numbersections: true
 ---
 

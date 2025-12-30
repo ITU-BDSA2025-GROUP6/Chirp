@@ -41,6 +41,7 @@ public class CheepDbContext : IdentityDbContext<Author>
         builder.Entity<Follows>()
             .HasOne(f => f.FollowedByAuthor)
             .WithMany(a => a.FollowedBy)
+            .HasForeignKey(f => f.FollowedById)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

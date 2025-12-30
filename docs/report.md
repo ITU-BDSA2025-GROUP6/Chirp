@@ -87,12 +87,12 @@ An `Authorized User` may...
 ### Authorized User Diagram
 <img width="1130" height="1691" alt="image" src="images/Authorized User Activity.jpg" />
 
-**Below are Sequence Diagrams showing a standard login and an open authentication one.**
+## User Activities - Expanded Login Diagrams
 
-**Standard Login (Typing in details on the Registration or Login page)**
+### Standard Login (Typing in details on the Registration or Login page)
 <img width="948" height="455" alt="image" src="images/Authentication Diagram.jpg" />
 
-**Open Authentication Login**
+### Open Authentication Login
 <img width="1330" height="982" alt="image" src="images/Open Authentication Diagram.jpg" />
 
 

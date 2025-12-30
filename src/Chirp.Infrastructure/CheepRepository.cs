@@ -175,7 +175,7 @@ public class CheepRepository : ICheepRepository
                 AuthorName = c.Author!.UserName ?? string.Empty,
                 Timestamp = c.Timestamp,
                 ProfilePicturePath = c.Author.ProfilePicturePath
-                                     ?? "/images/default-pfp.png"
+                                     ?? "/images/default.png"
             });
 
         var recheeped = _dbContext.Recheeps
@@ -190,7 +190,7 @@ public class CheepRepository : ICheepRepository
                     AuthorName = c.Author.UserName,
                     Timestamp = c.Timestamp,
                     ProfilePicturePath = c.Author.ProfilePicturePath
-                                         ?? "/images/default-pfp.png"
+                                         ?? "/images/default.png"
                 }
             );
 

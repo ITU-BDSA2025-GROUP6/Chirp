@@ -45,7 +45,7 @@ public class CheepRepositoryIntegrationTests : IDisposable
         _context.Dispose();
     }
     
-    public class CreateCheepTests : CheepRepositoryIntegrationTests
+    public class CheepTests : CheepRepositoryIntegrationTests
     {
 
         [Fact]

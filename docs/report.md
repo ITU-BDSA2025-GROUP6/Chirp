@@ -24,7 +24,6 @@ Chirp has the following key entities:
     
 Below is an UML class diagram of our domain model: 
 
-<img width="800" height="880" alt="image" src="images/DomainModel.png" />
 ![DomainModel](images/DomainModel.png)
 
 - **NOTE:** `IdentityUser` only shows the first part of the library it comes from in the diagram.  
@@ -44,7 +43,7 @@ The Onion Architecture of Chirp is seen in the below UML.
     - Repository Layer: Functionality, DTOs, Interfaces and database retrieval methods supported by Entity Core.
     - Domain Layer: Contains our domain entities only.
 
-<img width="max-width:100%" height="auto" alt="onion architecture" src="images/Onion Architecture.png" />
+![Onion_Architecture](images/Onion_Architecture.png)
 
 ## Architecture of deployed application
 The Deployed Application Architecture can be seen below.

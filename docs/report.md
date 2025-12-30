@@ -82,7 +82,7 @@ An `Authorized User` may...
     - Recheep other Authors' Cheeps
 
 ### Unauthorized User Diagram
-<img width="417" height="981" alt="image" src="images/Unauthorized User Activity Diagram.jpg" />
+![Unauthorized_User_Activity_Diagram](images/Unauthorized_User_Activity_Diagram.png)
 
 ### Authorized User Diagram
 <img width="1130" height="1691" alt="image" src="images/Authorized User Activity.jpg" />

@@ -119,6 +119,7 @@ The workflow ensures that the ASP.NET application is build, published and deploy
 <img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:100%; height:auto;">
 
 The fourth diagram is created over the Auto Label workflow. It shows how labels are automatically assigned to newly opened or edited issues based on predefined keywords, such as "bug", "layout", etc. 
+
 <img src="images/AutoLabel.png" alt="Auto Label diagram" style="max-width:100%; height:auto;">
 
 

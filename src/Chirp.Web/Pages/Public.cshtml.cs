@@ -57,7 +57,7 @@ public class PublicModel : PageModel
         if (author == null)
             return Redirect("/");
 
-        await _authorService.createRecheep(new AuthorDTO { Id = author.Id }, cheepId);
+        await _service.CreateRecheep(new AuthorDTO { Id = author.Id }, cheepId);
 
         return RedirectToPage();
     }

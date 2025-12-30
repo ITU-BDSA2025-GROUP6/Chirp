@@ -12,7 +12,5 @@ public interface ICheepRepository
     Task<bool>  DeleteCheep(int cheepId, string authorName);
     Task<List<CheepDTO>> GetCheepsFromFollowedAuthor(string userId, int page);
     
-    //Task<int> InsertAuthor(string username, string email);
-
-
+    Task<int> CreateRecheep(AuthorDTO Author, int cheepID);
 }

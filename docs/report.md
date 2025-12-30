@@ -86,6 +86,15 @@ An `Authorized User` may...
 
 <img width="1130" height="1691" alt="image" src="images/Authorized User Activity.jpg" />
 
+**Below are Sequence Diagrams showing a standard login and an open authentication one.**
+
+**Standard Login (Typing in details on the Registration or Login page)**
+<img width="948" height="455" alt="image" src="images/Authentication Diagram.jpg" />
+
+**Open Authentication Login**
+<img width="1330" height="982" alt="image" src="images/Open Authentication Diagram.jpg" />
+
+
 ## Sequence of functionality/calls trough _Chirp!_
 Below is a Diagram of an example functionality call of an Unauthorized user accessing the site, causing us to display all cheeps, which are grabbed from the database.
 
@@ -109,7 +118,7 @@ The workflow ensures that the ASP.NET application is build, published and deploy
 
 <img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:100%; height:auto;">
 
-The fourth diagram is created over the Auto Label workflow. 
+The fourth diagram is created over the Auto Label workflow. It shows how labels are automatically assigned to newly opened or edited issues based on predefined keywords, such as "bug", "layout", etc. 
 <img src="images/AutoLabel.png" alt="Auto Label diagram" style="max-width:100%; height:auto;">
 
 
@@ -118,13 +127,91 @@ This is our project board at hand-in. The following tasks remain unresolved:
 INSÆT BILLEDE AF PROJECT BOARD OG LISTE AF UNRESOLVED TASKS + FORKLARING
 
 The structure around which we have organised our work, can be described with the following sequence diagram.
-<img src=
+
+<img src="images/image.png" alt="TeamworkSequenceUML" style="max-width:100%; height:auto;">
+
+As illustrated in the picture, our process had the following main components:
+
+- **Creating an issue:** During the first two steps of the sequence, the project manager creates a new issue. This issue is based either on the requirements presented the given week or on bugs found during development. After creating the issue, including a description and success requirements, a developer can be assigned to it.
+- **Code development:** The issue is then picked up by a developer from the team. In the next steps of the sequence, the developer creates a new designated branch for the issue, develops the feature, pushes the code to the GitHub repository, and finaly requests review of the implemented code.
+- **Code review:** GitHub then notifies the team about the pull request, and a reviewer reviews the code. The review is based on the success criteria defined when the issue was created. The reviwer summits the review through GitHub, which then notifies the developer whether the pull request apporved or changes are requested. If changes are requested, the developer updates the code, pushes the changes and sends a new review request thorugh the GitGub repository. If the pull request is approved, the sequence continues to the merge step.
+- **Closing the issue:** Once the pull request is merged, the branch is deleted and the issue is closed. The process starts again, with the creation of a new issue.
+
 ## How to make _Chirp!_ work locally
+### Clone Repository
+Open a terminal and navigate to preferred directory. 
+Then, run:
+```
+git clone https://github.com/ITU-BDSA2025-GROUP6/Chirp.git
+cd Chirp
+```
+The project files should now be visible in the terminal.
+
+### Restore Dependencies
+Install all required dependencies and tools for the project by running:
+```
+dotnet restore
+```
+A confirmation message should indicate that all packages have been restored successfully or that all projects are up-to-date for restore.
+
+### Run Application
+From project root directory, start the application by running:
+```
+dotnet run --project src/Chirp.Web/Chirp.Web.csproj
+```
+The terminal should display messages indicating that the application is building and starting.
+
+### Access the Application
+Once the application is running, open a browser and navigate to:
+```
+https://localhost:5273
+```
+The *Chirp!* web interface should now be running locally.
 
 ## How to run test suite locally
+After cloning the project repository, you can run the entire test suite or individual types of tests using
+the following steps:
+
+### 1. Install Required Browsers for Playwright
+The E2E tests use Playwright, so browser binaries need to be installed locally.  
+From the project root, run:
+```
+pwsh bin/Debug/net8.0/playwright.ps1 install --with-deps
+```
+If `pwsh` is not available, install PowerShell first.
+
+This step is required for the E2E tests to run correctly.
+
+For any issues with Playwright or browser installation, see the official guide:
+https://playwright.dev/dotnet/docs/intro
+
+### 2. Run All tests:
+From the project root directory, run the command:
+```
+dotnet test
+```
+This will run all test cases across the project, including unit, integration, and end-to-end tests.
+
+### 3. Run Specific Test
+Each type of test can also be run separately from the project root:
+- Unit tests:
+```
+dotnet test test/UnitTests
+```
+
+- Integration tests:
+```
+dotnet test test/IntegrationTests
+```
+
+- E2E tests:
+```
+dotnet test test/End2End
+```
 
 # Ethics
 
 ## License
+During this project, we have learned about the importance of licensing and the ethics of open source developement. This has added new understanding and new perspectives to the reality surrounding the Chirp! application. For licensing, we haven chosen the MIT License. This choice is based on the simplicity of the license, as well as the its broad use and familiarity. Having this lisence means that others are free to use, modify and distribute our application, as long as the original license and copyright notice are included.
 
 ## LLMs, ChatGPT, CoPilot, and others

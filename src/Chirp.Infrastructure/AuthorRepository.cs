@@ -13,8 +13,13 @@ public class AuthorRepository : IAuthorRepository
         _dbContext = dbContext;
     }
 
-    public async Task<AuthorDTO> GetAuthorByName(string name)
+    public async Task<AuthorDTO> GetAuthorByName(string? name)
     {
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new InvalidOperationException("Name cannot be null or empty");
+        }
         try
         {
             var author = await _dbContext.Authors
@@ -35,8 +40,12 @@ public class AuthorRepository : IAuthorRepository
         }
     }
 
-    public async Task<AuthorDTO> GetAuthorByEmail(string email)
+    public async Task<AuthorDTO> GetAuthorByEmail(string? email)
     {
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            throw new InvalidOperationException("Email cannot be null or empty");
+        }
         try
         {
             var author = await _dbContext.Authors
@@ -56,30 +65,5 @@ public class AuthorRepository : IAuthorRepository
         {
             throw new InvalidOperationException("No such author with email: " + email);
         }
-    }
-    public async Task<int> CreateRecheep(AuthorDTO author, int cheepID)
-    {
-        if (author == null)
-            throw new InvalidOperationException("No such author");
-
-        var existing = await _dbContext.Recheeps
-            .FirstOrDefaultAsync(r => r.AuthorID == author.Id && r.CheepID == cheepID);
-
-        if (existing != null)
-        {
-            _dbContext.Recheeps.Remove(existing);
-            await _dbContext.SaveChangesAsync();
-            return cheepID;
-        }
-
-        var newRecheep = new Recheep
-        {
-            AuthorID = author.Id,
-            CheepID = cheepID
-        };
-
-        await _dbContext.Recheeps.AddAsync(newRecheep);
-        await _dbContext.SaveChangesAsync();
-        return cheepID;
     }
 }

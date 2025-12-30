@@ -155,12 +155,10 @@ public class CheepRepository : ICheepRepository
             })
             .ToListAsync();
     }
-    
     public async Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int page)
     {
         const int pageSize = 32;
 
-        // Get the author's ID
         var authorId = await _dbContext.Authors
             .Where(a => a.UserName == author)
             .Select(a => a.Id)
@@ -169,14 +167,15 @@ public class CheepRepository : ICheepRepository
         if (authorId == null)
             return new List<CheepDTO>();
 
-        // users own cheeps
         var authored = _dbContext.Cheeps
             .Where(c => c.AuthorID == authorId)
             .Select(c => new CheepDTO
             {
                 Text = c.Text,
                 AuthorName = c.Author!.UserName ?? string.Empty,
-                Timestamp = c.Timestamp
+                Timestamp = c.Timestamp,
+                ProfilePicturePath = c.Author.ProfilePicturePath
+                                     ?? "/images/default.png"
             });
 
         var recheeped = _dbContext.Recheeps
@@ -189,7 +188,9 @@ public class CheepRepository : ICheepRepository
                 {
                     Text = c.Text,
                     AuthorName = c.Author.UserName,
-                    Timestamp = c.Timestamp
+                    Timestamp = c.Timestamp,
+                    ProfilePicturePath = c.Author.ProfilePicturePath
+                                         ?? "/images/default.png"
                 }
             );
 
@@ -243,5 +244,31 @@ public class CheepRepository : ICheepRepository
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
+    }
+    
+    public async Task<int> CreateRecheep(AuthorDTO? author, int cheepId)
+    {
+        if (author == null)
+            throw new InvalidOperationException("No such author");
+
+        var existing = await _dbContext.Recheeps
+            .FirstOrDefaultAsync(r => r.AuthorID == author.Id && r.CheepID == cheepId);
+
+        if (existing != null)
+        {
+            _dbContext.Recheeps.Remove(existing);
+            await _dbContext.SaveChangesAsync();
+            return cheepId;
+        }
+
+        var newRecheep = new Recheep
+        {
+            AuthorID = author.Id,
+            CheepID = cheepId
+        };
+
+        await _dbContext.Recheeps.AddAsync(newRecheep);
+        await _dbContext.SaveChangesAsync();
+        return cheepId;
     }
 }

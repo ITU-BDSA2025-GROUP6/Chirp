@@ -90,16 +90,14 @@ An `Authorized User` may...
 ## User Activities - Expanded Login Diagrams
 
 ### Standard Login (Typing in details on the Registration or Login page)
-![Authentication Diagram](images/Authentication_Diagram.jpg)
+![Authentication_Diagram](images/Authentication_Diagram.jpg)
 
 ### Open Authentication Login
-<img width="1330" height="982" alt="image" src="images/Open Authentication Diagram.jpg" />
-
+![Open_Authentication_Diagram](images/Open_Authentication_Diagram.jpg)
 
 ## Sequence of functionality/calls through _Chirp!_
 Below is a Diagram of an example functionality call of an Unauthorized user accessing the site, causing us to display all cheeps, which are grabbed from the database.
-
-<img src="images/Functionality Calls.png" alt="image" style="max-width: 150%; height=auto;"/>
+![Functionality_Calls](images/Functionality_Calls.png)
 
 # Process
 
@@ -112,26 +110,25 @@ We have created three workflows for the different tasks:
 
 The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release webapp artifact on tags, with both title and release notes.
 
-<img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:60%; height:auto;">
+![CiDiagram](images/CiDiagram.png)
 
 The second diagram illustrates the Continuous Deployment workflow, which consists of a build- and deploy job. This workflow is triggered on 'push' to the main branch.
 The workflow ensures that the ASP.NET application is build, published and deployed to Azure App Service. The workflow does not include a dedicated test step, as this is done in CI.
 
-<img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:80%; height:auto;">
+![CdDiagram](images/CdDiagram.png)
 
 The third diagram is for releasing executables. When a version tag and release is created, the workflow builds, tests, and publishes four platform-specific executables (Linux, Windows, and macOS for both x64 and arm64), which are packaged and uploaded to the GitHub release.
 
-<img src="images/ExecutablesDiagram.png" alt="Executables Diagram" styles="max-width:50%; height:auto;">
+![ExecutablesDiagram](images/ExecutablesDiagram.png)
 
 The fourth diagram is created over the Auto Label workflow. It shows how labels are automatically assigned to newly opened or edited issues based on predefined keywords, such as "bug", "layout", etc. 
 
-<img src="images/AutoLabel.png" alt="Auto Label diagram" style="max-width:100%; height:auto;">
+![AutoLabel](images/AutoLabel.png)
 
 
 ## Team work
 The structure around which we have organised our work, can be described with the following sequence diagram.
-
-<img src="images/image.png" alt="TeamworkSequenceUML" style="max-width:100%; height:auto;">
+![image](images/image.png)
 
 As illustrated in the picture, our process had the following main components:
 
@@ -142,7 +139,7 @@ As illustrated in the picture, our process had the following main components:
 
 ### Snippet of Final Scrum Board
 We used a Scrum Board to keep track of current issues and their status.
-<img width="max-width:100%" height="auto" alt="image" src="images/Scrum Board.png" />
+![Scrum_Board](images/Scrum_Board.png)
 
 
 ### Unresolved Tasks

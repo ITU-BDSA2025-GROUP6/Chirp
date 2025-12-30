@@ -155,12 +155,10 @@ public class CheepRepository : ICheepRepository
             })
             .ToListAsync();
     }
-    
     public async Task<List<CheepDTO>> GetCheepsFromAuthor(string author, int page)
     {
         const int pageSize = 32;
 
-        // Get the author's ID
         var authorId = await _dbContext.Authors
             .Where(a => a.UserName == author)
             .Select(a => a.Id)
@@ -169,14 +167,15 @@ public class CheepRepository : ICheepRepository
         if (authorId == null)
             return new List<CheepDTO>();
 
-        // users own cheeps
         var authored = _dbContext.Cheeps
             .Where(c => c.AuthorID == authorId)
             .Select(c => new CheepDTO
             {
                 Text = c.Text,
                 AuthorName = c.Author!.UserName ?? string.Empty,
-                Timestamp = c.Timestamp
+                Timestamp = c.Timestamp,
+                ProfilePicturePath = c.Author.ProfilePicturePath
+                                     ?? "/images/default.png"
             });
 
         var recheeped = _dbContext.Recheeps
@@ -189,7 +188,9 @@ public class CheepRepository : ICheepRepository
                 {
                     Text = c.Text,
                     AuthorName = c.Author.UserName,
-                    Timestamp = c.Timestamp
+                    Timestamp = c.Timestamp,
+                    ProfilePicturePath = c.Author.ProfilePicturePath
+                                         ?? "/images/default.png"
                 }
             );
 

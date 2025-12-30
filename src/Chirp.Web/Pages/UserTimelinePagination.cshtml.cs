@@ -9,23 +9,24 @@ public class UserTimelinePaginationModel : PageModel
 {
     private readonly ICheepService _cheepService;
     private readonly IAuthorService _authorService;
-    
-    public List<CheepDTO> Cheeps { get; set; } = new List<CheepDTO>();
-    public bool hasNextPage { get; set; }
-    public int currentPage { get; set; }
+
+    public List<CheepDTO> Cheeps { get; set; } = new();
     public bool IsOwnTimeline { get; set; }
 
-    public UserTimelinePaginationModel(ICheepService cheepService,  IAuthorService authorService)
+    public int CurrentPage { get; set; }
+    public bool HasNextPage { get; set; }
+
+    public UserTimelinePaginationModel(ICheepService cheepService, IAuthorService authorService)
     {
         _cheepService = cheepService;
         _authorService = authorService;
     }
-    
-    public async Task<ActionResult> OnGetAsync(string author, int index)
+
+    public async Task<IActionResult> OnGetAsync(string author, int index)
     {
-        currentPage = index < 1 ? 1 : index;
+        CurrentPage = index < 1 ? 1 : index;
+
         var currentUserName = User.Identity?.Name;
-        
         IsOwnTimeline = currentUserName != null && currentUserName == author;
 
         if (IsOwnTimeline)
@@ -33,13 +34,18 @@ public class UserTimelinePaginationModel : PageModel
             var currentUser = await _authorService.GetAuthorEntityByName(currentUserName!);
             if (currentUser != null)
             {
-                Cheeps = await _cheepService.GetCheepsFromFollowedAuthor(currentUser.Id, currentPage);
+                Cheeps = await _cheepService.GetCheepsFromFollowedAuthor(currentUser.Id, CurrentPage);
+                HasNextPage = (await _cheepService
+                    .GetCheepsFromFollowedAuthor(currentUser.Id, CurrentPage + 1)).Any();
             }
         }
         else
         {
-            Cheeps = await _cheepService.GetCheepsFromFollowedAuthor(author, currentPage);
+            Cheeps = await _cheepService.GetCheepsFromAuthor(author, CurrentPage);
+            HasNextPage = (await _cheepService
+                .GetCheepsFromAuthor(author, CurrentPage + 1)).Any();
         }
+
         return Page();
     }
 }

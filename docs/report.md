@@ -129,9 +129,6 @@ The fourth diagram is created over the Auto Label workflow. It shows how labels 
 
 
 ## Team work
-This is our project board at hand-in. The following tasks remain unresolved:
-INSÆT BILLEDE AF PROJECT BOARD OG LISTE AF UNRESOLVED TASKS + FORKLARING
-
 The structure around which we have organised our work, can be described with the following sequence diagram.
 
 <img src="images/image.png" alt="TeamworkSequenceUML" style="max-width:100%; height:auto;">
@@ -142,6 +139,16 @@ As illustrated in the picture, our process had the following main components:
 - **Code development:** The issue is then picked up by a developer from the team. In the next steps of the sequence, the developer creates a new designated branch for the issue, develops the feature, pushes the code to the GitHub repository, and finaly requests review of the implemented code.
 - **Code review:** GitHub then notifies the team about the pull request, and a reviewer reviews the code. The review is based on the success criteria defined when the issue was created. The reviwer summits the review through GitHub, which then notifies the developer whether the pull request apporved or changes are requested. If changes are requested, the developer updates the code, pushes the changes and sends a new review request thorugh the GitGub repository. If the pull request is approved, the sequence continues to the merge step.
 - **Closing the issue:** Once the pull request is merged, the branch is deleted and the issue is closed. The process starts again, with the creation of a new issue.
+
+### Snippet of Final Scrum Board
+We used a Scrum Board to keep track of current issues and their status.
+<img width="max-width:100%" height="auto" alt="image" src="images/Scrum Board.png" />
+
+
+### Unresolved Tasks
+We did not manage to cover all test cases for the initial part of the project (Chirp.Razor).
+We have prioritized getting Azure to work, but encountered issues with it during the final phases of the Follows functionality. Currently, we believe it to be functioning, but our Quota is exceeded. We hope to be able to test it around the date of delivery, when Quota resets.
+
 
 ## How to make _Chirp!_ work locally
 ### Prerequisites

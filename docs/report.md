@@ -90,7 +90,7 @@ An `Authorized User` may...
 ## User Activities - Expanded Login Diagrams
 
 ### Standard Login (Typing in details on the Registration or Login page)
-<img width="948" height="455" alt="image" src="images/Authentication Diagram.jpg" />
+![Authentication Diagram](images/Authentication_Diagram.jpg)
 
 ### Open Authentication Login
 <img width="1330" height="982" alt="image" src="images/Open Authentication Diagram.jpg" />

@@ -43,7 +43,7 @@ The Onion Architecture of Chirp is seen in the below UML.
     - Repository Layer: Functionality, DTOs, Interfaces and database retrieval methods supported by Entity Core.
     - Domain Layer: Contains our domain entities only.
 
-<img width="800" height="880" alt="image" src="images/Onion Architecture.png" />
+<img width="max-width:100%" height="auto" alt="onion architecture" src="images/Onion Architecture.png" />
 
 ## Architecture of deployed application
 The Deployed Application Architecture can be seen below.
@@ -52,12 +52,12 @@ The Deployed Application Architecture can be seen below.
 #### Remote Architecture
 Client interacts with an Azure Database through an HTTP (Converted to HTTPS) request. Hosted offshore. 
 
-<img width="800" height="880" alt="image" src="images/Deployed Application Azure Architecture.png" />
+<img width="max-width:100%" height="auto" alt="image" src="images/Deployed Application Azure Architecture.png" />
 
 #### Local Architecture 
 Client interacts directly with a local database. Does not require internet.
 
-<img width="400" height="480" alt="image" src="images/Deployed Application Locally Hosted Architecture.png" />
+<img width="max-width:100%" height="auto" alt="image" src="images/Deployed Application Locally Hosted Architecture.png" />
 
 ## User activities
 We have two types of users: `Authorized `and `Unauthorized`.

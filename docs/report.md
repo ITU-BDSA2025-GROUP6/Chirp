@@ -143,6 +143,10 @@ As illustrated in the picture, our process had the following main components:
 - **Code review:** GitHub then notifies the team about the pull request, and a reviewer reviews the code. The review is based on the success criteria defined when the issue was created. The reviwer summits the review through GitHub, which then notifies the developer whether the pull request apporved or changes are requested. If changes are requested, the developer updates the code, pushes the changes and sends a new review request thorugh the GitGub repository. If the pull request is approved, the sequence continues to the merge step.
 - **Closing the issue:** Once the pull request is merged, the branch is deleted and the issue is closed. The process starts again, with the creation of a new issue.
 
+### Snippet of Final Scrum Board
+We used a Scrum Board to keep track of current issues and their status.
+<img width="max-width:100%" height="auto" alt="image" src="images/Scrum Board.png" />
+
 ## How to make _Chirp!_ work locally
 ### Prerequisites
 - .NET 8 SDK

@@ -45,34 +45,7 @@ public class AuthorRepositoryTests : IDisposable
 
     public class CreateAuthorTests : AuthorRepositoryTests
     {
-        [Fact]
-        public async Task CreateAuthorTest_ShouldAddAuthorToDatabase()
-        {
-            /*
-            //Arrange
-            var newAuthor = new AuthorDTO
-            {
-                Name = "Test Author2",
-                Email = "test@email.com",
-            };
-
-            //Act
-            await _repository.CreateAuthor(newAuthor);
-            var createdAuthor = await _context.Authors.FirstOrDefaultAsync(a => a.Email == newAuthor.Email);
-
-            //Assert
-            Assert.NotNull(createdAuthor);
-            Assert.NotEqual("1", createdAuthor.Id);
-            Assert.Equal("3", createdAuthor.Id);
-            Assert.Equal("Test Author2", createdAuthor.UserName);
-            Assert.Equal("test@email.com", createdAuthor.Email);
-            */
-        }
-
-        [Fact]
-        public async Task InsertAuthor_ShouldThrowExceptionIfNameNotUnique()
-        {
-        }
+        
     }
 
     public class GetAuthorTests : AuthorRepositoryTests
@@ -80,7 +53,6 @@ public class AuthorRepositoryTests : IDisposable
         [Fact]
         public async Task GetAuthorByName_ShouldReturnAuthor()
         {
-            /*
             //Arrange
             var author = await _repository.GetAuthorByName("Test Author");
             var author2 = await _repository.GetAuthorByName("Test Author2");
@@ -94,13 +66,12 @@ public class AuthorRepositoryTests : IDisposable
             Assert.Equal("Test Author2", author2.Name);
             Assert.Equal("test2@email.com", author2.Email);
             Assert.NotNull(author2.Cheeps);
-            */
         }
 
         [Fact]
         public async Task GetAuthorByEmail_ShouldReturnAuthor()
         {
-            /*
+            
             //Arrange
             var author = await _repository.GetAuthorByEmail("test@author.com");
             // var author2 = await _repository.GetAuthorByEmail("test2@email.com");
@@ -110,7 +81,99 @@ public class AuthorRepositoryTests : IDisposable
             Assert.Equal("Test Author", author.Name);
             Assert.Equal("test@author.com", author.Email);
             Assert.NotNull(author.Cheeps);
-            */
+        }
+
+        [Fact]
+        public async Task GetAuthorByName_ShouldThrowInvalidOperationException()
+        {
+            // Arrange
+            var nameNotInDatabase = "username";
+            InvalidOperationException? exception = null;
+            
+            // Act
+            try
+            {
+                await _repository.GetAuthorByName(nameNotInDatabase);
+
+            }
+            catch (InvalidOperationException e)
+            {
+                exception = e;
+            }
+            
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<InvalidOperationException>(exception);
+            Assert.Equal($"No such author with name: {nameNotInDatabase}", exception.Message);
+        }
+
+        [Fact]
+        public async Task GetAuthorByEmail_ShouldThrowInvalidOperationException()
+        {
+            // Arrange
+            var emailNotInDatabase = "email@email.com";
+            InvalidOperationException? exception = null;
+            
+            // Act
+            try
+            { 
+                await _repository.GetAuthorByEmail(emailNotInDatabase);
+
+            }
+            catch (InvalidOperationException e)
+            {
+                exception = e;
+            }
+            
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<InvalidOperationException>(exception);
+            Assert.Equal($"No such author with email: {emailNotInDatabase}", exception.Message);
+        }
+        
+        [Fact]
+        public async Task GetAuthorByName_ShouldThrow_WhenNameIsNull()
+        {
+            // Arrange
+            string? userName = null;
+            InvalidOperationException? exception = null;
+
+            // Act
+            try
+            {
+                await _repository.GetAuthorByName(userName);
+            }
+            catch (InvalidOperationException ex)
+            {
+                exception = ex;
+            }
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<InvalidOperationException>(exception);
+            Assert.Equal("Name cannot be null or empty", exception.Message);
+        }
+
+        [Fact]
+        public async Task GetAuthorByEmail_ShouldThrow_WhenEmailIsNull()
+        {
+            string? email = null;
+            InvalidOperationException? exception = null;
+            
+            // Act
+            try
+            {
+                await _repository.GetAuthorByEmail(email);
+            }
+            catch (InvalidOperationException ex)
+            {
+                exception = ex;
+            }
+            
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<InvalidOperationException>(exception);
+            Assert.Equal("Email cannot be null or empty", exception.Message);
         }
     }
 }

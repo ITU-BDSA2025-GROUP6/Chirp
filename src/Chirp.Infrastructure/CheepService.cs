@@ -50,4 +50,8 @@ public class CheepService : ICheepService
     {
         return _repository.GetCheeps(page, currentUserId);
     }
+    
+    public async Task<int> CreateRecheep(AuthorDTO Author, int cheepID) {
+        return await _repository.CreateRecheep(Author, cheepID);
+    }
 }

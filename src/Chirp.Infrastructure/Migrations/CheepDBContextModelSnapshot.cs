@@ -125,9 +125,12 @@ namespace Chirp.Infrastructure.Migrations
                     b.Property<string>("FollowedById")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("FollowedByAuthorId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("FollowsId", "FollowedById");
 
-                    b.HasIndex("FollowedById");
+                    b.HasIndex("FollowedByAuthorId");
 
                     b.ToTable("Follows");
                 });
@@ -282,7 +285,8 @@ namespace Chirp.Infrastructure.Migrations
                 {
                     b.HasOne("Chirp.Core.Author", "Author")
                         .WithMany("Cheeps")
-                        .HasForeignKey("AuthorID");
+                        .HasForeignKey("AuthorID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Author");
                 });
@@ -291,14 +295,13 @@ namespace Chirp.Infrastructure.Migrations
                 {
                     b.HasOne("Chirp.Core.Author", "FollowedByAuthor")
                         .WithMany("FollowedBy")
-                        .HasForeignKey("FollowedById")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("FollowedByAuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Chirp.Core.Author", "FollowsAuthor")
                         .WithMany("Following")
                         .HasForeignKey("FollowsId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("FollowedByAuthor");

@@ -144,6 +144,10 @@ As illustrated in the picture, our process had the following main components:
 - **Closing the issue:** Once the pull request is merged, the branch is deleted and the issue is closed. The process starts again, with the creation of a new issue.
 
 ## How to make _Chirp!_ work locally
+### Prerequisites
+- .NET 8 SDK
+- Git
+
 ### Clone Repository
 Open a terminal and navigate to preferred directory. 
 Then, run:

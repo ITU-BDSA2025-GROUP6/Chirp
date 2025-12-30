@@ -52,7 +52,7 @@ The Deployed Application Architecture can be seen below.
 #### Remote Architecture
 Client interacts with an Azure Database through an HTTP (Converted to HTTPS) request. Hosted offshore. 
 
-![Deployed Application Azure Architecture](images/Deployed Application Azure Architecture.png)
+![Deployed_Application_Azure_Architecture](images/Deployed_Application_Azure_Architecture.png)
 
 #### Local Architecture 
 Client interacts directly with a local database. Does not require internet.

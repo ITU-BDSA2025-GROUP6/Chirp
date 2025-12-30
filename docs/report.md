@@ -2,12 +2,12 @@
 title: _Chirp!_ Project Report
 subtitle: ITU BDSA 2025 Group `6`
 author:
-- "Andreas <anys@itu.dk>"
-- "Maja <mcls@itu.dk>"
-- "Sebastian <sebseb10@gmail.com>"
-- "Ludvig <ludvig.elias.kirkeby@gmail.com>"
-- "Anna <anna.kirstine.hoff@gmail.com>"
-- "Nina <cenh@itu.dk>"
+- "Andreas Schiøtt <anys@itu.dk>"
+- "Maja Schewe-Jensen <mcls@itu.dk>"
+- "Sebastian Holt Svendsen <sebseb10@gmail.com>"
+- "Ludvig Kirkeby <ludvig.elias.kirkeby@gmail.com>"
+- "Anna Bohn Hoff <anna.kirstine.hoff@gmail.com>"
+- "Nina Hansson <cenh@itu.dk>"
 numbersections: true
 ---
 
@@ -24,7 +24,7 @@ Chirp has the following key entities:
     
 Below is an UML class diagram of our domain model: 
 
-<img width="800" height="880" alt="image" src="images/DomainModel.png" />
+![DomainModel](images/DomainModel.png)
 
 - **NOTE:** `IdentityUser` only shows the first part of the library it comes from in the diagram.  
   The full library path is:  
@@ -43,7 +43,7 @@ The Onion Architecture of Chirp is seen in the below UML.
     - Repository Layer: Functionality, DTOs, Interfaces and database retrieval methods supported by Entity Core.
     - Domain Layer: Contains our domain entities only.
 
-<img width="max-width:100%" height="auto" alt="onion architecture" src="images/Onion Architecture.png" />
+![Onion_Architecture](images/Onion_Architecture.png)
 
 ## Architecture of deployed application
 The Deployed Application Architecture can be seen below.
@@ -52,12 +52,12 @@ The Deployed Application Architecture can be seen below.
 #### Remote Architecture
 Client interacts with an Azure Database through an HTTP (Converted to HTTPS) request. Hosted offshore. 
 
-<img width="max-width:100%" height="auto" alt="image" src="images/Deployed Application Azure Architecture.png" />
+![Deployed_Application_Azure_Architecture](images/Deployed_Application_Azure_Architecture.png)
 
 #### Local Architecture 
 Client interacts directly with a local database. Does not require internet.
 
-<img width="max-width:100%" height="auto" alt="image" src="images/Deployed Application Locally Hosted Architecture.png" />
+![Deployed_Application_Locally_Hosted_Architecture](images/Deployed_Application_Locally_Hosted_Architecture.png)
 
 ## User activities
 We have two types of users: `Authorized `and `Unauthorized`.
@@ -82,24 +82,22 @@ An `Authorized User` may...
     - Recheep other Authors' Cheeps
 
 ### Unauthorized User Diagram
-<img width="417" height="981" alt="image" src="images/Unauthorized User Activity Diagram.jpg" />
+![Unauthorized_User_Activity_Diagram](images/Unauthorized_User_Activity_Diagram.jpg)
 
 ### Authorized User Diagram
-<img width="1130" height="1691" alt="image" src="images/Authorized User Activity.jpg" />
+![Authorized_User_Activity](images/Authorized_User_Activity.jpg)
 
 ## User Activities - Expanded Login Diagrams
 
 ### Standard Login (Typing in details on the Registration or Login page)
-<img width="948" height="455" alt="image" src="images/Authentication Diagram.jpg" />
+![Authentication_Diagram](images/Authentication_Diagram.jpg)
 
 ### Open Authentication Login
-<img width="1330" height="982" alt="image" src="images/Open Authentication Diagram.jpg" />
-
+![Open_Authentication_Diagram](images/Open_Authentication_Diagram.jpg)
 
 ## Sequence of functionality/calls through _Chirp!_
 Below is a Diagram of an example functionality call of an Unauthorized user accessing the site, causing us to display all cheeps, which are grabbed from the database.
-
-<img src="images/Functionality Calls.png" alt="image" style="max-width: 150%; height=auto;"/>
+![Functionality_Calls](images/Functionality_Calls.png)
 
 # Process
 
@@ -112,29 +110,25 @@ We have created three workflows for the different tasks:
 
 The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release webapp artifact on tags, with both title and release notes.
 
-<img src="images/CiDiagram.png" alt="CI workflow diagram" style="max-width:60%; height:auto;">
+![CiDiagram](images/CiDiagram.png)
 
 The second diagram illustrates the Continuous Deployment workflow, which consists of a build- and deploy job. This workflow is triggered on 'push' to the main branch.
 The workflow ensures that the ASP.NET application is build, published and deployed to Azure App Service. The workflow does not include a dedicated test step, as this is done in CI.
 
-<img src="images/CdDiagram.png" alt="CD workflow diagram" style="max-width:80%; height:auto;">
+![CdDiagram](images/CdDiagram.png)
 
 The third diagram is for releasing executables. When a version tag and release is created, the workflow builds, tests, and publishes four platform-specific executables (Linux, Windows, and macOS for both x64 and arm64), which are packaged and uploaded to the GitHub release.
 
-<img src="images/ExecutablesDiagram.png" alt="Executables Diagram" styles="max-width:50%; height:auto;">
+![ExecutablesDiagram](images/ExecutablesDiagram.png)
 
 The fourth diagram is created over the Auto Label workflow. It shows how labels are automatically assigned to newly opened or edited issues based on predefined keywords, such as "bug", "layout", etc. 
 
-<img src="images/AutoLabel.png" alt="Auto Label diagram" style="max-width:100%; height:auto;">
+![AutoLabel](images/AutoLabel.png)
 
 
 ## Team work
-This is our project board at hand-in. The following tasks remain unresolved:
-INSÆT BILLEDE AF PROJECT BOARD OG LISTE AF UNRESOLVED TASKS + FORKLARING
-
 The structure around which we have organised our work, can be described with the following sequence diagram.
-
-<img src="images/image.png" alt="TeamworkSequenceUML" style="max-width:100%; height:auto;">
+![image](images/image.png)
 
 As illustrated in the picture, our process had the following main components:
 
@@ -143,7 +137,21 @@ As illustrated in the picture, our process had the following main components:
 - **Code review:** GitHub then notifies the team about the pull request, and a reviewer reviews the code. The review is based on the success criteria defined when the issue was created. The reviwer summits the review through GitHub, which then notifies the developer whether the pull request apporved or changes are requested. If changes are requested, the developer updates the code, pushes the changes and sends a new review request thorugh the GitGub repository. If the pull request is approved, the sequence continues to the merge step.
 - **Closing the issue:** Once the pull request is merged, the branch is deleted and the issue is closed. The process starts again, with the creation of a new issue.
 
+### Snippet of Final Scrum Board
+We used a Scrum Board to keep track of current issues and their status.
+![Scrum_Board](images/Scrum_Board.png)
+
+
+### Unresolved Tasks
+We did not manage to cover all test cases for the initial part of the project (Chirp.Razor).
+We have prioritized getting Azure to work, but encountered issues with it during the final phases of the Follows functionality. Currently, we believe it to be functioning, but our Quota is exceeded. We hope to be able to test it around the date of delivery, when Quota resets.
+
+
 ## How to make _Chirp!_ work locally
+### Prerequisites
+- .NET 8 SDK
+- Git
+
 ### Clone Repository
 Open a terminal and navigate to preferred directory. 
 Then, run:

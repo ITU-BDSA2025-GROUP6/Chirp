@@ -99,7 +99,7 @@ namespace Chirp.Web.Areas.Identity.Pages.Account.Manage
 
             var userId = await _userManager.GetUserIdAsync(user);
             await _cheepDbContext.Follows
-                .Where(f => f.FollowedById == userId)
+                .Where(f => f.FollowsId == userId || f.FollowedById == userId)
                 .ExecuteDeleteAsync();
             
             var result = await _userManager.DeleteAsync(user);

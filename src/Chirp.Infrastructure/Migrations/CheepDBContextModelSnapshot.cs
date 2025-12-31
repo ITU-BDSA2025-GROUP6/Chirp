@@ -293,7 +293,7 @@ namespace Chirp.Infrastructure.Migrations
                     b.HasOne("Chirp.Core.Author", "FollowedByAuthor")
                         .WithMany("FollowedBy")
                         .HasForeignKey("FollowedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Chirp.Core.Author", "FollowsAuthor")

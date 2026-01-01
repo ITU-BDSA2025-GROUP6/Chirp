@@ -64,18 +64,18 @@ We have two types of users: `Authorized `and `Unauthorized`.
 
 **Access Restriction**
 
-An `Unauthorized User` may...
+An `Unauthorized User` can...
 
-    - Login and Register 
+    - Register and log in
     - View Public and Private timelines
-    - View multiple pages of content
+    - Navigate multiple pages of content
 
-An `Authorized User` may...
+An `Authorized User` can...
 
-    - Logout
+    - Log out
     - View Public and Private timelines
-    - View own Timeline, with own posted Cheeps
-    - View multiple pages of content
+    - View their own timeline with posted Cheeps
+    - Navigate multiple pages of content
     - Access an "About me" page, with account information and account deletion ("Forget me")
     - Set a Profile Picture in the "About me" page
     - Post new Cheeps

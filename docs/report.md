@@ -113,7 +113,7 @@ The first diagram is over our Continuous Integration workflow, which ensures bui
 ![CiDiagram](images/CiDiagram.png)
 
 The second diagram illustrates the Continuous Deployment workflow, which consists of a build- and deploy job. This workflow is triggered on 'push' to the main branch.
-The workflow ensures that the ASP.NET application is build, published and deployed to Azure App Service. The workflow does not include a dedicated test step, as this is done in CI.
+The workflow ensures that the ASP.NET application is built, published, and deployed to Azure App Service. The workflow does not include a dedicated test step, as this is done in CI.
 
 ![CdDiagram](images/CdDiagram.png)
 
@@ -127,14 +127,14 @@ The fourth diagram is created over the Auto Label workflow. It shows how labels 
 
 
 ## Team work
-The structure around which we have organised our work, can be described with the following sequence diagram.
+The structure around which we have organized our work can be described with the following sequence diagram.
 ![image](images/image.png)
 
 As illustrated in the picture, our process had the following main components:
 
 - **Creating an issue:** During the first two steps of the sequence, the project manager creates a new issue. This issue is based either on the requirements presented the given week or on bugs found during development. After creating the issue, including a description and success requirements, a developer can be assigned to it.
-- **Code development:** The issue is then picked up by a developer from the team. In the next steps of the sequence, the developer creates a new designated branch for the issue, develops the feature, pushes the code to the GitHub repository, and finaly requests review of the implemented code.
-- **Code review:** GitHub then notifies the team about the pull request, and a reviewer reviews the code. The review is based on the success criteria defined when the issue was created. The reviwer summits the review through GitHub, which then notifies the developer whether the pull request apporved or changes are requested. If changes are requested, the developer updates the code, pushes the changes and sends a new review request thorugh the GitGub repository. If the pull request is approved, the sequence continues to the merge step.
+- **Code development:** The issue is then picked up by a developer from the team. In the next steps of the sequence, the developer creates a new designated branch for the issue, develops the feature, pushes the code to the GitHub repository, and finally requests review of the implemented code.
+- **Code review:** GitHub then notifies the team about the pull request, and a reviewer reviews the code. The review is based on the success criteria defined when the issue was created. The reviewer submits the review through GitHub, which then notifies the developer whether the pull request was approved, or if changes are requested. If changes are requested, the developer updates the code, pushes the changes and sends a new review request thorugh the GitGub repository. If the pull request is approved, the sequence continues to the merge step.
 - **Closing the issue:** Once the pull request is merged, the branch is deleted and the issue is closed. The process starts again, with the creation of a new issue.
 
 ### Snippet of Final Scrum Board

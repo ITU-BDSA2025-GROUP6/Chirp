@@ -4,9 +4,9 @@ subtitle: ITU BDSA 2025 Group `6`
 author:
 - "Andreas Schiøtt <anys@itu.dk>"
 - "Maja Schewe-Jensen <mcls@itu.dk>"
-- "Sebastian Holt Svendsen <sebseb10@gmail.com>"
-- "Ludvig Kirkeby <ludvig.elias.kirkeby@gmail.com>"
-- "Anna Bohn Hoff <anna.kirstine.hoff@gmail.com>"
+- "Sebastian Holt Svendsen <sesv@itu.dk>"
+- "Ludvig Kirkeby <luki@itu.dk>"
+- "Anna Bohn Hoff <akih@itu.dk>"
 - "Nina Hansson <cenh@itu.dk>"
 numbersections: true
 ---
@@ -62,15 +62,13 @@ Client interacts directly with a local database. Does not require internet.
 ## User activities
 We have two types of users: `Authorized `and `Unauthorized`.
 
-**Access Restriction**
-
-An `Unauthorized User` can...
+An `Unauthorized User` can:
 
     - Register and log in
     - View Public and Private timelines
     - Navigate multiple pages of content
 
-An `Authorized User` can...
+An `Authorized User` can:
 
     - Log out
     - View Public and Private timelines

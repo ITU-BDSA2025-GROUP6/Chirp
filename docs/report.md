@@ -248,4 +248,7 @@ dotnet test test/End2End
 During this project, we have learned about the importance of licensing and the ethics of open source development. This has added new understanding and new perspectives to the reality surrounding the Chirp! application. For licensing, we have chosen the MIT License. This choice is based on the simplicity of the license, as well as the its broad use and familiarity. Having this license means that others are free to use, modify and distribute our application, as long as the original license and copyright notice are included.
 
 ## LLMs, ChatGPT, CoPilot, and others
-ChatGPT and Copilot have been utilized in the making of this project. These LLMs were used primarily for debugging and understanding different frameworks used. Deployment to Azure was especially difficult, and Copilot aided in correctly resolving the issues based on Azure logs.
+ChatGPT and Copilot have been utilized in the making of this project.
+The LLMs were used for debugging and understanding different frameworks used. Deployment to Azure was especially difficult, and Copilot aided in correctly resolving the issues based on Azure logs. Additionally, we had it support us in coding the UI aspect of the program.
+
+In using the LLMS, we were critical of its outputs, and aware of its potential detrimental consequences to our learning. As such, we strived to use it as a knowledgeable "peer".

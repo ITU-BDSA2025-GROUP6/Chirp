@@ -2,12 +2,16 @@ using Microsoft.Playwright;
 
 namespace End2End
 {
-    public class RegisterAndLogInTest
+    public class End2EndTests
     {
         private IPlaywright? _playwright;
         private IBrowser? _browser;
         private LocalHostServer? _server;
         private const string Url = "http://localhost:5273";
+        
+        // Terminal command: pwsh bin/Debug/net8.0/playwright.ps1 codegen  https://localhost:5273 
+        // Chirp! has to run on the same localhost 
+        
 
         [OneTimeSetUp]
         public async Task OneTimeSetup()

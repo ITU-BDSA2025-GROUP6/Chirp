@@ -22,11 +22,11 @@ Chirp has the following key entities:
     - Follows: Tracks following, and being followed by, other authors.
     - Recheep: Allows reposting specific cheeps by other authors on our own timeline.
     
-Below is an UML class diagram of our domain model: 
+Below is a UML class diagram of our domain model: 
 
 ![DomainModel](images/DomainModel.png)
 
-- **NOTE:** `IdentityUser` only shows the first part of the library it comes from in the diagram.  
+- **NOTE:** `IdentityUser` only shows the first part of the library frm which it comes from in the diagram.  
   The full library path is:  
   `Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUser`
 
@@ -108,7 +108,7 @@ We have created three workflows for the different tasks:
 - **Executables:** Builds, tests, and publishes single-file executables for multiple operating systems when a GitHub release is created.
 - **Auto Label:** Automatically labels issues based on keywords.
 
-The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release webapp artifact on tags, with both title and release notes.
+The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release web app artifact on tags, with both title and release notes.
 
 ![CiDiagram](images/CiDiagram.png)
 

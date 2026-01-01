@@ -5,7 +5,7 @@
 namespace Chirp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class FixMigration : Migration
+    public partial class FollowDelete : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,8 +35,7 @@ namespace Chirp.Infrastructure.Migrations
                 table: "Follows",
                 column: "FollowedById",
                 principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Follows_AspNetUsers_FollowsId",

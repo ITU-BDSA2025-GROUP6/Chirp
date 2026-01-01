@@ -22,11 +22,11 @@ Chirp has the following key entities:
     - Follows: Tracks following, and being followed by, other authors.
     - Recheep: Allows reposting specific cheeps by other authors on our own timeline.
     
-Below is an UML class diagram of our domain model: 
+Below is a UML class diagram of our domain model: 
 
 ![DomainModel](images/DomainModel.png)
 
-- **NOTE:** `IdentityUser` only shows the first part of the library it comes from in the diagram.  
+- **NOTE:** `IdentityUser` only shows the first part of the library frm which it comes from in the diagram.  
   The full library path is:  
   `Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUser`
 
@@ -64,18 +64,18 @@ We have two types of users: `Authorized `and `Unauthorized`.
 
 **Access Restriction**
 
-An `Unauthorized User` may...
+An `Unauthorized User` can...
 
-    - Login and Register 
+    - Register and log in
     - View Public and Private timelines
-    - View multiple pages of content
+    - Navigate multiple pages of content
 
-An `Authorized User` may...
+An `Authorized User` can...
 
-    - Logout
+    - Log out
     - View Public and Private timelines
-    - View own Timeline, with own posted Cheeps
-    - View multiple pages of content
+    - View their own timeline with posted Cheeps
+    - Navigate multiple pages of content
     - Access an "About me" page, with account information and account deletion ("Forget me")
     - Set a Profile Picture in the "About me" page
     - Post new Cheeps
@@ -108,12 +108,12 @@ We have created three workflows for the different tasks:
 - **Executables:** Builds, tests, and publishes single-file executables for multiple operating systems when a GitHub release is created.
 - **Auto Label:** Automatically labels issues based on keywords.
 
-The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release webapp artifact on tags, with both title and release notes.
+The first diagram is over our Continuous Integration workflow, which ensures build- and test correctness. In addition it publishes release web app artifact on tags, with both title and release notes.
 
 ![CiDiagram](images/CiDiagram.png)
 
 The second diagram illustrates the Continuous Deployment workflow, which consists of a build- and deploy job. This workflow is triggered on 'push' to the main branch.
-The workflow ensures that the ASP.NET application is build, published and deployed to Azure App Service. The workflow does not include a dedicated test step, as this is done in CI.
+The workflow ensures that the ASP.NET application is built, published, and deployed to Azure App Service. The workflow does not include a dedicated test step, as this is done in CI.
 
 ![CdDiagram](images/CdDiagram.png)
 
@@ -127,14 +127,14 @@ The fourth diagram is created over the Auto Label workflow. It shows how labels 
 
 
 ## Team work
-The structure around which we have organised our work, can be described with the following sequence diagram.
+The structure around which we have organized our work can be described with the following sequence diagram.
 ![image](images/image.png)
 
 As illustrated in the picture, our process had the following main components:
 
 - **Creating an issue:** During the first two steps of the sequence, the project manager creates a new issue. This issue is based either on the requirements presented the given week or on bugs found during development. After creating the issue, including a description and success requirements, a developer can be assigned to it.
-- **Code development:** The issue is then picked up by a developer from the team. In the next steps of the sequence, the developer creates a new designated branch for the issue, develops the feature, pushes the code to the GitHub repository, and finaly requests review of the implemented code.
-- **Code review:** GitHub then notifies the team about the pull request, and a reviewer reviews the code. The review is based on the success criteria defined when the issue was created. The reviwer summits the review through GitHub, which then notifies the developer whether the pull request apporved or changes are requested. If changes are requested, the developer updates the code, pushes the changes and sends a new review request thorugh the GitGub repository. If the pull request is approved, the sequence continues to the merge step.
+- **Code development:** The issue is then picked up by a developer from the team. In the next steps of the sequence, the developer creates a new designated branch for the issue, develops the feature, pushes the code to the GitHub repository, and finally requests review of the implemented code.
+- **Code review:** GitHub then notifies the team about the pull request, and a reviewer reviews the code. The review is based on the success criteria defined when the issue was created. The reviewer submits the review through GitHub, which then notifies the developer whether the pull request was approved or if changes are requested. If changes are requested, the developer updates the code, pushes the changes and sends a new review request through the GitHub repository. If the pull request is approved, the sequence continues to the merge step.
 - **Closing the issue:** Once the pull request is merged, the branch is deleted and the issue is closed. The process starts again, with the creation of a new issue.
 
 ### Snippet of Final Scrum Board
@@ -175,7 +175,7 @@ Run the following in the terminal:
 dotnet user-secrets init
 ```
 
-#### Set Github Secrets
+#### Set GitHub Secrets
 ```
 dotnet user-secrets set "authentication:github:clientId" "<ClientId>"
 dotnet user-secrets set "authentication:github:clientSecret" "<ClientSecret>"
@@ -245,7 +245,10 @@ dotnet test test/End2End
 # Ethics
 
 ## License
-During this project, we have learned about the importance of licensing and the ethics of open source developement. This has added new understanding and new perspectives to the reality surrounding the Chirp! application. For licensing, we haven chosen the MIT License. This choice is based on the simplicity of the license, as well as the its broad use and familiarity. Having this lisence means that others are free to use, modify and distribute our application, as long as the original license and copyright notice are included.
+During this project, we have learned about the importance of licensing and the ethics of open source development. This has added new understanding and new perspectives to the reality surrounding the Chirp! application. For licensing, we have chosen the MIT License. This choice is based on the simplicity of the license, as well as the its broad use and familiarity. Having this license means that others are free to use, modify and distribute our application, as long as the original license and copyright notice are included.
 
 ## LLMs, ChatGPT, CoPilot, and others
-ChatGPT and Copilot have been utalized in the making of this project. These LLMs were used primarily for debugging and understanding different frameworks. Deployment to Azure was especially difficult, and Copilot aided in correctly resolving the issues based on Azure logs.
+ChatGPT and Copilot have been utilized in the making of this project.
+The LLMs were used for debugging and understanding different frameworks used. Deployment to Azure was especially difficult, and Copilot aided in correctly resolving the issues based on Azure logs. Additionally, we had it support us in coding the UI aspect of the program.
+
+In using the LLMS, we were critical of its outputs, and aware of its potential detrimental consequences to our learning. As such, we strived to use it as a knowledgeable "peer".

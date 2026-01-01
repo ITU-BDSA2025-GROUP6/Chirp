@@ -102,7 +102,7 @@ Below is a Diagram of an example functionality call of an Unauthorized user acce
 # Process
 
 ## Build, test, release, and deployment
-We have created three workflows for the different tasks:
+We have created four workflows for the different tasks:
 - **CI:** Automatically builds and tests the application on every change, and publishes a versioned release artifact when a release tag is pushed.
 - **CD:** Build and deploy to Azure Web App.
 - **Executables:** Builds, tests, and publishes single-file executables for multiple operating systems when a GitHub release is created.
@@ -121,7 +121,7 @@ The third diagram is for releasing executables. When a version tag and release i
 
 ![ExecutablesDiagram](images/ExecutablesDiagram.png)
 
-The fourth diagram is created over the Auto Label workflow. It shows how labels are automatically assigned to newly opened or edited issues based on predefined keywords, such as "bug", "layout", etc. 
+The fourth diagram is created over the Auto Label workflow. It shows how labels are automatically assigned to newly opened or edited issues based on predefined keywords, such as "bug", "layout", etc. This automation improves issue organization and supports more effective use of the project board.
 
 ![AutoLabel](images/AutoLabel.png)
 

@@ -134,7 +134,7 @@ As illustrated in the picture, our process had the following main components:
 
 - **Creating an issue:** During the first two steps of the sequence, the project manager creates a new issue. This issue is based either on the requirements presented the given week or on bugs found during development. After creating the issue, including a description and success requirements, a developer can be assigned to it.
 - **Code development:** The issue is then picked up by a developer from the team. In the next steps of the sequence, the developer creates a new designated branch for the issue, develops the feature, pushes the code to the GitHub repository, and finally requests review of the implemented code.
-- **Code review:** GitHub then notifies the team about the pull request, and a reviewer reviews the code. The review is based on the success criteria defined when the issue was created. The reviewer submits the review through GitHub, which then notifies the developer whether the pull request was approved, or if changes are requested. If changes are requested, the developer updates the code, pushes the changes and sends a new review request thorugh the GitGub repository. If the pull request is approved, the sequence continues to the merge step.
+- **Code review:** GitHub then notifies the team about the pull request, and a reviewer reviews the code. The review is based on the success criteria defined when the issue was created. The reviewer submits the review through GitHub, which then notifies the developer whether the pull request was approved or if changes are requested. If changes are requested, the developer updates the code, pushes the changes and sends a new review request through the GitHub repository. If the pull request is approved, the sequence continues to the merge step.
 - **Closing the issue:** Once the pull request is merged, the branch is deleted and the issue is closed. The process starts again, with the creation of a new issue.
 
 ### Snippet of Final Scrum Board
@@ -175,7 +175,7 @@ Run the following in the terminal:
 dotnet user-secrets init
 ```
 
-#### Set Github Secrets
+#### Set GitHub Secrets
 ```
 dotnet user-secrets set "authentication:github:clientId" "<ClientId>"
 dotnet user-secrets set "authentication:github:clientSecret" "<ClientSecret>"
@@ -245,7 +245,7 @@ dotnet test test/End2End
 # Ethics
 
 ## License
-During this project, we have learned about the importance of licensing and the ethics of open source developement. This has added new understanding and new perspectives to the reality surrounding the Chirp! application. For licensing, we haven chosen the MIT License. This choice is based on the simplicity of the license, as well as the its broad use and familiarity. Having this lisence means that others are free to use, modify and distribute our application, as long as the original license and copyright notice are included.
+During this project, we have learned about the importance of licensing and the ethics of open source development. This has added new understanding and new perspectives to the reality surrounding the Chirp! application. For licensing, we have chosen the MIT License. This choice is based on the simplicity of the license, as well as the its broad use and familiarity. Having this license means that others are free to use, modify and distribute our application, as long as the original license and copyright notice are included.
 
 ## LLMs, ChatGPT, CoPilot, and others
-ChatGPT and Copilot have been utalized in the making of this project. These LLMs were used primarily for debugging and understanding different frameworks. Deployment to Azure was especially difficult, and Copilot aided in correctly resolving the issues based on Azure logs.
+ChatGPT and Copilot have been utilized in the making of this project. These LLMs were used primarily for debugging and understanding different frameworks used. Deployment to Azure was especially difficult, and Copilot aided in correctly resolving the issues based on Azure logs.

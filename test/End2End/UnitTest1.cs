@@ -86,30 +86,4 @@ public class Tests : PageTest
         // Expects the URL to contain intro.
         await Expect(Page).ToHaveURLAsync(new Regex(".*intro"));
     }
-
-    [Ignore("Ignored")]
-    [Test]
-    public async Task UserCanLogin_NavigateTimelines_PostCheep_ThenLogout()
-    {
-        await Page.GotoAsync(Url);
-        Assert.Pass();
-        /*
-        await Page.GotoAsync("https://localhost:5273/");
-        
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("test123@test.dk");
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).PressAsync("Tab");
-        await Page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync("Test123!");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "My Timeline" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Link, new() { Name = "Public Timeline" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = "Jacqualine Gilcoine Starbuck" }).GetByRole(AriaRole.Button).ClickAsync();
-        await Page.Locator("#Text").ClickAsync();
-        await Page.Locator("#Text").FillAsync("Test cheep!");
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
-        await Page.GetByRole(AriaRole.Button, new() { Name = "Logout [test123@test.dk]" }).ClickAsync();
-        
-        */
-    }
 }

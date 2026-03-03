@@ -26,7 +26,20 @@ services:
       - "9090:9090"
     networks:
       - itu-minitwit-network
-
+    
+  grafana:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./monitoring/grafana
+    image: grafana_image
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - itu-minitwit-network
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    
   #minitwit-sim-stub:
    # image: ${DOCKER_USERNAME}/minitwit-sim-stub:${TAG:-latest}
     #ports:

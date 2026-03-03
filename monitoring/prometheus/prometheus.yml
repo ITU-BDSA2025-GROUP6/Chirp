@@ -1,8 +1,7 @@
 global:
-  scrape_interval:     15s # By default, scrape targets every 15 seconds.
-  evaluation_interval: 15s # Evaluate rules every 15 seconds.
+  scrape_interval:     15s
+  evaluation_interval: 15s
 
-  # Attach these extra labels to all timeseries collected by this Prometheus instance.
   external_labels:
     monitor: 'codelab-monitor'
 
@@ -11,19 +10,12 @@ rule_files:
 
 scrape_configs:
   - job_name: 'prometheus'
-
-    # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
-
     static_configs:
-      - targets: ['prometheus:9090']
-
-  - job_name:       'itu-minittwit-app'
-
-    # Override the global default and scrape targets from this job every 5 seconds.
+      - targets: ['prometheus:9090']  
+  - job_name: 'itu-minittwit-app'
     scrape_interval: 5s
-
     static_configs:
-      - targets: ['minitwit:5000']
+      - targets: ['prometheus:46.101.231.189:5000']
         labels:
           group: 'production'

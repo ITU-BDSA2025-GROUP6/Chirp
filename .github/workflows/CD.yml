@@ -72,4 +72,4 @@ jobs:
           script: |
             cd /opt/itu-minitwit
             chmod +x scripts/deploy.sh
-            TAG=${{ github.sha }} bash scripts/deploy.sh
+            TAG=${{ github.sha }} DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} bash scripts/deploy.sh

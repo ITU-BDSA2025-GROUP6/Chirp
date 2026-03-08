@@ -4,8 +4,8 @@ set -euo pipefail
 APP_DIR="${APP_DIR:-/opt/itu-minitwit}"
 COMPOSE_FILE="${COMPOSE_FILE:-$APP_DIR/docker-compose.yml}"
 
-log() { echo "[$(date -IS)] $*"; }
-die() { echo "[$(date -is)] ERROR $*" >&2; exit 1;}
+log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
+die() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR $*" >&2; exit 1; }
 
 log "Starting deploy..."
 log "APP_DIR=$APP_DIR"

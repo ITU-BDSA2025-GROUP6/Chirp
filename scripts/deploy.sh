@@ -28,9 +28,12 @@ fi
 log "Resolved images:"
 TAG="${TAG:-}" docker compose config 2>/dev/null | awk '/image:/ {print "  " $0}' || true
 
-# Pull + run (idempotent)
+# Pull remote images (only itu-minitwit from Docker Hub)
 log "Pulling images..."
-TAG="${TAG:-}" docker compose pull
+TAG="${TAG:-}" docker compose pull --ignore-buildable
+
+log "Building local images..."
+TAG="${TAG:-}" docker compose build
 
 log "Applying compose (up -d)..."
 TAG="${TAG:-}" docker compose up -d --remove-orphans

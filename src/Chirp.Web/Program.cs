@@ -3,6 +3,7 @@ using Chirp.Core;
 using Chirp.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,6 +84,7 @@ using (var scope = app.Services.CreateScope())
 
 // No HTTPS redirect since the simulator uses http
 app.UseStaticFiles();
+app.UseHttpMetrics();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -90,5 +92,6 @@ app.UseSession();
 
 app.MapControllers();
 app.MapRazorPages();
+app.MapMetrics();
 
 app.Run();

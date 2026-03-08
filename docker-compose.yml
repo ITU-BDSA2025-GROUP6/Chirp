@@ -1,6 +1,6 @@
 services:
-  chirp-web:
-    image: ${DOCKER_USERNAME}/chirp-web:${TAG:-latest}
+  itu-minitwit:
+    image: ${DOCKER_USERNAME}/itu-minitwit:${TAG:-latest}
     ports:
       - "5001:5001"
     environment:

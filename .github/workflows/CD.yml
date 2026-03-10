@@ -51,7 +51,7 @@ jobs:
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
+          echo "${{ secrets.PREPROD_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           
       - name: Sync files to pre-prod droplet
@@ -168,5 +168,6 @@ jobs:
             cd /opt/itu-minitwit
             chmod +x scripts/deploy.sh
             TAG=${{ github.sha }} DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} bash scripts/deploy.sh
+
 
 

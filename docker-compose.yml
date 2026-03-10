@@ -4,11 +4,10 @@ services:
     ports:
       - "5001:5001"
     environment:
-      - ASPNETCORE_URLS=http://+:5001
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=chirp;Username=postgres;Password=postgres
+      - ASPNETCORE_URLS=${ASPNETCORE_URLS}
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
     depends_on:
-      - postgres
       - prometheus
     restart: unless-stopped
     networks:
@@ -28,6 +27,8 @@ services:
     restart: unless-stopped
     networks:
       - itu-minitwit-network
+    profiles:
+      - localdb
 
   prometheus:
     build:

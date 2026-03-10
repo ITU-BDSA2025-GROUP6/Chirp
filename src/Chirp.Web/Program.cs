@@ -8,15 +8,11 @@ using Prometheus;
 var builder = WebApplication.CreateBuilder(args);
 
 
-// have removed all logic checking which "environment" we are running in. so no azure db anymore see older commits if needed
-var dataDir = Path.Combine(builder.Environment.ContentRootPath, "data");
-Directory.CreateDirectory(dataDir);
-
-var dbPath = Path.Combine(dataDir, "Chirp.db");
-var connectionString = $"Data Source={dbPath}";
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                       ?? throw new InvalidOperationException("DefaultConnection missing");
 
 builder.Services.AddDbContext<CheepDbContext>(options =>
-    options.UseSqlite(connectionString));
+    options.UseNpgsql(connectionString));
 
 //changed login requirements to be more lenient to allow emails that are specefied in the simulator csv file.
 builder.Services.AddDefaultIdentity<Author>(options =>
@@ -76,8 +72,7 @@ using (var scope = app.Services.CreateScope())
 {
     using var context = scope.ServiceProvider.GetRequiredService<CheepDbContext>();
 
-    context.Database.EnsureCreated();
-
+    context.Database.Migrate();
    //DbInitializer.SeedDatabase(context); // this is no longer needed when runnign test
    //initial data is seeded with the simulator, might need it later not sure. 
 }

@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -46,24 +46,43 @@ jobs:
     environment: preprod
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.PREPROD_SSH_KEY }}" > ~/.ssh/deploy_key
+          printf '%s' "${{ secrets.PREPROD_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
+          ssh-keygen -l -f ~/.ssh/deploy_key
           
       - name: Sync files to pre-prod droplet
         run: |
           rsync -az --delete \
-          --exclude '.git' \
-          --exclude 'bin' \
-          --exclude 'obj' \
-          --exclude 'data' \
-          -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key" \
-          ./ ${{ secrets.PREPROD_SSH_USER }}@${{ secrets.PREPROD_SSH_HOST }}:/opt/itu-minitwit/
+            --exclude '.git' \
+            --exclude 'bin' \
+            --exclude 'obj' \
+            --exclude 'data' \
+            --exclude '.env' \
+            -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key" \
+            ./ ${{ secrets.PREPROD_SSH_USER }}@${{ secrets.PREPROD_SSH_HOST }}:/opt/itu-minitwit/
+    
 
+      - name: Write preprod .env on droplet
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.PREPROD_SSH_HOST }}
+          username: ${{ secrets.PREPROD_SSH_USER }}
+          key: ${{ secrets.PREPROD_SSH_KEY }}
+          script: |
+            mkdir -p /opt/itu-minitwit
+            cat > /opt/itu-minitwit/.env <<'EOF'
+            DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+            TAG=${{ github.sha }}
+            ASPNETCORE_ENVIRONMENT=Production
+            ASPNETCORE_URLS=http://+:5001
+            ConnectionStrings__DefaultConnection=${{ secrets.PREPROD_DO_CONNECTION_STRING }}
+            EOF
+            
       - name: Run deploy script on pre-prod
         uses: appleboy/ssh-action@v1.2.5
         with:
@@ -84,6 +103,7 @@ jobs:
         run: sleep 15
 
       - name: Health check pre-prod
+        shell: bash
         run: |
           for i in 1 2 3 4 5; do
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
@@ -104,24 +124,42 @@ jobs:
     environment: production
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
+          printf '%s' "${{ secrets.PREPROD_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-    
-      - name: Sync files to production droplet
+          ssh-keygen -l -f ~/.ssh/deploy_key
+          
+      - name: Sync files to droplet
         run: |
           rsync -az --delete \
             --exclude '.git' \
             --exclude 'bin' \
             --exclude 'obj' \
             --exclude 'data' \
+            --exclude '.env' \
             -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key" \
             ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/opt/itu-minitwit/
-    
+
+      - name: Write production .env on droplet
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            mkdir -p /opt/itu-minitwit
+            cat > /opt/itu-minitwit/.env <<'EOF'
+            DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+            TAG=${{ github.sha }}
+            ASPNETCORE_ENVIRONMENT=Production
+            ASPNETCORE_URLS=http://+:5001
+            ConnectionStrings__DefaultConnection=${{ secrets.DO_CONNECTION_STRING }}
+            EOF
+
       - name: Run deploy script on production
         uses: appleboy/ssh-action@v1.2.5
         with:
@@ -132,5 +170,4 @@ jobs:
             cd /opt/itu-minitwit
             chmod +x scripts/deploy.sh
             TAG=${{ github.sha }} DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} bash scripts/deploy.sh
-
 

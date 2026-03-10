@@ -3,54 +3,35 @@ using Chirp.Core;
 using Chirp.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
-using System.Security.Claims;
-using System.Text.Json;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = "";
-// Check if code is running in production environment (like Azure)
-if (builder.Environment.IsProduction())
-{
-    //ChatGPT help here
-    connectionString = builder.Configuration.GetConnectionString("AzureSQL")
-        ?? Environment.GetEnvironmentVariable("SQLAZURECONNSTR_AzureSQL")
-                       ?? throw new InvalidOperationException(
-                           "AzureSQL connection string not found.  Configure it in Azure Portal.");
 
-    builder.Services.AddDbContext<CheepDbContext>(options => 
-        options.UseSqlServer(connectionString, sqlOptions =>
-            {
-                sqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 10,
-                    maxRetryDelay: TimeSpan.FromSeconds(30),
-                    errorNumbersToAdd: new List<int> { 0 });
-                sqlOptions.CommandTimeout(60);
-            }));
-} 
-else 
-{ 
-    connectionString = builder. Configuration.GetConnectionString("DefaultConnection")
-                       ??  "Data Source=Chirp.db";
-    builder.Services.AddDbContext<CheepDbContext>(options => options.UseSqlite(connectionString));
-} 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                       ?? throw new InvalidOperationException("DefaultConnection missing");
 
-// Adds the Identity services to the DI container and uses a custom user type, ApplicationUser
+builder.Services.AddDbContext<CheepDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
+//changed login requirements to be more lenient to allow emails that are specefied in the simulator csv file.
 builder.Services.AddDefaultIdentity<Author>(options =>
     {
-        options.SignIn.RequireConfirmedAccount = true;
-        options.User.RequireUniqueEmail = true;
-        options.Lockout.AllowedForNewUsers = true;
-        options.Password.RequiredLength = 8;
+        options.SignIn.RequireConfirmedAccount = false;
+
+        options.Password.RequiredLength = 1;
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequireDigit = false;
         options.Password.RequireUppercase = false;
         options.Password.RequireLowercase = false;
+
+        // Allow emails like "test@test"
+        options.User.RequireUniqueEmail = false;
+
+        options.Lockout.AllowedForNewUsers = true;
         options.User.AllowedUserNameCharacters =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.@";
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.@ "; 
+        //do not change the whitespace!, allows for spaces in the username which is required for the simulator csv file.
     })
     .AddEntityFrameworkStores<CheepDbContext>();
 
@@ -66,95 +47,46 @@ builder.Services.AddScoped<ICheepService, CheepService>();
 builder.Services.AddScoped<ICheepRepository, CheepRepository>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
-// HSTS necessary for the HSTS header for reasons
+
+builder.Services.AddControllers();
+
+// Session
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 builder.Services.AddHsts(options =>
 {
     options.MaxAge = TimeSpan.FromHours(1);
 });
-// github authentication
-var githubClientId = builder.Configuration["authentication:github:clientId"];
-var  githubClientSecret = builder.Configuration["authentication:github:clientSecret"];
-var googleClientId = builder.Configuration["authentication:google:clientId"];
-var googleClientSecret = builder.Configuration["authentication:google:clientSecret"];
 
-var authBuilder = builder.Services.AddAuthentication();
-
-if (!string.IsNullOrEmpty(githubClientId) && !string.IsNullOrEmpty(githubClientSecret))
-{
-    authBuilder.AddGitHub(githubOptions =>
-    {
-        githubOptions.ClientId = githubClientId;
-        githubOptions.ClientSecret = githubClientSecret;
-        githubOptions.CallbackPath = "/signin-github";
-        githubOptions.Scope
-            .Add("user:email"); // Explicitly asking for Email as Github can be difficult to get Email from
-        githubOptions.SaveTokens = true; // maybe
-        githubOptions.CorrelationCookie.SameSite = SameSiteMode.None;
-        githubOptions.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-    });
-}
-
-if (!string.IsNullOrEmpty(googleClientId) && !string.IsNullOrEmpty(googleClientSecret))
-{
-    authBuilder.AddGoogle(googleOptions =>
-    {
-        googleOptions.ClientId = googleClientId;
-        googleOptions.ClientSecret = googleClientSecret;
-        googleOptions.CallbackPath = "/signin-google";
-        // Optional: get additional info like profile or email
-        googleOptions.Scope.Add("profile");
-        googleOptions.Scope.Add("email");
-        googleOptions.SaveTokens = true;
-        // Ensure cookies are secure for cross-site auth
-        googleOptions.CorrelationCookie.SameSite = SameSiteMode.None;
-        googleOptions.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
-    });
-}
+builder.Services.AddAuthentication();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-// Create a disposable service scope
 using (var scope = app.Services.CreateScope())
 {
-    using var context =
-        scope.ServiceProvider.GetRequiredService<CheepDbContext>();
-    if (app.Environment.IsProduction())
-    {
-        //For Azure SQL: applies SQL server migration
-        context.Database.Migrate();
-    }
-    else
-    {
-        //For localhost/testing: create Schema directly
-        //context.Database.EnsureDeleted();
-        context.Database.EnsureCreated();
-    }
-    
-    if (app.Environment.EnvironmentName != "Testing")
-    {
-        DbInitializer.SeedDatabase(context);
-    }
+    using var context = scope.ServiceProvider.GetRequiredService<CheepDbContext>();
+
+    context.Database.Migrate();
+   //DbInitializer.SeedDatabase(context); // this is no longer needed when runnign test
+   //initial data is seeded with the simulator, might need it later not sure. 
 }
 
-// if(app.Environment.IsProduction())
-// {
-//     app.UseHsts(); // Send HSTS headers, but only in production
-// }
-
-app.UseHttpsRedirection();
+// No HTTPS redirect since the simulator uses http
 app.UseStaticFiles();
+app.UseHttpMetrics();
 app.UseRouting();
 app.UseAuthentication();
-
 app.UseAuthorization();
+app.UseSession();
+
+app.MapControllers();
 app.MapRazorPages();
+app.MapMetrics();
 
 app.Run();

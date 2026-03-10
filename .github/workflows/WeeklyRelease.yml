@@ -1,0 +1,52 @@
+name: WeeklyRelease.yml
+on:
+  on:
+    schedule:
+      - cron: '0 6 * * 1'
+    workflow_dispatch:
+permissions:
+  contents: write
+  
+concurrency: 
+  group: weekly-release
+  cancel-in-progress: false
+  
+jobs:
+  build-test-release-webapp:
+    name: Build, Test, Publish, and Release Web App
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build -c Release --no-restore
+
+      - name: Run tests
+        run: dotnet test -c Release --filter "FullyQualifiedName!~End2End"
+        env:
+          ASPNETCORE_ENVIRONMENT: Testing
+          
+      - name: Publish Web App
+        run: |
+          dotnet publish "src/Chirp.Web/Chirp.Web.csproj" -c Release -o release-output --self-contained false
+          zip -r "ITU-MiniTwit-${{ github.ref_name }}.zip" ./release-output
+
+      - name: Create GitHub Release and Upload Artifact
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          name: "ITU-MiniTwit ${{ env.RELEASE_VERSION }}"
+          generate_release_notes: true
+          files: "ITU-MiniTwit-${{ env.RELEASE_VERSION }}.zip"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

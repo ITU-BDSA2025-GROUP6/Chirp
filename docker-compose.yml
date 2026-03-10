@@ -1,0 +1,63 @@
+services:
+  itu-minitwit:
+    image: ${DOCKER_USERNAME}/itu-minitwit:${TAG:-latest}
+    ports:
+      - "5001:5001"
+    environment:
+      - ASPNETCORE_URLS=http://+:5001
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=chirp;Username=postgres;Password=postgres
+    depends_on:
+      - postgres
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - itu-minitwit-network
+
+  postgres:
+    image: postgres:16
+    container_name: chirp-postgres
+    environment:
+      - POSTGRES_DB=chirp
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - itu-minitwit-network
+
+  prometheus:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./monitoring/prometheus
+    image: prometheus_image
+    container_name: prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    ports:
+      - "9090:9090"
+    networks:
+      - itu-minitwit-network
+
+  grafana:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./monitoring/grafana
+    image: grafana_image
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - itu-minitwit-network
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+volumes:
+  postgres-data:
+  grafana-storage: {}
+
+networks:
+  itu-minitwit-network:

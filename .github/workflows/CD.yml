@@ -79,7 +79,7 @@ jobs:
             TAG=${{ github.sha }}
             ASPNETCORE_ENVIRONMENT=Production
             ASPNETCORE_URLS=http://+:5001
-            ConnectionStrings__DefaultConnection=${{ secrets.PREPROD_DO_CONNECTION_STRING }}
+            ConnectionStrings__DefaultConnection=${{ secrets.DO_CONNECTION_STRING }}
             EOF
             
       - name: Run deploy script on pre-prod
@@ -168,6 +168,7 @@ jobs:
             cd /opt/itu-minitwit
             chmod +x scripts/deploy.sh
             TAG=${{ github.sha }} DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} bash scripts/deploy.sh
+
 
 
 

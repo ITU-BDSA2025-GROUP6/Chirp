@@ -1,9 +1,8 @@
 name: WeeklyRelease.yml
 on:
-  on:
-    schedule:
-      - cron: '0 6 * * 1'
-    workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
 permissions:
   contents: write
   
@@ -35,6 +34,9 @@ jobs:
         run: dotnet test -c Release --filter "FullyQualifiedName!~End2End"
         env:
           ASPNETCORE_ENVIRONMENT: Testing
+
+      - name: Compute release version
+        run: echo "RELEASE_VERSION=week$(date -u +%V)-$(date -u +%Y)" >> $GITHUB_ENV
           
       - name: Publish Web App
         run: |

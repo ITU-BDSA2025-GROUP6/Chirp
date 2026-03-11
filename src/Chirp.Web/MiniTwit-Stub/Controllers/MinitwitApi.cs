@@ -59,6 +59,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
             _db = db;
         }
 
+        
         /// <remarks>
         /// Get list of users followed by the given user.
         /// - Query param ?no= limits result count.

@@ -31,30 +31,28 @@ services:
       - localdb
 
   prometheus:
-    build:
-      dockerfile: ./Dockerfile
-      context: ./monitoring/prometheus
-    image: prometheus_image
+    image: prom/prometheus:v3.5.1
     container_name: prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
     ports:
       - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks:
       - itu-minitwit-network
 
-  grafana:
-    build:
-      dockerfile: ./Dockerfile
-      context: ./monitoring/grafana
-    image: grafana_image
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    networks:
-      - itu-minitwit-network
-    volumes:
-      - grafana-storage:/var/lib/grafana
+    grafana:
+      image: grafana/grafana:12.1
+      container_name: grafana
+      ports:
+        - "3000:3000"
+      volumes:
+        - grafana-storage:/var/lib/grafana
+        - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+        - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+      networks:
+        - itu-minitwit-network
 
 volumes:
   postgres-data:

@@ -77,6 +77,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
             [FromQuery(Name = "latest")] int? latest,
             [FromQuery(Name = "no")] int? no)
         {
+            
             if (authorization != SimulatorAuth)
             {
                 return StatusCode(403, new ErrorResponse

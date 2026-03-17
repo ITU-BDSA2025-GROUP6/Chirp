@@ -201,7 +201,6 @@
           },
           "editorMode": "code",
           "expr": "up{instance=\"itu-minitwit:5001\"}",
-          "expr": "up{instance=\"itu-minitwit:5001\"}",
           "hide": false,
           "instant": false,
           "legendFormat": "__auto",
@@ -227,6 +226,6 @@
   "timepicker": {},
   "timezone": "browser",
   "title": "Minitwit Example Dashboard",
-  "uid": "prometheus-ds",
+  "uid": "minitwit-dashboard",
   "version": 1
 }

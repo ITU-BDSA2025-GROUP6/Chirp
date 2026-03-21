@@ -1,0 +1,11 @@
+.git
+chirp.dump
+*.dump
+bin/
+obj/
+test/
+docs/
+monitoring/
+.github/
+*.md
+Vagrantfile

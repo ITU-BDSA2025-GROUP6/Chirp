@@ -24,6 +24,19 @@ services:
     restart: unless-stopped
     networks:
       - monitoring-network
+        
+  loki:
+    image: grafana/loki:3.5.0
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki/loki-config.yml:/etc/loki/local-config.yaml:ro
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
+    networks:
+      - monitoring-network
+    
 volumes:
   grafana-storage: {}
   

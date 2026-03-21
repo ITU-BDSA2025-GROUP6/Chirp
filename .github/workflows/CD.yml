@@ -112,5 +112,5 @@ jobs:
           username: ${{ secrets.MONITORING_SSH_USER }}
           key: ${{ secrets.MONITORING_SSH_KEY }}
           script: |
-            cd /opt/monitoring
+            cd /opt/monitoring/monitoring
             docker compose -f docker-compose.monitoring.yml up -d --remove-orphans

@@ -66,6 +66,12 @@ builder.Services.AddHsts(options =>
 
 builder.Services.AddAuthentication();
 
+Metrics.ConfigureMeterAdapter(options =>
+{
+    options.InstrumentFilterPredicate = instrument => 
+        instrument.Meter.Name.StartsWith("Npgsql", StringComparison.OrdinalIgnoreCase);
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -87,6 +93,6 @@ app.UseSession();
 
 app.MapControllers();
 app.MapRazorPages();
-app.MapMetrics();
+app.MapMetrics().RequireHost("localhost", "139.59.208.239");
 
 app.Run();

@@ -69,7 +69,7 @@ builder.Services.AddAuthentication();
 Metrics.ConfigureMeterAdapter(options =>
 {
     options.InstrumentFilterPredicate = instrument => 
-        instrument.Meter.Name.StartsWith("Npgsql", StringComparison.OrdinalIgnoreCase);
+        !instrument.Meter.Name.StartsWith("Npgsql", StringComparison.OrdinalIgnoreCase);
 });
 
 var app = builder.Build();

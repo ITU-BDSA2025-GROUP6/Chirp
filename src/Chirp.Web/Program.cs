@@ -93,6 +93,6 @@ app.UseSession();
 
 app.MapControllers();
 app.MapRazorPages();
-app.MapMetrics().RequireHost("localhost", "139.59.208.239");
+app.MapMetrics();
 
 app.Run();

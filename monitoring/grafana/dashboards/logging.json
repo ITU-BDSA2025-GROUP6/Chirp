@@ -1,0 +1,135 @@
+{
+  "title": "ITU-MiniTwit Logs",
+  "uid": "itu-minitwit-logs",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-1h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "container",
+        "label": "Container",
+        "type": "query",
+        "datasource": { "type": "loki", "uid": "loki-ds" },
+        "query": "label_values(container)",
+        "includeAll": true,
+        "allValue": ".+",
+        "multi": true,
+        "refresh": 2,
+        "sort": 1
+      },
+      {
+        "name": "level",
+        "label": "Log Level",
+        "type": "custom",
+        "query": "All,info,warn,error,fail,critical",
+        "includeAll": false,
+        "current": { "text": "All", "value": "All" }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Log Volume (by container)",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 6 },
+      "datasource": { "type": "loki", "uid": "loki-ds" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (container) (count_over_time({container=~\"$container\"} [$__interval]))",
+          "legendFormat": "{{container}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "fillOpacity": 10, "lineWidth": 1 }
+        }
+      }
+    },
+    {
+      "id": 2,
+      "title": "Errors & Warnings",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 6, "w": 12, "h": 6 },
+      "datasource": { "type": "loki", "uid": "loki-ds" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (container) (count_over_time({container=~\"$container\"} |~ \"(?i)(error|fail|exception|critical)\" [$__interval]))",
+          "legendFormat": "{{container}} errors"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "fixedColor": "red", "mode": "fixed" },
+          "custom": { "fillOpacity": 15, "lineWidth": 1 }
+        }
+      }
+    },
+    {
+      "id": 3,
+      "title": "Warnings",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 6, "w": 12, "h": 6 },
+      "datasource": { "type": "loki", "uid": "loki-ds" },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (container) (count_over_time({container=~\"$container\"} |~ \"(?i)(warn)\" [$__interval]))",
+          "legendFormat": "{{container}} warnings"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "fixedColor": "orange", "mode": "fixed" },
+          "custom": { "fillOpacity": 15, "lineWidth": 1 }
+        }
+      }
+    },
+    {
+      "id": 4,
+      "title": "All Logs",
+      "type": "logs",
+      "gridPos": { "x": 0, "y": 12, "w": 24, "h": 14 },
+      "datasource": { "type": "loki", "uid": "loki-ds" },
+      "options": {
+        "dedupStrategy": "none",
+        "showLabels": true,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "{container=~\"$container\"}",
+          "legendFormat": ""
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Errors Only",
+      "type": "logs",
+      "gridPos": { "x": 0, "y": 26, "w": 24, "h": 10 },
+      "datasource": { "type": "loki", "uid": "loki-ds" },
+      "options": {
+        "dedupStrategy": "none",
+        "showLabels": true,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "{container=~\"$container\"} |~ \"(?i)(error|fail|exception|critical)\"",
+          "legendFormat": ""
+        }
+      ]
+    }
+  ]
+}

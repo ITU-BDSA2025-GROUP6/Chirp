@@ -17,6 +17,7 @@ using Chirp.Web.MiniTwit_Stub.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Chirp.Web.MiniTwit_Stub.Controllers
@@ -33,6 +34,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
         private readonly UserManager<Author> _userManager;
         private readonly IAuthorService _authorService;
         private readonly ILogger<MinitwitApiController> _logger;
+        private readonly IMemoryCache _cache;
         private readonly CheepDbContext _db;
 
         private static int _latestValue = 0;
@@ -56,14 +58,27 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
         public MinitwitApiController(
             UserManager<Author> userManager, 
             IAuthorService authorService, CheepDbContext db, 
-            ILogger<MinitwitApiController> logger)
+            ILogger<MinitwitApiController> logger,
+            IMemoryCache cache)
         {
             _userManager = userManager;
             _authorService = authorService;
             _db = db;
             _logger = logger;
+            _cache = cache;
         }
 
+        private async Task<Author?> GetUserByNameAsync(string username)
+        {
+            var key = $"user:{username}";
+            if (!_cache.TryGetValue(key, out Author? user))
+            {
+                user = await _userManager.FindByNameAsync(username);
+                if (user != null) _cache.Set(key, user, TimeSpan.FromMinutes(5));
+            }
+
+            return user;
+        }
         
         /// <remarks>
         /// Get list of users followed by the given user.
@@ -76,7 +91,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
         [SwaggerOperation("GetFollow")]
         [SwaggerResponse(statusCode: 200, type: typeof(FollowsResponse), description: "Success")]
         [SwaggerResponse(statusCode: 403, type: typeof(ErrorResponse), description: "Unauthorized - Must include correct Authorization header")]
-        public virtual IActionResult GetFollow(
+        public virtual async Task<IActionResult> GetFollow(
             [FromRoute(Name = "username")][Required] string username,
             [FromHeader(Name = "Authorization")][Required] string authorization,
             [FromQuery(Name = "latest")] int? latest,
@@ -94,7 +109,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
 
             UpdateLatest(latest);
 
-            var user = _userManager.FindByNameAsync(username).Result;
+            var user = await GetUserByNameAsync(username);
             if (user == null)
             {
                 return StatusCode(404, new ErrorResponse
@@ -202,7 +217,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
         [SwaggerOperation("GetMessagesPerUser")]
         [SwaggerResponse(statusCode: 200, type: typeof(List<Message>), description: "Success")]
         [SwaggerResponse(statusCode: 403, type: typeof(ErrorResponse), description: "Unauthorized - Must include correct Authorization header")]
-        public virtual IActionResult GetMessagesPerUser(
+        public virtual async Task<IActionResult> GetMessagesPerUser(
             [FromRoute(Name = "username")][Required] string username,
             [FromHeader(Name = "Authorization")][Required] string authorization,
             [FromQuery(Name = "latest")] int? latest,
@@ -219,7 +234,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
 
             UpdateLatest(latest);
 
-            var user = _userManager.FindByNameAsync(username).Result;
+            var user = await GetUserByNameAsync(username);
             if (user == null)
             {
                 return StatusCode(404, new ErrorResponse
@@ -275,7 +290,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
 
             UpdateLatest(latest);
 
-            var actor = await _userManager.FindByNameAsync(username);
+            var actor = await GetUserByNameAsync(username);
             if (actor == null)
             {
                 return StatusCode(404, new ErrorResponse
@@ -298,7 +313,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
                 });
             }
 
-            var targetUser = await _userManager.FindByNameAsync(targetName!);
+            var targetUser = await GetUserByNameAsync(targetName!);
             if (targetUser == null)
             {
                 return StatusCode(404, new ErrorResponse
@@ -349,7 +364,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
         [ValidateModelState]
         [SwaggerOperation("PostMessagesPerUser")]
         [SwaggerResponse(statusCode: 403, type: typeof(ErrorResponse), description: "Unauthorized - Must include correct Authorization header")]
-        public virtual IActionResult PostMessagesPerUser(
+        public virtual async Task<IActionResult> PostMessagesPerUser(
             [FromRoute(Name = "username")][Required] string username,
             [FromHeader(Name = "Authorization")][Required] string authorization,
             [FromBody] PostMessage payload,
@@ -366,7 +381,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
 
             UpdateLatest(latest);
 
-            var user = _userManager.FindByNameAsync(username).Result;
+            var user = await GetUserByNameAsync(username);
             if (user == null)
             {
                 return StatusCode(404, new ErrorResponse

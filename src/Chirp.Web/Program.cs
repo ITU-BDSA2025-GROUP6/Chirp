@@ -49,7 +49,7 @@ builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
 builder.Services.AddControllers();
-
+builder.Services.AddMemoryCache();
 // Session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

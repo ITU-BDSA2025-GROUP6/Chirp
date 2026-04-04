@@ -32,6 +32,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
 
         private readonly UserManager<Author> _userManager;
         private readonly IAuthorService _authorService;
+        private readonly ILogger<MinitwitApiController> _logger;
         private readonly CheepDbContext _db;
 
         private static int _latestValue = 0;
@@ -52,11 +53,15 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
             lock (_latestLock) return _latestValue;
         }
 
-        public MinitwitApiController(UserManager<Author> userManager, IAuthorService authorService, CheepDbContext db)
+        public MinitwitApiController(
+            UserManager<Author> userManager, 
+            IAuthorService authorService, CheepDbContext db, 
+            ILogger<MinitwitApiController> logger)
         {
             _userManager = userManager;
             _authorService = authorService;
             _db = db;
+            _logger = logger;
         }
 
         
@@ -130,8 +135,9 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
             {
                 return StatusCode(200, new LatestValue { Latest = GetLatest() });
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Unhandled error in GetLatestValue");
                 return StatusCode(500, new ErrorResponse
                 {
                     Status = 500,

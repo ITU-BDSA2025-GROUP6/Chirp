@@ -48,7 +48,19 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          
+      
+      - name: Bootstrap droplet
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            if ! command -v docker >/dev/null 2>&1; then
+              curl -fsSL https://raw.githubusercontent.com/sebseb10/ITU-MiniTwit/main/scripts/bootstrap.sh | bash
+            fi
+            mkdir -p /opt/itu-minitwit
+            
       - name: Sync files to droplet
         run: |
           rsync -az --delete \
@@ -97,6 +109,19 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.MONITORING_SSH_KEY  }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
+          
+          
+      - name: Bootstrap droplet
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.MONITORING_SSH_HOST }}
+          username: ${{ secrets.MONITORING_SSH_USER }}
+          key: ${{ secrets.MONITORING_SSH_KEY }}
+          script: |
+            if ! command -v docker >/dev/null 2>&1; then
+              curl -fsSL https://raw.githubusercontent.com/sebseb10/ITU-MiniTwit/main/scripts/bootstrap.sh | bash
+            fi
+            mkdir -p /opt/monitoring
           
       - name: Sync files to monitoring droplet
         run: |

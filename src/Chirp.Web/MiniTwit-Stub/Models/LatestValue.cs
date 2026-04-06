@@ -13,7 +13,7 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace Chirp.Web.MiniTwit_Stub.Models
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
@@ -24,7 +24,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
         /// The latest global value
         /// </summary>
         /// <value>The latest global value</value>
-        [DataMember(Name="latest", EmitDefaultValue=true)]
+        [DataMember(Name = "latest", EmitDefaultValue = true)]
         public int? Latest { get; set; }
 
         /// <summary>
@@ -71,10 +71,10 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return 
+            return
                 (
                     Latest == other.Latest ||
-                    
+
                     Latest.Equals(other.Latest)
                 );
         }
@@ -89,14 +89,14 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    
-                    hashCode = hashCode * 59 + Latest.GetHashCode();
+
+                hashCode = hashCode * 59 + Latest.GetHashCode();
                 return hashCode;
             }
         }
 
         #region Operators
-        #pragma warning disable 1591
+#pragma warning disable 1591
 
         public static bool operator ==(LatestValue left, LatestValue right)
         {
@@ -108,7 +108,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             return !Equals(left, right);
         }
 
-        #pragma warning restore 1591
+#pragma warning restore 1591
         #endregion Operators
     }
 }

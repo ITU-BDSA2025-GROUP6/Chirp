@@ -26,7 +26,7 @@ public class CheepRepository : ICheepRepository
         {
             throw new InvalidOperationException("No such author: " + cheep.AuthorName);
         }
-        
+
         if (cheep.Text.Length > 160)
         {
             throw new ValidationException("Cheep text too long: " + cheep.Text);
@@ -48,21 +48,21 @@ public class CheepRepository : ICheepRepository
         return queryResult.Entity.CheepID;
     }
 
-   
-    
-    
-    
+
+
+
+
 
     // uses alter in UI to change the contect of a specefic message 
     public async Task<int> UpdateCheep(CheepDTO alteredMessage)
     {
-        
+
         var existingCheep = await _dbContext.Cheeps.FindAsync(alteredMessage.CheepID);
         if (existingCheep != null)
         {
             existingCheep.Text = alteredMessage.Text;
             existingCheep.Timestamp = alteredMessage.Timestamp;
-            
+
             await _dbContext.SaveChangesAsync();
         }
         else
@@ -84,7 +84,7 @@ public class CheepRepository : ICheepRepository
         }
         _dbContext.Cheeps.Remove(cheep);
         await _dbContext.SaveChangesAsync();
-        
+
         return true;
     }
 
@@ -245,7 +245,7 @@ public class CheepRepository : ICheepRepository
             .Take(pageSize)
             .ToListAsync();
     }
-    
+
     public async Task<int> CreateRecheep(AuthorDTO? author, int cheepId)
     {
         if (author == null)

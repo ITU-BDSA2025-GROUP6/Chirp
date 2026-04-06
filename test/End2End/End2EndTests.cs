@@ -8,17 +8,17 @@ namespace End2End
         private IBrowser? _browser;
         private LocalHostServer? _server;
         private const string Url = "http://localhost:5273";
-        
+
         // Terminal command: pwsh bin/Debug/net8.0/playwright.ps1 codegen  https://localhost:5273 
         // Chirp! has to run on the same localhost 
-        
+
 
         [OneTimeSetUp]
         public async Task OneTimeSetup()
         {
             _server = new LocalHostServer();
             await _server.StartAsync();
-            
+
             _playwright = await Playwright.CreateAsync();
 
             _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
@@ -32,10 +32,10 @@ namespace End2End
         {
             if (_browser != null) await _browser.CloseAsync();
             _playwright?.Dispose();
-            
-            if(_server != null) await _server.DisposeAsync();
+
+            if (_server != null) await _server.DisposeAsync();
         }
-        
+
         private async Task<IPage> CreatePageAsync()
         {
             var context = await _browser.NewContextAsync(new BrowserNewContextOptions
@@ -50,7 +50,7 @@ namespace End2End
         public async Task RegisterAndLogin()
         {
             var page = await CreatePageAsync();
-            
+
             await page.GotoAsync(Url);
             await page.GetByRole(AriaRole.Link, new() { Name = "Register" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
@@ -74,7 +74,7 @@ namespace End2End
         public async Task LoginAndLogout()
         {
             var page = await CreatePageAsync();
-            
+
             await page.GotoAsync(Url);
             await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
@@ -97,7 +97,7 @@ namespace End2End
         {
             var page = await CreatePageAsync();
             await page.GotoAsync(Url);
-            
+
             await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("testemail@example.com");
@@ -122,7 +122,7 @@ namespace End2End
         {
             var page = await CreatePageAsync();
             await page.GotoAsync(Url);
-            
+
             await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("testemail@example.com");
@@ -150,7 +150,7 @@ namespace End2End
         public async Task LoginAndDeleteAccount()
         {
             var page = await CreatePageAsync();
-            
+
             await page.GotoAsync(Url);
             await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();

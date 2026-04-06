@@ -1,0 +1,4 @@
+failure-threshold: warning
+ignore:
+  - DL3008  # Pin versions in apt-get (not applicable here)
+  - DL3018  # Pin versions in apk (not applicable here)

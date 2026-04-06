@@ -12,7 +12,7 @@ public class CheepDbContext : IdentityDbContext<Author>
     public DbSet<Author> Authors { get; set; }
     public DbSet<Recheep> Recheeps { get; set; }
     public DbSet<Follows> Follows { get; set; }
-    
+
     public CheepDbContext(DbContextOptions<CheepDbContext> options) : base(options)
     {
     }
@@ -20,12 +20,12 @@ public class CheepDbContext : IdentityDbContext<Author>
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
+
         builder.Entity<Author>()
             .HasMany(a => a.Cheeps)
             .WithOne(c => c.Author)
             .OnDelete(DeleteBehavior.Cascade);
-            
+
         builder.Entity<Follows>()
             .HasKey(f => new { f.FollowsId, f.FollowedById });
 

@@ -133,7 +133,8 @@ namespace End2End
             await page.GetByText("There are no cheeps so far.").ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "Public Timeline" }).ClickAsync();
             await page.Locator("ul#messagelist li p").Filter(new() { HasText = "I wonder if he" }).First.ClickAsync();
-            await page.Locator("ul#messagelist li").Filter(new() { HasText = "Jacqualine Gilcoine" }).Filter(new() { HasText = "I wonder if he" }).GetByRole(AriaRole.Button).ClickAsync();            await page.GetByRole(AriaRole.Link, new() { Name = "My Timeline" }).ClickAsync();
+            await page.Locator("ul#messagelist li").Filter(new() { HasText = "Jacqualine Gilcoine" }).Filter(new() { HasText = "I wonder if he" }).GetByRole(AriaRole.Button).ClickAsync();
+            await page.GetByRole(AriaRole.Link, new() { Name = "My Timeline" }).ClickAsync();
             await page.Locator("ul#messagelist li p").Filter(new() { HasText = "I wonder if he" }).First.ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "Public Timeline" }).ClickAsync();
             await page.Locator("ul#messagelist li p").Filter(new() { HasText = "I wonder if he" }).First.ClickAsync();

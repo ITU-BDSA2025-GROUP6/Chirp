@@ -43,7 +43,7 @@ def _register_user_via_gui(driver, data):
     wait = WebDriverWait(driver, 5)
     buttons = wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "actions")))
     input_fields = driver.find_elements(By.TAG_NAME, "input")
-
+cla
     for idx, str_content in enumerate(data):
         input_fields[idx].send_keys(str_content)
     input_fields[4].send_keys(Keys.RETURN)

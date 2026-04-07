@@ -60,7 +60,7 @@ namespace End2End
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).PressAsync("Tab");
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).FillAsync("Qwerty123!");
             await page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
-            await page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Logout [testemail@example.com]" }).ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("testemail@example.com");

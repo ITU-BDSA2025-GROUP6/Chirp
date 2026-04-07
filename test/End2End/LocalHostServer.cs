@@ -22,7 +22,7 @@ public class LocalHostServer : IAsyncDisposable
         var info = new ProcessStartInfo
         {
             FileName = "dotnet",
-            Arguments = $"run --project \"{projectPath}\" --urls=http://localhost:5273",
+            Arguments = $"run --no-launch-profile --project \"{projectPath}\" --urls=http://localhost:5273",
             UseShellExecute = false,
             RedirectStandardOutput = false,
             RedirectStandardError = false,

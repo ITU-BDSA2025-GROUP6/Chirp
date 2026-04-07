@@ -65,6 +65,7 @@ def test_register_user_via_gui():
     """
     firefox_options = Options()
     firefox_options.add_argument("--headless")
+    # firefox_options = None
     with webdriver.Firefox(service=Service("./geckodriver"), options=firefox_options) as driver:
         generated_msg = _register_user_via_gui(driver, ["Me", "me@some.where", "secure123", "secure123"])[0].text
         expected_msg = "You were successfully registered and can login now"
@@ -81,6 +82,8 @@ def test_register_user_via_gui_and_check_db_entry():
     database yet. After registering a user, it checks that the respective user appears in the database.
     """
     firefox_options = Options()
+    # firefox_options.add_argument("--headless")
+    # firefox_options = None
     with webdriver.Firefox(service=Service("./geckodriver"), options=firefox_options) as driver:
         db_client = pymongo.MongoClient(DB_URL, serverSelectionTimeoutMS=5000)
 

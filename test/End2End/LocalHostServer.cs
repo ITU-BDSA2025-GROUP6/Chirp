@@ -29,6 +29,8 @@ public class LocalHostServer : IAsyncDisposable
             CreateNoWindow = true
         };
 
+        info.EnvironmentVariables["ASPNETCORE_ENVIRONMENT"] = "E2ETest";
+
         _process = Process.Start(info)
             ?? throw new InvalidOperationException("Could not start the server");
 

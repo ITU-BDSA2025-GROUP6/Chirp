@@ -24,9 +24,9 @@ public class AuthorRepositoryTests : IDisposable
         _context.Database.EnsureCreated();
 
         var author = new Author
-            { Id = "1", UserName = "Test Author", Email = "test@author.com", Cheeps = new List<Cheep>() };
+        { Id = "1", UserName = "Test Author", Email = "test@author.com", Cheeps = new List<Cheep>() };
         var author2 = new Author
-            { Id = "2", UserName = "Test Author2", Email = "test2@email.com", Cheeps = new List<Cheep>() };
+        { Id = "2", UserName = "Test Author2", Email = "test2@email.com", Cheeps = new List<Cheep>() };
 
         _context.Authors.AddRange(author, author2);
         _context.SaveChanges();
@@ -45,7 +45,7 @@ public class AuthorRepositoryTests : IDisposable
 
     public class CreateAuthorTests : AuthorRepositoryTests
     {
-        
+
     }
 
     public class GetAuthorTests : AuthorRepositoryTests
@@ -71,7 +71,7 @@ public class AuthorRepositoryTests : IDisposable
         [Fact]
         public async Task GetAuthorByEmail_ShouldReturnAuthor()
         {
-            
+
             //Arrange
             var author = await _repository.GetAuthorByEmail("test@author.com");
             // var author2 = await _repository.GetAuthorByEmail("test2@email.com");
@@ -89,7 +89,7 @@ public class AuthorRepositoryTests : IDisposable
             // Arrange
             var nameNotInDatabase = "username";
             InvalidOperationException? exception = null;
-            
+
             // Act
             try
             {
@@ -100,7 +100,7 @@ public class AuthorRepositoryTests : IDisposable
             {
                 exception = e;
             }
-            
+
             // Assert
             Assert.NotNull(exception);
             Assert.IsType<InvalidOperationException>(exception);
@@ -113,10 +113,10 @@ public class AuthorRepositoryTests : IDisposable
             // Arrange
             var emailNotInDatabase = "email@email.com";
             InvalidOperationException? exception = null;
-            
+
             // Act
             try
-            { 
+            {
                 await _repository.GetAuthorByEmail(emailNotInDatabase);
 
             }
@@ -124,13 +124,13 @@ public class AuthorRepositoryTests : IDisposable
             {
                 exception = e;
             }
-            
+
             // Assert
             Assert.NotNull(exception);
             Assert.IsType<InvalidOperationException>(exception);
             Assert.Equal($"No such author with email: {emailNotInDatabase}", exception.Message);
         }
-        
+
         [Fact]
         public async Task GetAuthorByName_ShouldThrow_WhenNameIsNull()
         {
@@ -159,7 +159,7 @@ public class AuthorRepositoryTests : IDisposable
         {
             string? email = null;
             InvalidOperationException? exception = null;
-            
+
             // Act
             try
             {
@@ -169,7 +169,7 @@ public class AuthorRepositoryTests : IDisposable
             {
                 exception = ex;
             }
-            
+
             // Assert
             Assert.NotNull(exception);
             Assert.IsType<InvalidOperationException>(exception);

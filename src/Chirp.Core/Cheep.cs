@@ -17,7 +17,7 @@ namespace Chirp.Core
         public DateTime Timestamp { get; set; }
 
         public Author? Author { get; set; }
-        
+
         [ForeignKey(nameof(Author))]
         public string? AuthorID { get; set; }
     }

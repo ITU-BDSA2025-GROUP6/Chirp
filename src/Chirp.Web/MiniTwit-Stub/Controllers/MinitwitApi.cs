@@ -25,7 +25,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
     [ApiController]
     public class MinitwitApiController : ControllerBase
     {
-        private const string SimulatorAuth = "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh"; 
+        private const string SimulatorAuth = "Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh";
         // if using postman : username = simulator Password : super_safe!
         // if using curl
         // curl -k -i -H "Authorization: Basic c2ltdWxhdG9yOnN1cGVyX3NhZmUh" \
@@ -56,8 +56,8 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
         }
 
         public MinitwitApiController(
-            UserManager<Author> userManager, 
-            IAuthorService authorService, CheepDbContext db, 
+            UserManager<Author> userManager,
+            IAuthorService authorService, CheepDbContext db,
             ILogger<MinitwitApiController> logger,
             IMemoryCache cache)
         {
@@ -79,7 +79,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
 
             return user;
         }
-        
+
         /// <remarks>
         /// Get list of users followed by the given user.
         /// - Query param ?no= limits result count.
@@ -97,7 +97,7 @@ namespace Chirp.Web.MiniTwit_Stub.Controllers
             [FromQuery(Name = "latest")] int? latest,
             [FromQuery(Name = "no")] int? no)
         {
-            
+
             if (authorization != SimulatorAuth)
             {
                 return StatusCode(403, new ErrorResponse

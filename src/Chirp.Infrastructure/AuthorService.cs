@@ -23,8 +23,8 @@ public class AuthorService : IAuthorService
     {
         return _repository.GetAuthorByEmail(email);
     }
-    
-    
+
+
     public Task<Author?> GetAuthorEntityByName(string name)
     {
         return _context.Authors
@@ -32,7 +32,7 @@ public class AuthorService : IAuthorService
             .ThenInclude(f => f.FollowedByAuthor)
             .FirstOrDefaultAsync(a => a.UserName == name);
     }
-    
+
     public Task SaveChangesAsync()
     {
         return _context.SaveChangesAsync();

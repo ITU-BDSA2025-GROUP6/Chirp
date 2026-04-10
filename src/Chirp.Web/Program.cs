@@ -79,10 +79,6 @@ using (var scope = app.Services.CreateScope())
     using var context = scope.ServiceProvider.GetRequiredService<CheepDbContext>();
 
     context.Database.Migrate();
-    if (!app.Environment.IsProduction())
-    {
-        DbInitializer.SeedDatabase(context);
-    }
 }
 
 app.UseExceptionHandler(errorApp =>

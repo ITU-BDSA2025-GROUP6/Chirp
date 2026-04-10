@@ -30,7 +30,7 @@ builder.Services.AddDefaultIdentity<Author>(options =>
 
         options.Lockout.AllowedForNewUsers = true;
         options.User.AllowedUserNameCharacters =
-            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.@ "; 
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_.@ ";
         //do not change the whitespace!, allows for spaces in the username which is required for the simulator csv file.
     })
     .AddEntityFrameworkStores<CheepDbContext>();
@@ -68,7 +68,7 @@ builder.Services.AddAuthentication();
 
 Metrics.ConfigureMeterAdapter(options =>
 {
-    options.InstrumentFilterPredicate = instrument => 
+    options.InstrumentFilterPredicate = instrument =>
         !instrument.Meter.Name.StartsWith("Npgsql", StringComparison.OrdinalIgnoreCase);
 });
 
@@ -79,6 +79,11 @@ using (var scope = app.Services.CreateScope())
     using var context = scope.ServiceProvider.GetRequiredService<CheepDbContext>();
 
     context.Database.Migrate();
+<<<<<<< StaticAnalasys
+    //DbInitializer.SeedDatabase(context); // this is no longer needed when runnign test
+    //initial data is seeded with the simulator, might need it later not sure. 
+=======
+>>>>>>> main
 }
 
 app.UseExceptionHandler(errorApp =>

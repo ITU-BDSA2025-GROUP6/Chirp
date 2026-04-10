@@ -13,7 +13,7 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace Chirp.Web.MiniTwit_Stub.Models
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
@@ -25,7 +25,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
         /// </summary>
         /// <value>Text content of the message</value>
         /* <example>Hello, World!</example> */
-        [DataMember(Name="content", EmitDefaultValue=false)]
+        [DataMember(Name = "content", EmitDefaultValue = false)]
         public string? Content { get; set; }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
         /// </summary>
         /// <value>Publication date/time of the message</value>
         /* <example>2019-12-01 12:00:00</example> */
-        [DataMember(Name="pub_date", EmitDefaultValue=false)]
+        [DataMember(Name = "pub_date", EmitDefaultValue = false)]
         public string? PubDate { get; set; }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
         /// </summary>
         /// <value>Username of the message author</value>
         /* <example>Helge</example> */
-        [DataMember(Name="user", EmitDefaultValue=false)]
+        [DataMember(Name = "user", EmitDefaultValue = false)]
         public string? User { get; set; }
 
         /// <summary>
@@ -90,17 +90,17 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return 
+            return
                 (
                     Content == other.Content ||
                     Content != null &&
                     Content.Equals(other.Content)
-                ) && 
+                ) &&
                 (
                     PubDate == other.PubDate ||
                     PubDate != null &&
                     PubDate.Equals(other.PubDate)
-                ) && 
+                ) &&
                 (
                     User == other.User ||
                     User != null &&
@@ -118,18 +118,18 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Content != null)
+                if (Content != null)
                     hashCode = hashCode * 59 + Content.GetHashCode();
-                    if (PubDate != null)
+                if (PubDate != null)
                     hashCode = hashCode * 59 + PubDate.GetHashCode();
-                    if (User != null)
+                if (User != null)
                     hashCode = hashCode * 59 + User.GetHashCode();
                 return hashCode;
             }
         }
 
         #region Operators
-        #pragma warning disable 1591
+#pragma warning disable 1591
 
         public static bool operator ==(Message left, Message right)
         {
@@ -141,7 +141,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             return !Equals(left, right);
         }
 
-        #pragma warning restore 1591
+#pragma warning restore 1591
         #endregion Operators
     }
 }

@@ -63,7 +63,8 @@ namespace End2End
             var page = await CreatePageAsync();
             await page.GotoAsync(Url);
 
-            // Register
+            // Register — RequireConfirmedAccount is false, so registration
+            // immediately signs the user in and redirects to the public timeline.
             await page.GetByRole(AriaRole.Link, new() { Name = "Register" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync(AuthorEmail);
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).PressAsync("Tab");
@@ -71,16 +72,7 @@ namespace End2End
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).PressAsync("Tab");
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).FillAsync(AuthorPassword);
             await page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
-            await page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
-
-            // Login
-            await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
-            await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync(AuthorEmail);
-            await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).PressAsync("Tab");
-            await page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(AuthorPassword);
-            await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-
-            // Post one cheep
+            // User is now signed in on the public timeline — post the cheep
             await page.Locator("#Text").FillAsync(AuthorCheepText);
             await page.GetByRole(AriaRole.Button, new() { Name = "Share" }).ClickAsync();
 
@@ -109,6 +101,7 @@ namespace End2End
             var page = await CreatePageAsync();
             await page.GotoAsync(Url);
 
+            // Register — auto-signs in, no email confirmation step
             await page.GetByRole(AriaRole.Link, new() { Name = "Register" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync(TestUserEmail);
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).PressAsync("Tab");
@@ -116,15 +109,15 @@ namespace End2End
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).PressAsync("Tab");
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).FillAsync(TestUserPassword);
             await page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
-            await page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
 
-            await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
-            await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync(TestUserEmail);
-            await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).PressAsync("Tab");
-            await page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(TestUserPassword);
-            await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
+            // Registration auto-signs in — logout button must be visible
+            await Assertions.Expect(
+                page.GetByRole(AriaRole.Button, new() { Name = $"Logout [{TestUserEmail}]" })
+            ).ToBeVisibleAsync();
 
-            // Verify the logout button shows the logged-in user's email
+            // Logout, then log back in to verify the login flow also works
+            await page.GetByRole(AriaRole.Button, new() { Name = $"Logout [{TestUserEmail}]" }).ClickAsync();
+            await LoginAsync(page, TestUserEmail, TestUserPassword);
             await Assertions.Expect(
                 page.GetByRole(AriaRole.Button, new() { Name = $"Logout [{TestUserEmail}]" })
             ).ToBeVisibleAsync();

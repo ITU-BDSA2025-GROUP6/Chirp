@@ -61,10 +61,10 @@ jobs:
 
       - name: shellcheck — shell script linter
         run: |
-          shellcheck scripts/deploy.sh \
-                     scripts/bootstrap.sh \
-                     scripts/provision_itu_minitwit.sh \
-                     Start_Local+DB.sh
+          find . -name "*.sh" \
+            -not -path "*/bin/*" \
+            -not -path "*/obj/*" \
+          | xargs shellcheck
 
   test:
     name: Test

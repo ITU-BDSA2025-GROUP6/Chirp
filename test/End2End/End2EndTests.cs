@@ -10,12 +10,12 @@ namespace End2End
         private const string Url = "http://localhost:5273";
 
         // Primary test user — registered in test 1, deleted in test 5
-        private const string TestUserEmail    = "testemail@example.com";
+        private const string TestUserEmail = "testemail@example.com";
         private const string TestUserPassword = "Qwerty123!";
 
         // Secondary author — created in OneTimeSetUp so tests 3 & 4 have
         // a real author to follow/recheep without relying on seed data
-        private const string AuthorEmail    = "testauthor@example.com";
+        private const string AuthorEmail = "testauthor@example.com";
         private const string AuthorPassword = "Qwerty123!";
         private const string AuthorCheepText =
             "Hello from test author — unique e2e test cheep!";

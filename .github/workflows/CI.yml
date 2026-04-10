@@ -170,12 +170,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          ASPNETCORE_ENVIRONMENT: Testing
         run: |
           dotnet sonarscanner begin \
             /k:"sebseb10_ITU-MiniTwit" \
             /o:"sebseb10" \
             /d:sonar.host.url="https://sonarcloud.io" \
             /d:sonar.token="${SONAR_TOKEN}" \
-            /d:sonar.exclusions="test_itu_minitwit_ui.py,**/obj/**,**/bin/**,**/*.Designer.cs"
+            /d:sonar.exclusions="test_itu_minitwit_ui.py,**/obj/**,**/bin/**,**/*.Designer.cs" \
+            /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml"
           dotnet build --no-restore
+          dotnet test --no-restore \
+            --filter "FullyQualifiedName!~End2End" \
+            --collect:"XPlat Code Coverage" \
+            --results-directory TestResults \
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
           dotnet sonarscanner end /d:sonar.token="${SONAR_TOKEN}"

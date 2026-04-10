@@ -164,6 +164,7 @@ jobs:
             /k:"sebseb10_ITU-MiniTwit" \
             /o:"sebseb10" \
             /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.token="${SONAR_TOKEN}"
+            /d:sonar.token="${SONAR_TOKEN}" \
+            /d:sonar.exclusions="test_itu_minitwit_ui.py,**/obj/**,**/bin/**,**/*.Designer.cs"
           dotnet build --no-restore
           dotnet sonarscanner end /d:sonar.token="${SONAR_TOKEN}"

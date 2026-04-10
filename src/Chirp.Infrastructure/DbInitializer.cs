@@ -6,7 +6,7 @@ using System;
 
 public static class DbInitializer
 {
-    private static DateTime Utc(string s) => DateTime.SpecifyKind(Utc(s), DateTimeKind.Utc);
+    private static DateTime Utc(string s) => DateTime.SpecifyKind(DateTime.Parse(s), DateTimeKind.Utc);
 
     public static void SeedDatabase(CheepDbContext chirpContext)
     {

@@ -79,8 +79,6 @@ using (var scope = app.Services.CreateScope())
     using var context = scope.ServiceProvider.GetRequiredService<CheepDbContext>();
 
     context.Database.Migrate();
-   //DbInitializer.SeedDatabase(context); // this is no longer needed when runnign test
-   //initial data is seeded with the simulator, might need it later not sure. 
 }
 
 app.UseExceptionHandler(errorApp =>

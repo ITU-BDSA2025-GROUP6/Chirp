@@ -155,6 +155,17 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
+      - name: Check SONAR_TOKEN is set
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "ERROR: SONAR_TOKEN is empty or not set"
+            exit 1
+          else
+            echo "SONAR_TOKEN is set (length: ${#SONAR_TOKEN})"
+          fi
+
       - name: Run SonarCloud analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

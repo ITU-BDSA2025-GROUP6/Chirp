@@ -22,7 +22,7 @@ public class LocalHostServer : IAsyncDisposable
         var info = new ProcessStartInfo
         {
             FileName = "dotnet",
-            Arguments = $"run --project \"{projectPath}\" --urls=http://localhost:5273",
+            Arguments = $"run --project \"{projectPath}\" -c Release --no-build --urls=http://localhost:5273",
             UseShellExecute = false,
             RedirectStandardOutput = false,
             RedirectStandardError = false,
@@ -44,7 +44,7 @@ public class LocalHostServer : IAsyncDisposable
         };
         
         using var client = new HttpClient(handler);
-        var timeout = TimeSpan.FromSeconds(60); 
+        var timeout = TimeSpan.FromSeconds(120);
         var start = DateTime.Now;
 
         while (DateTime.Now - start < timeout)

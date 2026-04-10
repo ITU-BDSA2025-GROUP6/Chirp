@@ -40,9 +40,30 @@ namespace End2End
         [OneTimeTearDown]
         public async Task OneTimeTearDown()
         {
+            // Clean up the test author so the suite is idempotent on repeated runs
+            await CleanupTestAuthorAsync();
+
             if (_browser != null) await _browser.CloseAsync();
             _playwright?.Dispose();
             if (_server != null) await _server.DisposeAsync();
+        }
+
+        private async Task CleanupTestAuthorAsync()
+        {
+            try
+            {
+                var page = await CreatePageAsync();
+                await LoginAsync(page, AuthorEmail, AuthorPassword);
+                await page.GetByRole(AriaRole.Link, new() { Name = "Account" }).ClickAsync();
+                await page.GetByRole(AriaRole.Link, new() { Name = "Personal data" }).ClickAsync();
+                await page.GetByRole(AriaRole.Button, new() { Name = "Delete" }).ClickAsync();
+                await page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync(AuthorPassword);
+                await page.GetByRole(AriaRole.Button, new() { Name = "Delete data and close my" }).ClickAsync();
+            }
+            catch
+            {
+                // Best-effort — don't fail the test run if cleanup goes wrong
+            }
         }
 
         private async Task<IPage> CreatePageAsync()

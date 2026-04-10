@@ -34,6 +34,38 @@ jobs:
       - name: Build project
         run: dotnet build -c Release --no-restore
 
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: dotnet format — C# formatter
+        run: dotnet format --verify-no-changes --severity warn
+
+      - name: hadolint — Dockerfile linter
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          recursive: true
+
+      - name: shellcheck — shell script linter
+        run: |
+          shellcheck scripts/deploy.sh \
+                     scripts/bootstrap.sh \
+                     scripts/provision_itu_minitwit.sh \
+                     Start_Local+DB.sh
+
   test:
     name: Test
     needs: build

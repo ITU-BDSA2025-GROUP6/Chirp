@@ -38,17 +38,61 @@ jobs:
     name: Test
     needs: build
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-        
+
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
-          
+
       - name: Run tests
         run: dotnet test -c Release --filter "FullyQualifiedName!~End2End"
         env:
           ASPNETCORE_ENVIRONMENT: Testing
+
+  e2e-test:
+    name: E2E Tests
+    needs: build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: chirp
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build -c Release --no-restore
+
+      - name: Install Playwright browsers
+        run: pwsh test/End2End/bin/Release/net8.0/playwright.ps1 install --with-deps chromium
+
+      - name: Run E2E tests
+        run: dotnet test test/End2End/ -c Release
+        env:
+          ASPNETCORE_ENVIRONMENT: Development
+          ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=chirp;Username=postgres;Password=postgres"

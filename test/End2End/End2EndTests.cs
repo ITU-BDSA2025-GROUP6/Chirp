@@ -8,17 +8,17 @@ namespace End2End
         private IBrowser? _browser;
         private LocalHostServer? _server;
         private const string Url = "http://localhost:5273";
-        
+
         // Terminal command: pwsh bin/Debug/net8.0/playwright.ps1 codegen  https://localhost:5273 
         // Chirp! has to run on the same localhost 
-        
+
 
         [OneTimeSetUp]
         public async Task OneTimeSetup()
         {
             _server = new LocalHostServer();
             await _server.StartAsync();
-            
+
             _playwright = await Playwright.CreateAsync();
 
             _browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
@@ -32,10 +32,10 @@ namespace End2End
         {
             if (_browser != null) await _browser.CloseAsync();
             _playwright?.Dispose();
-            
-            if(_server != null) await _server.DisposeAsync();
+
+            if (_server != null) await _server.DisposeAsync();
         }
-        
+
         private async Task<IPage> CreatePageAsync()
         {
             var context = await _browser.NewContextAsync(new BrowserNewContextOptions
@@ -50,7 +50,7 @@ namespace End2End
         public async Task RegisterAndLogin()
         {
             var page = await CreatePageAsync();
-            
+
             await page.GotoAsync(Url);
             await page.GetByRole(AriaRole.Link, new() { Name = "Register" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
@@ -60,7 +60,7 @@ namespace End2End
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Password", Exact = true }).PressAsync("Tab");
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Confirm Password" }).FillAsync("Qwerty123!");
             await page.GetByRole(AriaRole.Button, new() { Name = "Register" }).ClickAsync();
-            await page.GetByRole(AriaRole.Link, new() { Name = "Click here to confirm your" }).ClickAsync();
+            await page.GetByRole(AriaRole.Button, new() { Name = "Logout [testemail@example.com]" }).ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("testemail@example.com");
@@ -74,7 +74,7 @@ namespace End2End
         public async Task LoginAndLogout()
         {
             var page = await CreatePageAsync();
-            
+
             await page.GotoAsync(Url);
             await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
@@ -97,18 +97,18 @@ namespace End2End
         {
             var page = await CreatePageAsync();
             await page.GotoAsync(Url);
-            
+
             await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("testemail@example.com");
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).PressAsync("Tab");
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Password" }).FillAsync("Qwerty123!");
             await page.GetByRole(AriaRole.Button, new() { Name = "Log in" }).ClickAsync();
-            await page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = "Mellie Yost Follow But what" }).GetByRole(AriaRole.Link).Nth(1).ClickAsync();
+            await page.Locator("ul#messagelist li").Filter(new() { HasText = "Mellie Yost Follow But what" }).GetByRole(AriaRole.Link).Nth(1).ClickAsync();
             await page.GetByText("But what was behind the").ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "My Timeline" }).ClickAsync();
             await page.GetByText("But what was behind the").ClickAsync();
-            await page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = "Mellie Yost He glared from" }).Locator("div").Nth(2).ClickAsync();
+            await page.Locator("ul#messagelist li").Filter(new() { HasText = "Mellie Yost He glared from" }).Locator("div").Nth(2).ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "Public Timeline" }).ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "Unfollow" }).ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "My Timeline" }).ClickAsync();
@@ -122,7 +122,7 @@ namespace End2End
         {
             var page = await CreatePageAsync();
             await page.GotoAsync(Url);
-            
+
             await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).FillAsync("testemail@example.com");
@@ -132,12 +132,12 @@ namespace End2End
             await page.GetByRole(AriaRole.Link, new() { Name = "My Timeline" }).ClickAsync();
             await page.GetByText("There are no cheeps so far.").ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "Public Timeline" }).ClickAsync();
-            await page.GetByText("I wonder if he''d give a very").ClickAsync();
-            await page.GetByRole(AriaRole.Listitem).Filter(new() { HasText = "Jacqualine Gilcoine Follow I wonder if he''d give a very shiny top hat and my" }).GetByRole(AriaRole.Button).ClickAsync();
+            await page.Locator("ul#messagelist li p").Filter(new() { HasText = "I wonder if he" }).First.ClickAsync();
+            await page.Locator("ul#messagelist li").Filter(new() { HasText = "Jacqualine Gilcoine" }).Filter(new() { HasText = "I wonder if he" }).GetByRole(AriaRole.Button).ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "My Timeline" }).ClickAsync();
-            await page.GetByText("I wonder if he''d give a very").ClickAsync();
+            await page.Locator("ul#messagelist li p").Filter(new() { HasText = "I wonder if he" }).First.ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "Public Timeline" }).ClickAsync();
-            await page.GetByText("I wonder if he''d give a very").ClickAsync();
+            await page.Locator("ul#messagelist li p").Filter(new() { HasText = "I wonder if he" }).First.ClickAsync();
             await page.GetByRole(AriaRole.Button, new() { Name = "Remove Recheep" }).ClickAsync();
             await page.GetByRole(AriaRole.Link, new() { Name = "My Timeline" }).ClickAsync();
             await page.GetByText("There are no cheeps so far.").ClickAsync();
@@ -150,7 +150,7 @@ namespace End2End
         public async Task LoginAndDeleteAccount()
         {
             var page = await CreatePageAsync();
-            
+
             await page.GotoAsync(Url);
             await page.GetByRole(AriaRole.Link, new() { Name = "Login" }).ClickAsync();
             await page.GetByRole(AriaRole.Textbox, new() { Name = "Email" }).ClickAsync();

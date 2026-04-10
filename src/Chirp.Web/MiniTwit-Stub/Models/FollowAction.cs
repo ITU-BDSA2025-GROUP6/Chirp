@@ -13,7 +13,7 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace Chirp.Web.MiniTwit_Stub.Models
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
@@ -25,7 +25,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
         /// </summary>
         /// <value>Username to follow (optional, either this or \&quot;unfollow\&quot;)</value>
         /* <example>Helge</example> */
-        [DataMember(Name="follow", EmitDefaultValue=false)]
+        [DataMember(Name = "follow", EmitDefaultValue = false)]
         public string? Follow { get; set; }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
         /// </summary>
         /// <value>Username to unfollow (optional, either this or \&quot;follow\&quot;)</value>
         /* <example>Helge</example> */
-        [DataMember(Name="unfollow", EmitDefaultValue=false)]
+        [DataMember(Name = "unfollow", EmitDefaultValue = false)]
         public string? Unfollow { get; set; }
 
         /// <summary>
@@ -81,12 +81,12 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return 
+            return
                 (
                     Follow == other.Follow ||
                     Follow != null &&
                     Follow.Equals(other.Follow)
-                ) && 
+                ) &&
                 (
                     Unfollow == other.Unfollow ||
                     Unfollow != null &&
@@ -104,16 +104,16 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Follow != null)
+                if (Follow != null)
                     hashCode = hashCode * 59 + Follow.GetHashCode();
-                    if (Unfollow != null)
+                if (Unfollow != null)
                     hashCode = hashCode * 59 + Unfollow.GetHashCode();
                 return hashCode;
             }
         }
 
         #region Operators
-        #pragma warning disable 1591
+#pragma warning disable 1591
 
         public static bool operator ==(FollowAction left, FollowAction right)
         {
@@ -125,7 +125,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             return !Equals(left, right);
         }
 
-        #pragma warning restore 1591
+#pragma warning restore 1591
         #endregion Operators
     }
 }

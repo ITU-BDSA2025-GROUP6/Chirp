@@ -58,7 +58,7 @@ namespace Chirp.Web.Areas.Identity.Pages.Account.Manage
                     c.Timestamp
                 })
                 .ToListAsync();
-            
+
             // Only include personal data for download
             var personalData = new Dictionary<string, object>();
             var personalDataProps = typeof(Author).GetProperties().Where(
@@ -80,7 +80,7 @@ namespace Chirp.Web.Areas.Identity.Pages.Account.Manage
             {
                 personalData.Add("Cheeps", cheeps);
             }
-            
+
             Response.Headers.TryAdd("Content-Disposition", "attachment; filename=PersonalData.json");
             return new FileContentResult(JsonSerializer.SerializeToUtf8Bytes(personalData), "application/json");
         }

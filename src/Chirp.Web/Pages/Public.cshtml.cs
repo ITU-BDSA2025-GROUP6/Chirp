@@ -28,11 +28,11 @@ public class PublicModel : PageModel
     {
         if (User.Identity?.IsAuthenticated != true)
             return null;
-        
+
         var username = User.Identity?.Name;
         if (string.IsNullOrEmpty(username))
             return null;
-    
+
         var author = await _authorService.GetAuthorByName(username);
         return author?.Id;
     }
@@ -152,4 +152,4 @@ public class PublicModel : PageModel
     {
         return HttpContext.Session.GetString("user_id") != null;
     }
-}   
+}

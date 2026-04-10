@@ -9,5 +9,5 @@ public interface IAuthorService
     Task<AuthorDTO> GetAuthorByEmail(string email);
 
     public Task<Author?> GetAuthorEntityByName(string name);
-    
+
 }

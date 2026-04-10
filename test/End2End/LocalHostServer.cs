@@ -11,27 +11,27 @@ public class LocalHostServer : IAsyncDisposable
     {
         string projectPath = Path.GetFullPath(
             Path.Combine(
-                AppContext.BaseDirectory, 
+                AppContext.BaseDirectory,
                 "..", "..", "..", "..", "..", "src", "Chirp.Web", "Chirp.Web.csproj"
             )
         );
-        
+
         if (!File.Exists(projectPath))
             throw new FileNotFoundException("Could not find project file", projectPath);
 
         var info = new ProcessStartInfo
         {
             FileName = "dotnet",
-            Arguments = $"run --project \"{projectPath}\" --urls=http://localhost:5273",
+            Arguments = $"run --no-launch-profile --project \"{projectPath}\" --urls=http://localhost:5273",
             UseShellExecute = false,
             RedirectStandardOutput = false,
             RedirectStandardError = false,
             CreateNoWindow = true
         };
-        
+
         _process = Process.Start(info)
             ?? throw new InvalidOperationException("Could not start the server");
-        
+
         await WaitAsync("http://localhost:5273");
 
     }
@@ -42,9 +42,9 @@ public class LocalHostServer : IAsyncDisposable
         {
             ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
         };
-        
+
         using var client = new HttpClient(handler);
-        var timeout = TimeSpan.FromSeconds(60); 
+        var timeout = TimeSpan.FromSeconds(60);
         var start = DateTime.Now;
 
         while (DateTime.Now - start < timeout)
@@ -65,7 +65,7 @@ public class LocalHostServer : IAsyncDisposable
 
             await Task.Delay(500);
         }
-        
+
         throw new TimeoutException("The server timed out");
     }
 

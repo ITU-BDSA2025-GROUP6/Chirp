@@ -60,7 +60,7 @@ public class AuthorRepository : IAuthorRepository
                 Cheeps = author.Cheeps
             };
         }
-        
+
         catch (InvalidOperationException)
         {
             throw new InvalidOperationException("No such author with email: " + email);

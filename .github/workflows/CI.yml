@@ -11,44 +11,178 @@ on:
   pull_request:
     branches:
       - main
-permissions: 
+permissions:
   contents: write
 jobs:
- 
+
   build:
     name: Build
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-        
+
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
-          
+
       - name: Restore dependencies
         run: dotnet restore
-        
+
       - name: Build project
         run: dotnet build -c Release --no-restore
+
+  lint:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Check C# formatting (dotnet format)
+        run: dotnet format --verify-no-changes --severity warn
+
+      - name: Install hadolint (Dockerfile linter)
+        run: |
+          wget -q -O /usr/local/bin/hadolint \
+            https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
+          chmod +x /usr/local/bin/hadolint
+
+      - name: Lint Dockerfile
+        run: hadolint Dockerfile
+
+      - name: Install shellcheck
+        run: sudo apt-get install -y shellcheck
+
+      - name: Lint shell scripts
+        run: |
+          find scripts/ -name "*.sh" -exec shellcheck {} \;
 
   test:
     name: Test
     needs: build
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-        
+
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
-          
+
       - name: Run tests
         run: dotnet test -c Release --filter "FullyQualifiedName!~End2End"
         env:
           ASPNETCORE_ENVIRONMENT: Testing
+
+  test-e2e:
+    name: End-to-End Tests
+    needs: build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: chirp
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build End2End project
+        run: dotnet build test/End2End/End2End.csproj -c Debug
+
+      - name: Install Playwright browsers
+        run: |
+          pwsh test/End2End/bin/Debug/net8.0/playwright.ps1 install --with-deps chromium
+
+      - name: Run End2End tests
+        run: dotnet test test/End2End/End2End.csproj -c Debug --logger "console;verbosity=normal"
+        env:
+          ASPNETCORE_ENVIRONMENT: E2ETest
+          ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=chirp;Username=postgres;Password=postgres"
+
+  sonarcloud:
+    name: SonarCloud Analysis
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.x
+
+      - name: Install SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Check SONAR_TOKEN is set
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -z "$SONAR_TOKEN" ]; then
+            echo "ERROR: SONAR_TOKEN is empty or not set"
+            exit 1
+          else
+            echo "SONAR_TOKEN is set (length: ${#SONAR_TOKEN})"
+          fi
+
+      - name: Run SonarCloud analysis
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          ASPNETCORE_ENVIRONMENT: Testing
+        run: |
+          dotnet sonarscanner begin \
+            /k:"sebseb10_ITU-MiniTwit" \
+            /o:"sebseb10" \
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.token="${SONAR_TOKEN}" \
+            /d:sonar.exclusions="test_itu_minitwit_ui.py,**/obj/**,**/bin/**,**/*.Designer.cs" \
+            /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml"
+          dotnet build --no-restore
+          dotnet test --no-restore \
+            --filter "FullyQualifiedName!~End2End" \
+            --collect:"XPlat Code Coverage" \
+            --results-directory TestResults \
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+          dotnet sonarscanner end /d:sonar.token="${SONAR_TOKEN}"

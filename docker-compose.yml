@@ -64,7 +64,8 @@ services:
   redis:
     image: redis:7
     container_name: redis
-  
+    restart: unless-stopped
+    
 volumes:
   postgres-data:
 

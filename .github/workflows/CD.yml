@@ -109,7 +109,7 @@ jobs:
         
       - name: Health check for app 1
         run: |
-          curl --retry 10 --retry-delay 5 --retry-connrefused http://46.101.231.189:5001
+          curl --retry 10 --retry-delay 5 --retry-connrefused https://itu-minitwit.duckdns.org 
           
       - name: Bootstrap droplet app2
         uses: appleboy/ssh-action@v1.2.5

@@ -22,6 +22,11 @@ discovery.relabel "containers" {
     source_labels = ["__meta_docker_container_log_stream"]
     target_label  = "stream"
   }
+
+  rule {
+    source_labels = ["__meta_docker_container_image"]
+    target_label  = "image"
+  }
 }
 
 loki.source.docker "containers" {

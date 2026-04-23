@@ -163,7 +163,7 @@ jobs:
 
       - name: Health check for app 2
         run: |
-          curl --retry 10 --retry-delay 5 --retry-connrefused http://167.71.37.109:5001
+          curl --retry 10 --retry-delay 5 --retry-connrefused http://46.101.206.181:5001
       
   Deploy-Monitoring:
     runs-on: ubuntu-latest

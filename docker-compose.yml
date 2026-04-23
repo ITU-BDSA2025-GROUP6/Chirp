@@ -60,7 +60,6 @@ services:
     restart: unless-stopped
     networks:
       - itu-minitwit-network
-      - monitoring-network
   
   redis:
     image: redis:7

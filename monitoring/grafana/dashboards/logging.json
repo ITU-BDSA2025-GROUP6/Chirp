@@ -2,7 +2,7 @@
   "title": "ITU-MiniTwit Logs",
   "uid": "itu-minitwit-logs",
   "schemaVersion": 38,
-  "version": 2,
+  "version": 3,
   "refresh": "30s",
   "time": { "from": "now-1h", "to": "now" },
   "templating": {
@@ -12,22 +12,10 @@
         "label": "Container",
         "type": "query",
         "datasource": { "type": "loki", "uid": "loki-ds" },
-        "query": "label_values(container)",
+        "query": "label_values({container=~\".+\"}, container)",
         "includeAll": true,
         "allValue": ".+",
         "multi": true,
-        "refresh": 2,
-        "sort": 1
-      },
-      {
-        "name": "stream",
-        "label": "Stream",
-        "type": "query",
-        "datasource": { "type": "loki", "uid": "loki-ds" },
-        "query": "label_values(stream)",
-        "includeAll": true,
-        "allValue": ".+",
-        "multi": false,
         "refresh": 2,
         "sort": 1
       },
@@ -46,14 +34,12 @@
       "id": 10,
       "title": "Overview",
       "type": "row",
-      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
       "collapsed": false
     },
     {
       "id": 11,
       "title": "Total Log Lines",
       "type": "stat",
-      "gridPos": { "x": 0, "y": 1, "w": 4, "h": 4 },
       "datasource": { "type": "loki", "uid": "loki-ds" },
       "options": {
         "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false },
@@ -71,7 +57,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(count_over_time({container=~\"$container\", stream=~\"$stream\"} [$__range]))",
+          "expr": "sum(count_over_time({container=~\"$container\"} [$__range]))",
           "legendFormat": "Total"
         }
       ]
@@ -80,7 +66,6 @@
       "id": 12,
       "title": "Errors",
       "type": "stat",
-      "gridPos": { "x": 4, "y": 1, "w": 4, "h": 4 },
       "datasource": { "type": "loki", "uid": "loki-ds" },
       "options": {
         "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false },
@@ -101,7 +86,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(count_over_time({container=~\"$container\", stream=~\"$stream\"} |~ \"(?i)(error|fail|exception|critical)\" [$__range]))",
+          "expr": "sum(count_over_time({container=~\"$container\"} |~ \"(?i)(error|fail|exception|critical)\" [$__range]))",
           "legendFormat": "Errors"
         }
       ]
@@ -110,7 +95,6 @@
       "id": 13,
       "title": "Warnings",
       "type": "stat",
-      "gridPos": { "x": 8, "y": 1, "w": 4, "h": 4 },
       "datasource": { "type": "loki", "uid": "loki-ds" },
       "options": {
         "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false },
@@ -131,7 +115,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum(count_over_time({container=~\"$container\", stream=~\"$stream\"} |~ \"(?i)(warn)\" [$__range]))",
+          "expr": "sum(count_over_time({container=~\"$container\"} |~ \"(?i)(warn)\" [$__range]))",
           "legendFormat": "Warnings"
         }
       ]
@@ -140,7 +124,6 @@
       "id": 14,
       "title": "Log Lines per Container",
       "type": "bargauge",
-      "gridPos": { "x": 12, "y": 1, "w": 12, "h": 8 },
       "datasource": { "type": "loki", "uid": "loki-ds" },
       "options": {
         "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false },
@@ -159,7 +142,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (container) (count_over_time({container=~\"$container\", stream=~\"$stream\"} [$__range]))",
+          "expr": "sum by (container) (count_over_time({container=~\"$container\"} [$__range]))",
           "legendFormat": "{{container}}"
         }
       ]
@@ -168,7 +151,6 @@
       "id": 15,
       "title": "Errors per Container",
       "type": "bargauge",
-      "gridPos": { "x": 0, "y": 5, "w": 12, "h": 4 },
       "datasource": { "type": "loki", "uid": "loki-ds" },
       "options": {
         "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false },
@@ -190,7 +172,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (container) (count_over_time({container=~\"$container\", stream=~\"$stream\"} |~ \"(?i)(error|fail|exception|critical)\" [$__range]))",
+          "expr": "sum by (container) (count_over_time({container=~\"$container\"} |~ \"(?i)(error|fail|exception|critical)\" [$__range]))",
           "legendFormat": "{{container}}"
         }
       ]
@@ -199,39 +181,18 @@
       "id": 20,
       "title": "Volume Over Time",
       "type": "row",
-      "gridPos": { "x": 0, "y": 9, "w": 24, "h": 1 },
       "collapsed": false
     },
     {
       "id": 1,
       "title": "Log Volume (by container)",
       "type": "timeseries",
-      "gridPos": { "x": 0, "y": 10, "w": 24, "h": 7 },
       "datasource": { "type": "loki", "uid": "loki-ds" },
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (container) (count_over_time({container=~\"$container\", stream=~\"$stream\"} [$__interval]))",
+          "expr": "sum by (container) (count_over_time({container=~\"$container\"} [$__interval]))",
           "legendFormat": "{{container}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "custom": { "fillOpacity": 10, "lineWidth": 1 }
-        }
-      }
-    },
-    {
-      "id": 6,
-      "title": "Log Volume by Stream (stdout vs stderr)",
-      "type": "timeseries",
-      "gridPos": { "x": 0, "y": 17, "w": 12, "h": 6 },
-      "datasource": { "type": "loki", "uid": "loki-ds" },
-      "targets": [
-        {
-          "refId": "A",
-          "expr": "sum by (container, stream) (count_over_time({container=~\"$container\"} [$__interval]))",
-          "legendFormat": "{{container}} / {{stream}}"
         }
       ],
       "fieldConfig": {
@@ -244,12 +205,11 @@
       "id": 2,
       "title": "Errors & Exceptions (by container)",
       "type": "timeseries",
-      "gridPos": { "x": 12, "y": 17, "w": 12, "h": 6 },
       "datasource": { "type": "loki", "uid": "loki-ds" },
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (container) (count_over_time({container=~\"$container\", stream=~\"$stream\"} |~ \"(?i)(error|fail|exception|critical)\" [$__interval]))",
+          "expr": "sum by (container) (count_over_time({container=~\"$container\"} |~ \"(?i)(error|fail|exception|critical)\" [$__interval]))",
           "legendFormat": "{{container}}"
         }
       ],
@@ -264,12 +224,11 @@
       "id": 3,
       "title": "Warnings (by container)",
       "type": "timeseries",
-      "gridPos": { "x": 0, "y": 23, "w": 12, "h": 6 },
       "datasource": { "type": "loki", "uid": "loki-ds" },
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (container) (count_over_time({container=~\"$container\", stream=~\"$stream\"} |~ \"(?i)(warn)\" [$__interval]))",
+          "expr": "sum by (container) (count_over_time({container=~\"$container\"} |~ \"(?i)(warn)\" [$__interval]))",
           "legendFormat": "{{container}}"
         }
       ],
@@ -284,14 +243,12 @@
       "id": 30,
       "title": "Log Viewer",
       "type": "row",
-      "gridPos": { "x": 0, "y": 29, "w": 24, "h": 1 },
       "collapsed": false
     },
     {
       "id": 4,
       "title": "All Logs",
       "type": "logs",
-      "gridPos": { "x": 0, "y": 30, "w": 24, "h": 14 },
       "datasource": { "type": "loki", "uid": "loki-ds" },
       "options": {
         "dedupStrategy": "none",
@@ -305,7 +262,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "{container=~\"$container\", stream=~\"$stream\"} |~ \"(?i)($level)\"",
+          "expr": "{container=~\"$container\"} |~ \"(?i)($level)\"",
           "legendFormat": ""
         }
       ]
@@ -314,7 +271,6 @@
       "id": 5,
       "title": "Errors Only",
       "type": "logs",
-      "gridPos": { "x": 0, "y": 44, "w": 24, "h": 10 },
       "datasource": { "type": "loki", "uid": "loki-ds" },
       "options": {
         "dedupStrategy": "none",
@@ -328,30 +284,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "{container=~\"$container\", stream=~\"$stream\"} |~ \"(?i)(error|fail|exception|critical)\"",
-          "legendFormat": ""
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "title": "stderr Logs (raw process error output)",
-      "type": "logs",
-      "gridPos": { "x": 0, "y": 54, "w": 24, "h": 10 },
-      "datasource": { "type": "loki", "uid": "loki-ds" },
-      "options": {
-        "dedupStrategy": "none",
-        "showLabels": true,
-        "showTime": true,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true,
-        "prettifyLogMessage": false,
-        "enableLogDetails": true
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "expr": "{container=~\"$container\", stream=\"stderr\"}",
+          "expr": "{container=~\"$container\"} |~ \"(?i)(error|fail|exception|critical)\"",
           "legendFormat": ""
         }
       ]

@@ -22,21 +22,22 @@
       {
         "name": "stream",
         "label": "Stream",
-        "type": "custom",
-        "query": "stdout,stderr",
+        "type": "query",
+        "datasource": { "type": "loki", "uid": "loki-ds" },
+        "query": "label_values(stream)",
         "includeAll": true,
         "allValue": ".+",
         "multi": false,
-        "current": { "text": "All", "value": "$__all" }
+        "refresh": 2,
+        "sort": 1
       },
       {
         "name": "level",
         "label": "Log Level",
         "type": "custom",
-        "query": "info,warn,error,fail,critical",
-        "includeAll": true,
-        "allValue": ".*",
-        "current": { "text": "All", "value": "$__all" }
+        "query": "All : .*,info : info,warn : warn,error : error|fail|exception|critical",
+        "includeAll": false,
+        "current": { "text": "All", "value": ".*" }
       }
     ]
   },

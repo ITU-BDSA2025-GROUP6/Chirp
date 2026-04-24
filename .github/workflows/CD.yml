@@ -1,27 +1,30 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: CD #Build and deploy ASP.Net Core app to Azure Web App - bdsa2025group6chirp
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI -- Build, Test, and Release"]
+    types:
+      - completed
     branches:
       - main
   workflow_dispatch:
-      
-permissions: 
+
+permissions:
   contents: read
   packages: write
-  
+
 jobs:
   build-push:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+        with:
+          driver-opts: network=host
 
       - name: Login
         uses: docker/login-action@v3
@@ -29,7 +32,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           
-      # Image 1: itu-minitwit
       - name: Build & push image
         uses: docker/build-push-action@v6
         with:
@@ -52,18 +54,49 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          
-      - name: Sync files to droplet
+          echo "${{ secrets.SSH_KEY_APP2 }}" > ~/.ssh/deploy_key_app2
+          chmod 600 ~/.ssh/deploy_key_app2
+      
+      - name: Bootstrap droplet app1
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            if ! command -v docker >/dev/null 2>&1; then
+              curl -fsSL https://raw.githubusercontent.com/sebseb10/ITU-MiniTwit/main/scripts/bootstrap.sh | bash
+            fi
+            mkdir -p /opt/itu-minitwit
+            
+      - name: Sync files to droplet app1
         run: |
           rsync -az --delete \
             --exclude '.git' \
             --exclude 'bin' \
             --exclude 'obj' \
             --exclude 'data' \
+            --exclude '.env' \
             -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key" \
             ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/opt/itu-minitwit/
+          
+      - name: Write production .env on droplet app 1
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cat > /opt/itu-minitwit/.env <<'EOF'
+            DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+            TAG=${{ github.sha }}
+            ASPNETCORE_ENVIRONMENT=Production
+            ASPNETCORE_URLS=http://+:5001
+            ConnectionStrings__DefaultConnection=${{ secrets.DO_CONNECTION_STRING }}
+            ConnectionStrings__Redis=${{ secrets.DO_REDIS_CONNECTION_STRING }}
+            EOF
             
-      - name: Run deploy script
+      - name: Run deploy script app1
         uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -73,3 +106,104 @@ jobs:
             cd /opt/itu-minitwit
             chmod +x scripts/deploy.sh
             TAG=${{ github.sha }} DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} bash scripts/deploy.sh
+        
+      - name: Health check for app 1
+        run: |
+          curl --retry 10 --retry-delay 5 --retry-connrefused https://itu-minitwit.duckdns.org 
+          
+      - name: Bootstrap droplet app2
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST_APP2 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY_APP2 }}
+          script: |
+            if ! command -v docker >/dev/null 2>&1; then
+              curl -fsSL https://raw.githubusercontent.com/sebseb10/ITU-MiniTwit/main/scripts/bootstrap.sh | bash
+            fi
+            mkdir -p /opt/itu-minitwit
+
+      - name: Sync files to droplet app2
+        run: |
+          rsync -az --delete \
+            --exclude '.git' \
+            --exclude 'bin' \
+            --exclude 'obj' \
+            --exclude 'data' \
+            --exclude '.env' \
+            -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key_app2" \
+            ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST_APP2 }}:/opt/itu-minitwit/
+          
+      - name: Write production .env on droplet app 2
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST_APP2 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY_APP2 }}
+          script: |
+            cat > /opt/itu-minitwit/.env <<'EOF'
+            DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+            TAG=${{ github.sha }}
+            ASPNETCORE_ENVIRONMENT=Production
+            ASPNETCORE_URLS=http://+:5001
+            ConnectionStrings__DefaultConnection=${{ secrets.DO_CONNECTION_STRING }}
+            ConnectionStrings__Redis=${{ secrets.DO_REDIS_CONNECTION_STRING }}
+            EOF
+
+      - name: Run deploy script app2
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.SSH_HOST_APP2 }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY_APP2 }}
+          script: |
+            cd /opt/itu-minitwit
+            chmod +x scripts/deploy.sh
+            TAG=${{ github.sha }} DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} bash scripts/deploy.sh
+
+      - name: Health check for app 2
+        run: |
+          curl --retry 10 --retry-delay 5 --retry-connrefused http://46.101.206.181:5001
+      
+  Deploy-Monitoring:
+    runs-on: ubuntu-latest
+    needs: build-push
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.MONITORING_SSH_KEY  }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          
+          
+      - name: Bootstrap droplet
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.MONITORING_SSH_HOST }}
+          username: ${{ secrets.MONITORING_SSH_USER }}
+          key: ${{ secrets.MONITORING_SSH_KEY }}
+          script: |
+            if ! command -v docker >/dev/null 2>&1; then
+              curl -fsSL https://raw.githubusercontent.com/sebseb10/ITU-MiniTwit/main/scripts/bootstrap.sh | bash
+            fi
+            mkdir -p /opt/monitoring
+          
+      - name: Sync files to monitoring droplet
+        run: |
+          rsync -az --delete \
+            --exclude '.git' \
+            -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key" \
+            ./ ${{ secrets.MONITORING_SSH_USER }}@${{ secrets.MONITORING_SSH_HOST }}:/opt/monitoring/
+
+      - name: Start monitoring stack
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.MONITORING_SSH_HOST }}
+          username: ${{ secrets.MONITORING_SSH_USER }}
+          key: ${{ secrets.MONITORING_SSH_KEY }}
+          script: |
+            cd /opt/monitoring/monitoring
+            docker compose -f docker-compose.monitoring.yml up -d --remove-orphans

@@ -10,10 +10,10 @@ public class AuthorRepositoryIntegrationTests : IDisposable
     private readonly SqliteConnection _connection;
     private readonly AuthorRepository _repository;
     private readonly CheepDbContext _context;
-    
-    public AuthorRepositoryIntegrationTests() 
+
+    public AuthorRepositoryIntegrationTests()
     {
-    _connection = new SqliteConnection("Data Source=:memory:");
+        _connection = new SqliteConnection("Data Source=:memory:");
         _connection.Open();
 
         var options = new DbContextOptionsBuilder<CheepDbContext>()
@@ -24,9 +24,9 @@ public class AuthorRepositoryIntegrationTests : IDisposable
         _context.Database.EnsureCreated();
 
         var author = new Author
-            { Id = "1", UserName = "Test Author", Email = "test@author.com", Cheeps = new List<Cheep>() };
+        { Id = "1", UserName = "Test Author", Email = "test@author.com", Cheeps = new List<Cheep>() };
         var author2 = new Author
-            { Id = "2", UserName = "Test Author2", Email = "test2@email.com", Cheeps = new List<Cheep>() };
+        { Id = "2", UserName = "Test Author2", Email = "test2@email.com", Cheeps = new List<Cheep>() };
 
         //_context.Authors.Add(author);
         //_context.Authors.Add(author2);
@@ -35,7 +35,7 @@ public class AuthorRepositoryIntegrationTests : IDisposable
 
         _repository = new AuthorRepository(_context);
     }
-    
+
     public void Dispose()
     {
         // this method is called after all tests in the class have run
@@ -44,7 +44,7 @@ public class AuthorRepositoryIntegrationTests : IDisposable
         _connection.Dispose();
         _context.Dispose();
     }
-    
+
     public class AuthorTests : AuthorRepositoryIntegrationTests
     {
 

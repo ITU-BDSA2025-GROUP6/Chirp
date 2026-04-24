@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Chirp.Core
 {
     public class Author : IdentityUser
-    { 
+    {
         public ICollection<Cheep> Cheeps { get; set; } = new List<Cheep>();
 
         public List<Recheep> Recheeps { get; set; } = new List<Recheep>(); // List of cheeps we've recheeped, for printing in MyTimeline
@@ -14,7 +14,7 @@ namespace Chirp.Core
         public List<Follows> Following { get; set; } = new List<Follows>();
 
         public List<Follows> FollowedBy { get; set; } = new List<Follows>();
-        
+
         public string ProfilePicturePath { get; set; } = "/images/default.png";
     }
 }

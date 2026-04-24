@@ -25,9 +25,9 @@ public class CheepRepositoryTests : IDisposable
         _context.Database.EnsureCreated();
 
         var author = new Author
-            { Id = "1", UserName = "Test Author", Email = "test@author.com", Cheeps = new List<Cheep>() };
+        { Id = "1", UserName = "Test Author", Email = "test@author.com", Cheeps = new List<Cheep>() };
         var author2 = new Author
-            { Id = "2", UserName = "Test Author2", Email = "test2@email.com", Cheeps = new List<Cheep>() };
+        { Id = "2", UserName = "Test Author2", Email = "test2@email.com", Cheeps = new List<Cheep>() };
 
         //_context.Authors.Add(author);
         //_context.Authors.Add(author2);
@@ -36,7 +36,7 @@ public class CheepRepositoryTests : IDisposable
 
         _repository = new CheepRepository(_context);
     }
-    
+
     public void Dispose()
     {
         // this method is called after all tests in the class have run
@@ -137,7 +137,7 @@ public class CheepRepositoryTests : IDisposable
             var resultId = await _repository.CreateCheep(cheep);
             Assert.True(resultId > 0);
         }
-        
+
         [Fact]
         public async Task CreateCheep_ShouldGenerateUniqueIds()
         {
@@ -176,16 +176,16 @@ public class CheepRepositoryTests : IDisposable
                 AuthorName = "Test Author",
                 Text = "Hello, this is a test cheep!"
             };
-            
+
             await _repository.CreateCheep(originalCheep);
-            
+
             var updatedCheep = new CheepDTO
             {
                 CheepID = id,
                 AuthorName = "Test Author",
                 Text = "Updated text"
             };
-            
+
             // Act
             await _repository.UpdateCheep(updatedCheep);
 
@@ -211,10 +211,10 @@ public class CheepRepositoryTests : IDisposable
             var cheep = await _context.Cheeps
                 .Include(c => c.Author)
                 .FirstAsync();
-            
+
             // Act
             var result = await _repository.DeleteCheep(cheep.CheepID, cheep.Author.UserName);
-            
+
             // Assert
             Assert.True(result);
         }
@@ -223,12 +223,12 @@ public class CheepRepositoryTests : IDisposable
         public async Task DeleteCheep_ShouldThrowExceptionIfCheepNotFound()
         {
             // Arrange
-            var id = 2; 
+            var id = 2;
             var name = "Test";
-            
+
             // Act
             var result = await _repository.DeleteCheep(id, name);
-            
+
             // Assert
             Assert.False(result);
         }
@@ -245,7 +245,7 @@ public class CheepRepositoryTests : IDisposable
             {
                 Id = authorEntity.Id,
                 Name = authorEntity.UserName ?? string.Empty,
-                Email = authorEntity.Email  ?? string.Empty
+                Email = authorEntity.Email ?? string.Empty
             };
 
             var cheep = new Cheep
@@ -254,19 +254,19 @@ public class CheepRepositoryTests : IDisposable
                 Text = "Hello, this is a test cheep!",
                 Timestamp = DateTime.UtcNow
             };
-            
+
             await _context.Cheeps.AddAsync(cheep);
             await _context.SaveChangesAsync();
-            
+
             // Act
             var resultId = await _repository.CreateRecheep(authorDto, cheep.CheepID);
-            
+
             // Assert
             Assert.Equal(cheep.CheepID, resultId);
-            
+
             var recheep = await _context.Recheeps
-                .FirstOrDefaultAsync(r => r.AuthorID == authorDto.Id &&  r.CheepID == cheep.CheepID);
-            
+                .FirstOrDefaultAsync(r => r.AuthorID == authorDto.Id && r.CheepID == cheep.CheepID);
+
             Assert.NotNull(recheep);
             Assert.Equal(authorDto.Id, recheep.AuthorID);
             Assert.Equal(cheep.CheepID, recheep.CheepID);
@@ -283,8 +283,8 @@ public class CheepRepositoryTests : IDisposable
                 Name = authorEntity.UserName ?? string.Empty,
                 Email = authorEntity.Email ?? string.Empty
             };
-            
-            
+
+
             var cheep = new Cheep
             {
                 Text = "Existing Cheep",
@@ -301,16 +301,16 @@ public class CheepRepositoryTests : IDisposable
             };
             await _context.Recheeps.AddAsync(existingCheep);
             await _context.SaveChangesAsync();
-            
+
             // Act
             var resultId = await _repository.CreateRecheep(authorDto, cheep.CheepID);
-            
+
             // Assert
             Assert.Equal(cheep.CheepID, resultId);
-            
+
             var recheep = await _context.Recheeps
-                .FirstOrDefaultAsync(r  => r.AuthorID == authorDto.Id && r.CheepID == cheep.CheepID);
-            
+                .FirstOrDefaultAsync(r => r.AuthorID == authorDto.Id && r.CheepID == cheep.CheepID);
+
             Assert.Null(recheep);
         }
 
@@ -321,7 +321,7 @@ public class CheepRepositoryTests : IDisposable
             AuthorDTO? author = null;
             int cheepId = 1;
             InvalidOperationException? exception = null;
-            
+
             // Act
             try
             {
@@ -331,7 +331,7 @@ public class CheepRepositoryTests : IDisposable
             {
                 exception = e;
             }
-            
+
             // Assert
             Assert.NotNull(exception);
             Assert.IsType<InvalidOperationException>(exception);

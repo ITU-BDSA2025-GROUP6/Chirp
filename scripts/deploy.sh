@@ -32,9 +32,6 @@ TAG="${TAG:-}" docker compose config 2>/dev/null | awk '/image:/ {print "  " $0}
 log "Pulling images..."
 TAG="${TAG:-}" docker compose pull --ignore-buildable
 
-log "Building local images..."
-TAG="${TAG:-}" docker compose build
-
 log "Applying compose (up -d)..."
 TAG="${TAG:-}" docker compose up -d --remove-orphans
 

@@ -22,33 +22,201 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-        
+
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
-          
+
       - name: Restore dependencies
         run: dotnet restore
-        
+
       - name: Build project
         run: dotnet build -c Release --no-restore
+
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    needs: build
+    continue-on-error: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: dotnet format — C# formatter
+        run: dotnet format --verify-no-changes --severity warn || true
+
+      - name: hadolint — Dockerfile linter
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          recursive: true
+          no-fail: true
+          format: github
+
+      - name: shellcheck — shell script linter
+        run: |
+          find . -name "*.sh" \
+            -not -path "*/bin/*" \
+            -not -path "*/obj/*" \
+          | xargs shellcheck || true
 
   test:
     name: Test
     needs: build
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
-        
+
       - name: Setup .NET 8
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.x
-          
+
       - name: Run tests
         run: dotnet test -c Release --filter "FullyQualifiedName!~End2End"
         env:
           ASPNETCORE_ENVIRONMENT: Testing
+
+  sonar:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # full history needed for blame/new-code detection
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.x
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: zulu
+
+      - name: Install SonarCloud scanner
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Begin SonarCloud scan
+        run: |
+          dotnet sonarscanner begin \
+            /k:"sebseb10_ITU-MiniTwit" \
+            /o:"sebseb10" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" \
+            /d:sonar.exclusions="**/Migrations/**,**/DbInitializer.cs"
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Run tests with coverage
+        run: |
+          dotnet test --no-build \
+            --filter "FullyQualifiedName!~End2End" \
+            --collect:"XPlat Code Coverage" \
+            --results-directory coverage \
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+        env:
+          ASPNETCORE_ENVIRONMENT: Testing
+
+      - name: End SonarCloud scan
+        run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+  e2e-test:
+    name: E2E Tests
+    needs: build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: chirp
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 8.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build -c Release --no-restore
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ hashFiles('test/End2End/End2End.csproj') }}
+
+      - name: Install Playwright browsers
+        run: pwsh test/End2End/bin/Release/net8.0/playwright.ps1 install --with-deps chromium
+
+      - name: Start web app in background
+        run: >
+          nohup dotnet run --project src/Chirp.Web/
+          -c Release --no-build
+          --urls=http://localhost:5273
+          > /tmp/webapp.log 2>&1 &
+        env:
+          ASPNETCORE_ENVIRONMENT: Development
+          ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=chirp;Username=postgres;Password=postgres"
+
+      - name: Wait for web app to be ready
+        run: |
+          echo "Waiting for web app..."
+          for i in $(seq 1 90); do
+            if curl -sf http://localhost:5273 > /dev/null 2>&1; then
+              echo "Ready after $((i * 2))s"
+              exit 0
+            fi
+            echo "  attempt $i / 90 ..."
+            sleep 2
+          done
+          echo "=== Web app failed to start. Log: ==="
+          cat /tmp/webapp.log
+          exit 1
+
+      - name: Run E2E tests
+        run: dotnet test test/End2End/ -c Release
+        env:
+          ASPNETCORE_ENVIRONMENT: Development
+          ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=chirp;Username=postgres;Password=postgres"
+
+      - name: Show web app log on failure
+        if: failure()
+        run: cat /tmp/webapp.log

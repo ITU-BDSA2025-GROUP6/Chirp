@@ -89,7 +89,7 @@ namespace Chirp.Web.Areas.Identity.Pages.Account.Manage
                     ModelState.AddModelError(string.Empty, "Password is required.");
                     return Page();
                 }
-                
+
                 if (!await _userManager.CheckPasswordAsync(user, Input.Password))
                 {
                     ModelState.AddModelError(string.Empty, "Incorrect password.");
@@ -101,9 +101,9 @@ namespace Chirp.Web.Areas.Identity.Pages.Account.Manage
             await _cheepDbContext.Follows
                 .Where(f => f.FollowsId == userId || f.FollowedById == userId)
                 .ExecuteDeleteAsync();
-            
+
             var result = await _userManager.DeleteAsync(user);
-            
+
             if (!result.Succeeded)
             {
                 throw new InvalidOperationException($"Unexpected error occurred deleting user.");

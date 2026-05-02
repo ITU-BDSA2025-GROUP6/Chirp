@@ -13,7 +13,7 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace Chirp.Web.MiniTwit_Stub.Models
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
@@ -25,7 +25,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
         /// </summary>
         /// <value>HTTP error code</value>
         /* <example>403</example> */
-        [DataMember(Name="status", EmitDefaultValue=true)]
+        [DataMember(Name = "status", EmitDefaultValue = true)]
         public int? Status { get; set; }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
         /// </summary>
         /// <value>Error message</value>
         /* <example>You are not authorized to use this resource!</example> */
-        [DataMember(Name="error_msg", EmitDefaultValue=false)]
+        [DataMember(Name = "error_msg", EmitDefaultValue = false)]
         public string? ErrorMsg { get; set; }
 
         /// <summary>
@@ -81,12 +81,12 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return 
+            return
                 (
                     Status == other.Status ||
-                    
+
                     Status.Equals(other.Status)
-                ) && 
+                ) &&
                 (
                     ErrorMsg == other.ErrorMsg ||
                     ErrorMsg != null &&
@@ -104,16 +104,16 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    
-                    hashCode = hashCode * 59 + Status.GetHashCode();
-                    if (ErrorMsg != null)
+
+                hashCode = hashCode * 59 + Status.GetHashCode();
+                if (ErrorMsg != null)
                     hashCode = hashCode * 59 + ErrorMsg.GetHashCode();
                 return hashCode;
             }
         }
 
         #region Operators
-        #pragma warning disable 1591
+#pragma warning disable 1591
 
         public static bool operator ==(ErrorResponse left, ErrorResponse right)
         {
@@ -125,7 +125,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             return !Equals(left, right);
         }
 
-        #pragma warning restore 1591
+#pragma warning restore 1591
         #endregion Operators
     }
 }

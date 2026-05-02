@@ -499,3 +499,6 @@ out/
 
 # Ignore API Spec
 API_Spec/
+
+#Ignore .dump file
+chirp.dump

@@ -6,14 +6,15 @@ namespace Chirp.Infrastructure;
 public class CheepDTO
 {
     public int CheepID { get; set; }
-    
+
     public string Text { get; set; } = string.Empty;
 
-    public DateTime Timestamp { get; set; } 
-    
+    public DateTime Timestamp { get; set; }
+
     public string AuthorName { get; set; } = string.Empty;
+    public string AuthorId { get; set; } = string.Empty;
     public string? ProfilePicturePath { get; set; }
-    
+
     public bool IsRecheepedByCurrentUser { get; set; }
 
 

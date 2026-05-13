@@ -1,0 +1,179 @@
+\section{Process' Perspective}
+\byline{Andreas Schiøtt}
+
+\subsection{CI/CD Pipeline}
+
+
+\begin{table}[H]
+      \centering
+      \caption{CI/CD tools}
+      \begin{tabularx}{\linewidth}{lX}
+          \toprule
+          \textbf{Technology} & \textbf{Purpose} \\
+          \midrule
+          GitHub Actions      & CI/CD automation \\
+          Playwright          & end-to-end testing \\
+          SonarCloud          & Static analysis and code coverage \\
+          Hadolint            & Dockerfile linter \\
+          ShellCheck          & Shell script linter \\
+          Docker Build        & Build and push container images to Docker Hub \\
+          Docker Swarm        & Automated docker container orchestration \\
+          rsync               & Idempotent Sync files to the remote swarm manager \\
+          Grafana             & Logging / monitoring running Prometheus, loki, Alloy \\
+          Prometheus          & Metric collection and monitoring \\
+          Loki                & Log aggregation system \\
+          Grafana Alloy       & Log and monitoring collection \\
+          \bottomrule
+      \end{tabularx}
+  \end{table}
+
+Before we had a running cloud hosted droplet we only ran CI to run a docker container and
+run unit test on a locally hosted sqlite based application.
+\\\\
+After cloud hosting on \textbf{DigitalOcean} was setup we added the CD pipeline to the CI pipeline. The CI/CD pipeline were both triggered concurrently on push to main branch
+which then builds a \textbf{Docker image}, pushes it to \textbf{Docker Hub} and then deploys it to the \textbf{DigitalOcean} droplet using \textbf{SSH \& docker pull}. With the later focus on idempotent deployment,
+we added a check to see if the CI pipeline succeeded before the CD pipeline is triggered.
+\\\\
+The CI pipeline was extended to include end-to-end testing using \textbf{Playwright}, and static code analysis using \textbf{SonarCloud}, \textbf{Hadolint} and \textbf{ShellCheck}. As shown in \cref{fig:ci}, on every push the pipeline detects which paths changed, builds the project, and then runs static analysis, unit tests, SonarCloud analysis, and end-to-end tests in parallel.
+\\\\
+While writing the report we itterativly extended the CI pipeline to check which files were changed to decicde which steps to run, if only the report directory was changed we only run "build PDF" report" step and vice versa.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{CI.png}
+    \caption{CI pipeline (\texttt{CI.yml}).}
+    \label{fig:ci}
+\end{figure}
+
+\noindent The CD pipeline is triggered only after a successful CI run, ensuring that broken builds are never deployed. As shown in \cref{fig:cd}, it consists of three sequential jobs: building and pushing the Docker image (\textit{build-push}), deploying the application (\textit{Deploy}), and deploying the monitoring stack (\textit{Deploy-Monitoring}) with \textbf{Grafana}, \textbf{Prometheus}, \textbf{Loki} and \textbf{Grafana Alloy}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{CD.png}
+    \caption{CD pipeline}
+    \label{fig:cd}
+\end{figure}
+
+\noindent To ensure high availability of the application, we extended the CD pipeline to
+deploy the application using \textbf{Docker Swarm}, which deploys the application as a swarm with multiple replica nodes while a load balencer distributes traffic across the replicas.
+this deployment uses rolling updates, which starts a new docker container before closing the previous one to avoid downtime.
+The application also uses shared \textbf{Redis} which caches data across the replicas.
+The detailed steps of the \textit{Deploy} job are shown in \cref{fig:cd-deploy}:
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.55\linewidth]{CD_DeploySteps.png}
+    \caption{Detailed steps of the \textit{Deploy} job.}
+    \label{fig:cd-deploy}
+\end{figure}
+
+
+% Describe all stages and tools in your pipeline end-to-end.
+% Include a diagram if helpful.
+% Cover: triggering events, build, test, containerisation, push to registry,
+%        deployment strategy (rolling, blue/green, etc.), release.
+
+\subsection{Monitoring}
+\hyperref{http://165.245.209.232:3000/d/minitwit-dashboard/itu-minitwit-production?orgId=1&from=now-1h&to=now&timezone=browser&refresh=30s}{}{}{Link to Grafana monitoring dashboard}
+
+
+\noindent Metrics are collected through \textbf{Prometheus} and visualised in \textbf{Grafana},
+both running as Docker services on a dedicated monitoring droplet, isolated from the application.
+Prometheus scrapes application metrics via \texttt{'itu-minitwit-app'} defined in the Prometheus configuration and
+metrics from Node Exporter running on each Swarm node.
+\\
+
+\noindent We have itterativly upated which data is collected and visualised in the Grafana dashboard based on the needs of the project.
+At the projects end we have the Grafana dashboard organised into five sections, as shown in \cref{fig:monitoring}:
+\begin{itemize}
+    \item \textbf{Health overview} — application up/down status, average response time,
+          requests / sec, in-flight requests, error rate and current memory usage.
+    \item \textbf{HTTP traffic} — request rate by status code, … response-time percentiles grouped by p50 p90 and p99,
+     request rate /s grouped by HTTP method, and the response time grouped by api endpoints.
+    \item \textbf{Error tracking}  error rates req/s grouped by 400/500 http response, errors mesured in req/s per endpoint.
+    \item \textbf{Process \& runtime} — process CPU usage, process memory usage, thread count, garbage colllection rate.
+    \item \textbf{Uptime \& Availability} — uptime \& availability over time (bar graf), Availability mesured in percentage over the selected time period.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{Monitoring.png}
+    \caption{Grafana monitoring dashboard.}
+    \label{fig:monitoring}
+\end{figure}
+
+\subsection{Logging}
+
+\hyperref{http://165.245.209.232:3000/d/itu-minitwit-logs/itu-minitwit-logs?orgId=1&from=now-1h&to=now&timezone=browser&var-container=$__all&var-level=.%2A&refresh=30s}{}{}{Link to Grafana logging dashboard}
+
+\noindent Application logs are aggregated using \textbf{Loki} and collected by
+\textbf{Grafana Alloy}. Each line in the logs is labelled with the 
+container name, service name, stream, and image name.
+Grafana Alloy collects logs from all the replica nodes and forwards them to Loki for aggregation and storage.
+\textbf{Loki} rejects old samples above the "age" of 168hours (7 days) to prevent unbounded log storage growth.
+\\\\    
+\noindent The application logs the following events:
+\begin{itemize}
+    \item HTTP requests — method, path, response status code, and elapsed time mesured in ms.
+    \item Unhandled exceptions — method, path, error details.
+    \item Custom logs through \texttt{ILogger} throughout the minitwit codebase.
+\end{itemize}
+
+\noindent The logs are visualised in a Grafana dashboard with the following panels:
+\begin{itemize}
+    \item \textbf{Total Log lines \& error lines} — Total log lines \& errors within the selected time period
+    \item \textbf{Log lines \& Errors per container} — Log lines \& errors grouped by container within the selected time period
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=0.4\textheight]{Logging.png}
+    \caption{Loki log aggregation in Grafana.}
+    \label{fig:logging}
+\end{figure}
+
+
+
+\subsection{Security Hardening}
+\noindent measures applied to harden the system:
+\begin{itemize}
+    \item \textbf{GitHub Secrets} — database connection strings and API keys are stored as encrypted secrets and injected at deploy time.
+    \item \textbf{Firewall} — inbound and outbound traffic on both application droplets and the database is restricted to only the ports and sources required.
+\end{itemize}
+
+\noindent Static code analysis is integrated in the CI pipeline using \textbf{SonarCloud}.
+Every build is analysed for bugs, coverage, code duplication and security vulnerabilities.
+As shown in \cref{fig:sonarcloud}, there are still a number of security vulnerabilities but 
+with only two of five members actively contributing, there was not time to address them before the deadline
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{SonarCube.png}
+    \caption{SonarCloud quality gate results.}
+    \label{fig:sonarcloud}
+\end{figure}
+
+
+% Brief description of measures taken, e.g.:
+% - Secrets management (env vars, GitHub Secrets, Vault)
+% - TLS / HTTPS setup
+% - Firewall / network policies
+% - Dependency scanning / vulnerability alerts
+% - Least-privilege service accounts
+
+\subsection{Availability and Scaling}
+
+\textbf{TODO : Insert pictures of stucture umls}
+\\\\
+\noindent The application is deployed as a \textbf{Docker Swarm} stack with \textbf{2 replicas} hosted as 2 seperate \textbf{DigtalOcean droplets}.
+our load balencer distributes traffic across replicas, and automatically reroutes requests away from any node that becomes unavailable/crash.
+Crashed containers are restarted automatically via the on-failure restart policy.
+\\\\
+\noindent the application uses a \textbf{Redis} instance shared between all nodes which caches data between replica nodes, which ensures consistent returned data regardless of which replica handles the request.
+\\
+\noindent Deployments are made using rolling updates, which starts a new docker container before closing the previous one to avoid downtime.
+this process is repeated for each node with a 10 second delay to ensure that at least one instance is always available for requests during deployments to reduced downtime of the system.
+
+% How do you handle availability (replication, health checks, restarts)?
+% How do you scale (horizontal scaling, load balancing)?
+% E.g. Docker Swarm replicas, Kubernetes HPA, DigitalOcean load balancer.

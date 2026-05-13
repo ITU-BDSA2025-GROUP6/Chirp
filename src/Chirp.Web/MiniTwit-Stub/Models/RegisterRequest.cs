@@ -14,7 +14,7 @@ using System.Text;
 using Newtonsoft.Json;
 
 namespace Chirp.Web.MiniTwit_Stub.Models
-{ 
+{
     /// <summary>
     /// 
     /// </summary>
@@ -26,7 +26,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
         /// </summary>
         /// <value>Username</value>
         [Required]
-        [DataMember(Name="username", EmitDefaultValue=false)]
+        [DataMember(Name = "username", EmitDefaultValue = false)]
         public string Username { get; set; }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
         /// </summary>
         /// <value>Email address</value>
         [Required]
-        [DataMember(Name="email", EmitDefaultValue=false)]
+        [DataMember(Name = "email", EmitDefaultValue = false)]
         public string Email { get; set; }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
         /// </summary>
         /// <value>Password</value>
         [Required]
-        [DataMember(Name="pwd", EmitDefaultValue=false)]
+        [DataMember(Name = "pwd", EmitDefaultValue = false)]
         public string Pwd { get; set; }
 
         /// <summary>
@@ -91,17 +91,17 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             if (other is null) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return 
+            return
                 (
                     Username == other.Username ||
                     Username != null &&
                     Username.Equals(other.Username)
-                ) && 
+                ) &&
                 (
                     Email == other.Email ||
                     Email != null &&
                     Email.Equals(other.Email)
-                ) && 
+                ) &&
                 (
                     Pwd == other.Pwd ||
                     Pwd != null &&
@@ -119,18 +119,18 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             {
                 var hashCode = 41;
                 // Suitable nullity checks etc, of course :)
-                    if (Username != null)
+                if (Username != null)
                     hashCode = hashCode * 59 + Username.GetHashCode();
-                    if (Email != null)
+                if (Email != null)
                     hashCode = hashCode * 59 + Email.GetHashCode();
-                    if (Pwd != null)
+                if (Pwd != null)
                     hashCode = hashCode * 59 + Pwd.GetHashCode();
                 return hashCode;
             }
         }
 
         #region Operators
-        #pragma warning disable 1591
+#pragma warning disable 1591
 
         public static bool operator ==(RegisterRequest left, RegisterRequest right)
         {
@@ -142,7 +142,7 @@ namespace Chirp.Web.MiniTwit_Stub.Models
             return !Equals(left, right);
         }
 
-        #pragma warning restore 1591
+#pragma warning restore 1591
         #endregion Operators
     }
 }

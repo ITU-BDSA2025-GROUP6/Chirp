@@ -2,14 +2,29 @@ services:
   itu-minitwit:
     image: ${DOCKER_USERNAME}/itu-minitwit:${TAG:-latest}
     ports:
-      - "5001:5001"
+      - "0.0.0.0:5001:5001"
     environment:
-      - ASPNETCORE_URLS=http://+:5001
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=chirp;Username=postgres;Password=postgres
-    depends_on:
-      - postgres
-      - prometheus
+      - ASPNETCORE_URLS=${ASPNETCORE_URLS}
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ConnectionStrings__DefaultConnection=${ConnectionStrings__DefaultConnection}
+      - ConnectionStrings__Redis=${ConnectionStrings__Redis}
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '1.0'
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
     restart: unless-stopped
     networks:
       - itu-minitwit-network
@@ -22,42 +37,107 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - FOWNER
+      - SETGID
+      - SETUID
+      - DAC_OVERRIDE
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: '0.5'
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    restart: unless-stopped
+    networks:
+      - itu-minitwit-network
+    profiles:
+      - localdb
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+          cpus: '0.1'
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 1024
     restart: unless-stopped
     networks:
       - itu-minitwit-network
 
-  prometheus:
-    build:
-      dockerfile: ./Dockerfile
-      context: ./monitoring/prometheus
-    image: prometheus_image
-    container_name: prometheus
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-    ports:
-      - "9090:9090"
-    networks:
-      - itu-minitwit-network
-
-  grafana:
-    build:
-      dockerfile: ./Dockerfile
-      context: ./monitoring/grafana
-    image: grafana_image
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    networks:
-      - itu-minitwit-network
+  redis:
+    image: redis:7
+    container_name: redis
     volumes:
-      - grafana-storage:/var/lib/grafana
+      - redis-data:/data
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+    security_opt:
+      - no-new-privileges:true
+      - apparmor:docker-default
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+          cpus: '0.5'
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    restart: unless-stopped
+    networks:
+      - itu-minitwit-network
 
 volumes:
   postgres-data:
-  grafana-storage: {}
+  redis-data:
 
 networks:
   itu-minitwit-network:

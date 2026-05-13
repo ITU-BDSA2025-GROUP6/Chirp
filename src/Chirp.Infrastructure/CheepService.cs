@@ -1,4 +1,4 @@
-using Chirp.Infrastructure.Interfaces; 
+using Chirp.Infrastructure.Interfaces;
 namespace Chirp.Infrastructure;
 
 public class CheepService : ICheepService
@@ -14,7 +14,7 @@ public class CheepService : ICheepService
     {
         return await _repository.GetCheeps(page);
     }
-    
+
     public Task<int> CreateCheep(CheepDTO newMessage)
     {
         return _repository.CreateCheep(newMessage);
@@ -34,8 +34,8 @@ public class CheepService : ICheepService
     {
         return _repository.UpdateCheep(alteredMessage);
     }
-    
-    
+
+
 
     public Task<bool> DeleteCheep(int cheepId, string authorName)
     {
@@ -50,8 +50,18 @@ public class CheepService : ICheepService
     {
         return _repository.GetCheeps(page, currentUserId);
     }
-    
-    public async Task<int> CreateRecheep(AuthorDTO Author, int cheepID) {
+
+    public async Task<int> CreateRecheep(AuthorDTO Author, int cheepID)
+    {
         return await _repository.CreateRecheep(Author, cheepID);
     }
+
+    public Task<bool> HasNextPageCheeps(int currentPage, string? currentUserId = null)
+        => _repository.HasNextPageCheeps(currentPage, currentUserId);
+
+    public Task<bool> HasNextPageFromAuthor(string authorName, int currentPage)
+        => _repository.HasNextPageFromAuthor(authorName, currentPage);
+
+    public Task<bool> HasNextPageFromFollowedAuthor(string userId, int currentPage)
+        => _repository.HasNextPageFromFollowedAuthor(userId, currentPage);
 }

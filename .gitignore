@@ -499,3 +499,32 @@ out/
 
 # Ignore API Spec
 API_Spec/
+
+#Ignore .dump file
+chirp.dump
+
+# LaTeX intermediate build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.lof
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.idx
+*.ilg
+*.ind
+
+# Build directory: ignore everything except the final PDF
+build/*
+!build/.gitkeep
+!build/*.pdf

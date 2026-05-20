@@ -4,7 +4,10 @@ services:
   itu-minitwit:
     image: ${DOCKER_USERNAME}/itu-minitwit:${TAG:-latest}
     ports:
-      - "5001:5001"
+      - target: 5001
+        published: 5001
+        protocol: tcp
+        mode: host
     environment:
       - ASPNETCORE_URLS=${ASPNETCORE_URLS}
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
@@ -21,18 +24,22 @@ services:
       placement:
         constraints:
           - node.labels.role == app
+        max_replicas_per_node: 1
       restart_policy:
         condition: on-failure
         delay: 5s
       update_config:
         parallelism: 1
         delay: 10s
-        order: start-first
+        order: stop-first
 
   node-exporter:
     image: prom/node-exporter:latest
     ports:
-      - "9100:9100"
+      - target: 9100
+        published: 9100
+        protocol: tcp
+        mode: host
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro

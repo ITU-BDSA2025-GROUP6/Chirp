@@ -1,6 +1,6 @@
 %TC:envir tabular 0 0
 %TC:envir tabularx 0 0
-\sloppy \section{System's Perspective}
+\section{System's Perspective}
 \byline{Sebastian Holt Svendsen}
 
 \noindent In this section, we provide an overview of the ITU-MiniTwit system from a technical perspective. 
@@ -34,18 +34,18 @@ TLS via \texttt{Certbot} and distribute requests to the next tier. \textit{Keepa
 VRRP between them. On failue of the master, the backup promotes itself and the floating IP is 
 reattached automatically.
 
-\paragraph{Tier 3: App and data} contains two app nodes (App1, App2) each host one \texttt{itu-minitwit} replica
+\paragraph{Tier 3: App and data.} The swarm contains two app nodes (App1, App2) each host one \texttt{itu-minitwit} replica
 plus a \texttt{node-exporter}. Swarm schedules them onto nodes labelled \texttt{role == app}. 
 Both replicas share a managed PostgreSQL database and a Redis instance holding session state 
 and ASP.NET DataProtection keys. Because the containers hold no per-request state, replicas 
 are interchangeable and a failed node does not drop sessions.
 
-\paragraph{Tier 4: Monitoring.} A dedicated node runs Prometheus, Grafana, Loki, and Alloy. Prometheus 
-scrapes \texttt{:9100} (host metrics) and \texttt{:5001} (app \texttt{/metrics}). Alloy ships container 
+\sloppy \paragraph{Tier 4: Monitoring.} A dedicated node runs Prometheus, Grafana, Loki, and Alloy. Prometheus 
+scrapes \texttt{:9100} (host metrics) and \texttt{:5001} (app metrics). Alloy ships container 
 logs from every node to Loki. Isolation ensures an app-tier outage does not blind the diagnostic tooling.
 
-{\sloppy \paragraph{Application architecture.} The application follows a layered design across three 
-.NET projects with a one-way dependency rule. \texttt{Chirp.Core} (domain entities), \texttt{Chirp.Infrastructure} 
+\fussy \paragraph{Application architecture.} The application follows a layered design across three .NET
+projects with a one-way dependency rule. \texttt{Chirp.Core} (domain entities), \texttt{Chirp.Infrastructure} 
 (EF Core \texttt{DbContext}, repositories, services, migrations), and \texttt{Chirp.Web} (Razor Pagesm scaffolded 
 Identity pages, and the \texttt{MiniTwit-Stub} controller exposing the REST API). 
 \\

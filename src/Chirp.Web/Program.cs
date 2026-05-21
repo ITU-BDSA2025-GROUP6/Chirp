@@ -51,24 +51,27 @@ builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddMemoryCache();
-// Session
+builder.Services.AddHealthChecks();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromDays(7);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+var redisConfig = ConfigurationOptions.Parse(
+    builder.Configuration.GetConnectionString("Redis")!);
+redisConfig.AbortOnConnectFail = false;
+var redisMultiplexer = ConnectionMultiplexer.Connect(redisConfig);
+builder.Services.AddSingleton<IConnectionMultiplexer>(redisMultiplexer);
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.ConnectionMultiplexerFactory =
+        () => Task.FromResult<IConnectionMultiplexer>(redisMultiplexer);
 });
 
 builder.Services.AddDataProtection()
-    .PersistKeysToStackExchangeRedis(
-        ConnectionMultiplexer.Connect(
-            builder.Configuration.GetConnectionString("Redis")!),
-        "DataProtection-Keys");
+    .PersistKeysToStackExchangeRedis(redisMultiplexer, "DataProtection-Keys");
 
 builder.Services.AddHsts(options =>
 {
@@ -134,5 +137,6 @@ app.UseSession();
 app.MapControllers();
 app.MapRazorPages();
 app.MapMetrics();
+app.MapHealthChecks("/health");
 
 app.Run();

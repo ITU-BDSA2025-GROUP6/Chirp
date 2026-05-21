@@ -19,6 +19,12 @@ services:
       - no-new-privileges:true
     networks:
       - itu-minitwit-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 40s
     deploy:
       replicas: 2
       placement:

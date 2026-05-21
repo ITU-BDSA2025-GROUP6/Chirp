@@ -17,6 +17,7 @@ WORKDIR /app
 # deb12u7 yet, so pull the security fix explicitly.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends --only-upgrade libgnutls30 \
+    && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -r appuser && useradd -r -g appuser appuser

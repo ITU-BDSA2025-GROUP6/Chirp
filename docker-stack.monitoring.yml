@@ -46,7 +46,7 @@ services:
         condition: on-failure
 
   loki:
-    image: grafana/loki:3.5.0
+    image: grafana/loki:3.7.2
     ports:
       - "3100:3100"
     volumes:
@@ -66,7 +66,7 @@ services:
         condition: on-failure
 
   alloy:
-    image: grafana/alloy:latest
+    image: grafana/alloy:v1.16.1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     configs:

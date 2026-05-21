@@ -29,7 +29,14 @@ jobs:
       - id: report_only
         shell: bash
         run: |
-          CHANGED=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE=${{ github.event.pull_request.base.sha }}
+            HEAD=${{ github.event.pull_request.head.sha }}
+          else
+            BASE=${{ github.event.before }}
+            HEAD=${{ github.sha }}
+          fi
+          CHANGED=$(git diff --name-only "$BASE" "$HEAD")
           echo "Changed files:"
           echo "$CHANGED"
           NON_REPORT=$(echo "$CHANGED" | grep -v '^Report/' || true)

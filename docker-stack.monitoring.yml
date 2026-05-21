@@ -90,6 +90,7 @@ configs:
     file: ./monitoring/loki/loki-config.yml
   alloy_config:
     file: ./monitoring/alloy/config.alloy
+    name: monitoring_alloy_config_v2
   grafana_datasources:
     file: ./monitoring/grafana/datasources/datasources.yml
   grafana_dashboards_config:
